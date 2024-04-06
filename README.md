@@ -9,4 +9,4 @@
 혹시 몰라서 제가 쓰던 번역 메모도 올려놨어요 (Translation_Memo)
 
 - if anyone sees this repo please help me write the code
-- - im too busy and don't have much time to develop but I need to finish this mod before v50 is released
+- im too busy and dont have much time to develop but I need to finish this mod before v50 is released
