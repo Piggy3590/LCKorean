@@ -47,5 +47,19 @@ namespace LCKorean.Patches
                 StartOfRound.Instance.profitQuotaMonitorText.text = $"수익\n할당량:\n${___quotaFulfilled} / ${___profitQuota}";
             }
         }
+        [HarmonyPostfix]
+        [HarmonyPatch("Update")]
+        private static void Update_Postfix()
+        {
+            HUDManager.Instance.clockNumber.text = HUDManager.Instance.clockNumber.text.Replace("AM", "오전");
+            HUDManager.Instance.clockNumber.text = HUDManager.Instance.clockNumber.text.Replace("PM", "오후");
+        }
+        [HarmonyPostfix]
+        [HarmonyPatch("VoteShipToLeaveEarly")]
+        private static void VoteShipToLeaveEarly_Postfix(ref DialogueSegment[] ___shipLeavingEarlyDialogue)
+        {
+            ___shipLeavingEarlyDialogue[0].bodyText = ___shipLeavingEarlyDialogue[0].bodyText.Replace("AM", "오전");
+            ___shipLeavingEarlyDialogue[0].bodyText = ___shipLeavingEarlyDialogue[0].bodyText.Replace("PM", "오후");
+        }
     }
 }

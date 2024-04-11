@@ -39,6 +39,11 @@ namespace LCKorean.Patches
             {
                 ___triggerScript.hoverTip = "함선 출발하기 : [LMB]";
             }
+
+            if (___triggerScript.disabledHoverTip == "[Wait for ship to land]")
+            {
+                ___triggerScript.disabledHoverTip = "[함선이 완전히 이착륙할 때까지 기다리세요]";
+            }
         }
     }
 }

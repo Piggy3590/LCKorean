@@ -16,6 +16,9 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.HID;
+using UnityEngine.InputSystem.XR;
+using UnityEngine.Rendering;
+using UnityEngine.UI;
 
 namespace LCKorean.Patches
 {
@@ -29,6 +32,18 @@ namespace LCKorean.Patches
             TranslateItem();
             TranslateDialogue();
             TranslatePlanet();
+            TranslateUnlockableList();
+            ConvertImage();
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch("SceneManager_OnLoad")]
+        private static void SceneManager_OnLoad_Postfix()
+        {
+            if (HUDManager.Instance.loadingText.text == "LOADING WORLD...")
+            {
+                HUDManager.Instance.loadingText.text = "세계 불러오는 중...";
+            }
         }
 
         [HarmonyPostfix]
@@ -36,6 +51,14 @@ namespace LCKorean.Patches
         private static void SetMapScreenInfoToCurrentLevel_Postfix(ref TextMeshProUGUI ___screenLevelDescription)
         {
             TranslatePlanet();
+            ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("Weather", "날씨");
+
+            ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("Rainy", "우천");
+            ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("Stormy", "뇌우");
+            ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("Foggy", "안개");
+            ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("Flooded", "홍수");
+            ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("Eclipsed", "일식");
+
             ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("Orbiting", "공전 중");
             ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("71 Gordion", "71 고르디온");
 
@@ -124,6 +147,122 @@ namespace LCKorean.Patches
             }
 
             return;
+        }
+
+        static void ConvertImage()
+        {
+            foreach (Texture2D texture in TextureReplacer.Textures)
+            {
+                if (texture.name == "StopSignTex")
+                {
+                    Graphics.CopyTexture(Plugin.stopSignTex, texture);
+                    //CopyTexture2D(texture, Plugin.stopSignTex);
+                }
+                else if (texture.name == "YieldSignTex")
+                {
+                    Graphics.CopyTexture(Plugin.yieldSignTex, texture);
+                    //CopyTexture2D(texture, Plugin.yieldSignTex);
+                }
+                else if (texture.name == "StickyNoteTex")
+                {
+                    CopyTexture2D(texture, Plugin.StickyNoteTex);
+                }
+
+                else if (texture.name == "artificeHint")
+                {
+                    CopyTexture2D(texture, Plugin.artificeHint);
+                }
+                else if (texture.name == "endgameAllPlayersDead")
+                {
+                    Graphics.CopyTexture(Plugin.endgameAllPlayersDead, texture);
+                    //CopyTexture2D(texture, Plugin.endgameAllPlayersDead);
+                }
+                else if (texture.name == "endgameStatsBoxes")
+                {
+                    CopyTexture2D(texture, Plugin.endgameStatsBoxes);
+                }
+                else if (texture.name == "endgameStatsDeceased")
+                {
+                    CopyTexture2D(texture, Plugin.endgameStatsDeceased);
+                }
+                else if (texture.name == "endgameStatsMissing")
+                {
+                    CopyTexture2D(texture, Plugin.endgameStatsMissing);
+                }
+                else if (texture.name == "FlashbangBottleTexture")
+                {
+                    CopyTexture2D(texture, Plugin.flashbangBottleTexture);
+                }
+
+                else if (texture.name == "manual1")
+                {
+                    CopyTexture2D(texture, Plugin.manual1);
+                }
+                else if (texture.name == "manual2v2")
+                {
+                    CopyTexture2D(texture, Plugin.manual2v2);
+                }
+                else if (texture.name == "manual3v2")
+                {
+                    CopyTexture2D(texture, Plugin.manual3v2);
+                }
+                else if (texture.name == "manual4v2")
+                {
+                    CopyTexture2D(texture, Plugin.manual4v2);
+                }
+
+                else if (texture.name == "PlayerLevelStickers")
+                {
+                    CopyTexture2D(texture, Plugin.playerLevelStickers);
+                }
+                else if (texture.name == "PlayerLevelStickers 1")
+                {
+                    CopyTexture2D(texture, Plugin.playerLevelStickers1);
+                }
+
+                else if (texture.name == "posters")
+                {
+                    CopyTexture2D(texture, Plugin.posters);
+                }
+                else if (texture.name == "TipsPoster2")
+                {
+                    CopyTexture2D(texture, Plugin.TipsPoster2);
+                }
+                else if (texture.name == "powerBoxTextures")
+                {
+                    CopyTexture2D(texture, Plugin.powerBoxTextures);
+                }
+
+                else if (texture.name == "RedUIPanelGlitchBWarningRadiation")
+                {
+                    CopyTexture2D(texture, Plugin.RedUIPanelGlitchBWarningRadiation);
+                }
+                else if (texture.name == "RedUIPanelGlitchBWarningRadiationB")
+                {
+                    CopyTexture2D(texture, Plugin.RedUIPanelGlitchBWarningRadiationB);
+                }
+                else if (texture.name == "RedUIPanelGlitchBWarningRadiationC")
+                {
+                    CopyTexture2D(texture, Plugin.RedUIPanelGlitchBWarningRadiationC);
+                }
+                else if (texture.name == "RedUIPanelGlitchBWarningRadiationD")
+                {
+                    CopyTexture2D(texture, Plugin.RedUIPanelGlitchBWarningRadiationD);
+                }
+            }
+        }
+
+        static void CopyTexture2D(Texture2D texture, Texture2D texture2)
+        {
+            try
+            {
+                Plugin.mls.LogInfo("applying translated texture " + texture.name);
+                Graphics.CopyTexture(texture2, texture);
+            }
+            catch (Exception ex)
+            {
+                Plugin.mls.LogError("error while applying translated texture " + texture.name + " : " + ex);
+            }
         }
         
         static void TranslatePlanet()
@@ -277,6 +416,100 @@ namespace LCKorean.Patches
                         break;
                     case "The Company must minimize risk of damage to proprietary hardware. Goodbye!":
                         dialogue.bodyText = "우리 회사는 독점 하드웨어에 대한 손상 위험을 최소화해야 합니다. 안녕히 계세요!\r\n";
+                        break;
+                }
+            }
+        }
+        
+        static void TranslateUnlockableList()
+        {
+            foreach (UnlockableItem unlockableItem in StartOfRound.Instance.unlockablesList.unlockables)
+            {
+                switch (unlockableItem.unlockableName)
+                {
+                    case "Orange suit":
+                        unlockableItem.unlockableName = "주황색 슈트";
+                        break;
+                    case "Green suit":
+                        unlockableItem.unlockableName = "초록색 슈트";
+                        break;
+                    case "Hazard suit":
+                        unlockableItem.unlockableName = "방호복 슈트";
+                        break;
+                    case "Pajama suit":
+                        unlockableItem.unlockableName = "파자마 슈트";
+                        break;
+                    case "Cozy lights":
+                        unlockableItem.unlockableName = "아늑한 조명";
+                        break;
+                    case "Teleporter":
+                        unlockableItem.unlockableName = "순간이동기";
+                        break;
+                    case "Television":
+                        unlockableItem.unlockableName = "텔레비전";
+                        break;
+                    case "Cupboard":
+                        unlockableItem.unlockableName = "수납장";
+                        break;
+                    case "File Cabinet":
+                        unlockableItem.unlockableName = "파일 캐비닛";
+                        break;
+                    case "Toilet":
+                        unlockableItem.unlockableName = "변기";
+                        break;
+                    case "Shower":
+                        unlockableItem.unlockableName = "샤워 부스";
+                        break;
+                    case "Light switch":
+                        unlockableItem.unlockableName = "전등 스위치";
+                        break;
+                    case "Record player":
+                        unlockableItem.unlockableName = "레코드 플레이어";
+                        break;
+                    case "Table":
+                        unlockableItem.unlockableName = "테이블";
+                        break;
+                    case "Romantic table":
+                        unlockableItem.unlockableName = "로맨틱한 테이블";
+                        break;
+                    case "Bunkbeds":
+                        unlockableItem.unlockableName = "벙커침대";
+                        break;
+                    case "Terminal":
+                        unlockableItem.unlockableName = "터미널";
+                        break;
+                    case "Signal translator":
+                        unlockableItem.unlockableName = "신호 해석기";
+                        break;
+                    case "Loud horn":
+                        unlockableItem.unlockableName = "시끄러운 경적";
+                        break;
+                    case "Inverse Teleporter":
+                        unlockableItem.unlockableName = "역방향 순간이동기";
+                        break;
+                    case "JackOLantern":
+                        unlockableItem.unlockableName = "잭오랜턴";
+                        break;
+                    case "Welcome mat":
+                        unlockableItem.unlockableName = "웰컴 매트";
+                        break;
+                    case "Goldfish":
+                        unlockableItem.unlockableName = "금붕어";
+                        break;
+                    case "Plushie pajama man":
+                        unlockableItem.unlockableName = "인형 파자마 맨";
+                        break;
+                    case "Purple Suit":
+                        unlockableItem.unlockableName = "보라색 슈트";
+                        break;
+                    case "Bee Suit":
+                        unlockableItem.unlockableName = "꿀벌 슈트";
+                        break;
+                    case "Bunny Suit":
+                        unlockableItem.unlockableName = "토끼 슈트";
+                        break;
+                    case "Disco Ball":
+                        unlockableItem.unlockableName = "디스코 볼";
                         break;
                 }
             }
@@ -442,8 +675,8 @@ namespace LCKorean.Patches
                     case "Ring":
                         item.itemName = "반지";
                         break;
-                    case "Robot toy":
-                        item.itemName = "로봇 장난감";
+                    case "Toy robot":
+                        item.itemName = "장난감 로봇";
                         break;
                     case "Rubber Ducky":
                         item.itemName = "고무 오리";
@@ -514,7 +747,7 @@ namespace LCKorean.Patches
                     case "Whoopie cushion":
                         item.itemName = "방귀 쿠션";
                         break;
-                    case "Kitchin knife":
+                    case "Kitchen knife":
                         item.itemName = "식칼";
                         item.toolTips[0] = "찌르기 : [RMB]";
                         break;

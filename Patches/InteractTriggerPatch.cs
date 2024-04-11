@@ -99,6 +99,14 @@ namespace LCKorean.Patches
             {
                 ___hoverTip = "내리기 : [LMB]";
             }
+            else if (___hoverTip == "Switch camera : [LMB]")
+            {
+                ___hoverTip = "카메라 전환하기 : [LMB]";
+            }
+            else if (___hoverTip == "Turn on/off : [LMB]")
+            {
+                ___hoverTip = "전원 켜기/끄기 : [LMB]";
+            }
 
             if (___disabledHoverTip == "(Requires battery-powered item)")
             {

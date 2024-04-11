@@ -38,7 +38,33 @@ namespace LCKorean.Patches
                 ___cursorTip.text = "[양 손 사용 중]";
             }else if (___cursorTip.text == "Grab : [E]")
             {
-                ___cursorTip.text = "줍기 : [E]]";
+                ___cursorTip.text = "줍기 : [E]";
+            }
+        }
+        [HarmonyPostfix]
+        [HarmonyPatch("SpawnDeadBody")]
+        private static void SpawnDeadBody_Postfix()
+        {
+            DeadBodyInfo[] deadBodyInfo = GameObject.FindObjectsOfType<DeadBodyInfo>();
+            foreach (DeadBodyInfo info in deadBodyInfo)
+            {
+                ScanNodeProperties componentInChildren = info.gameObject.GetComponentInChildren<ScanNodeProperties>();
+                componentInChildren.headerText = componentInChildren.headerText.Replace("Body of ", "");
+                componentInChildren.headerText = componentInChildren.headerText + "의 시체";
+                componentInChildren.subText = componentInChildren.subText.Replace("Cause of death: ", "사인:");
+                componentInChildren.subText = componentInChildren.subText.Replace("Unknown", "알 수 없음");
+                componentInChildren.subText = componentInChildren.subText.Replace("Bludgeoning", "구타");
+                componentInChildren.subText = componentInChildren.subText.Replace("Gravity", "중력");
+                componentInChildren.subText = componentInChildren.subText.Replace("Blast", "폭사");
+                componentInChildren.subText = componentInChildren.subText.Replace("Kicking", "걷어차임");
+                componentInChildren.subText = componentInChildren.subText.Replace("Strangulation", "교살");
+                componentInChildren.subText = componentInChildren.subText.Replace("Suffocation", "질식");
+                componentInChildren.subText = componentInChildren.subText.Replace("Mauling", "공격당함");
+                componentInChildren.subText = componentInChildren.subText.Replace("Gunshots", "총격");
+                componentInChildren.subText = componentInChildren.subText.Replace("Crushing", "압사");
+                componentInChildren.subText = componentInChildren.subText.Replace("Drowning", "익사");
+                componentInChildren.subText = componentInChildren.subText.Replace("Abandoned", "실종");
+                componentInChildren.subText = componentInChildren.subText.Replace("Electrocution", "감전사");
             }
         }
     }

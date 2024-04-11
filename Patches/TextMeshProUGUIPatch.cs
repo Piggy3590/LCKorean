@@ -330,6 +330,9 @@ namespace LCKorean.Patches
                 case "Tell autopilot ship to leave early : [RMB] (Hold)":
                     __instance.text = "함선에게 일찍 출발하라고 지시하기\n: [RMB] (Hold)";
                     break;
+                case "HAZARD LEVEL:":
+                    __instance.text = "위험 수준:";
+                    break;
             }
             __instance.text.Replace(" collected!", " 수집함!");
             __instance.text.Replace("Value: ", "가치: ");
