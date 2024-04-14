@@ -24,4 +24,5 @@ Translate the in-game language into Korean. It's very hardcoded and can cause pr
 
 ## 크레딧
 
-- 
+- 게임 기본 폰트 - [Orbit체](https://github.com/JAMO-TYPEFACE/Orbit)
+- 신호 해석기 폰트 - [갈무리9](https://galmuri.quiple.dev/)
