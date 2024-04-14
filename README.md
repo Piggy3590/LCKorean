@@ -2,7 +2,7 @@
 ## Description
 Translate the in-game language into Korean. It's very hardcoded and can cause problems!
 
-게임 내 언어를 한글로 변경합니다. 그냥 한패롤 모드로 옮긴 거라고 생각하시면 편합니다 (기존 한패 만든놈임)
+게임 내 언어를 한글로 변경합니다. 그냥 한패롤 모드로 옮긴 거라고 생각하시면 편합니다 (기존 한패와 거의 동일함)
 
 ## 구성 설명
 
