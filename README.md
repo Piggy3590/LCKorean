@@ -1,19 +1,33 @@
-# LCKorean
+# LCKR
+## Description
+Translate the in-game language into Korean. It's very hardcoded and can cause problems!
 
-현재 필요한 것:
- - 날씨 한글화
- - 
+게임 내 언어를 한글로 변경합니다. 그냥 한패롤 모드로 옮긴 거라고 생각하시면 편합니다 (기존 한패 만든놈임)
+
+## 구성 설명
+
+- 폰트 변경
+  
+- 기본값은 true입니다.
+- FontPatcher 등 외부 폰트 모드를 사용하려면 이 값을 true로 설정하세요. 이 값을 false로 설정한다면 바닐라 폰트로 적용되며, 한글이 깨져보일 수도 있습니다.
 
 
-바빠서 작업하기가 쉽지 않음 흑흑
+- 행성 내부 이름 번역
+  
+- 기본값은 false입니다.
+- 코드에서 사용되는 행성의 내부 이름을 한글화합니다. 게임 플레이에서 달라지는 부분은 없지만, true로 하면 모드 인테리어의 구성을 변경할 때 행성 명을 한글로 입력해야 합니다. false로 두면 그대로 영어로 입력하시면 됩니다.
 
-만약 누가 코드 확인하시고
 
-뭐든 pr 해주신다면 감사히 받겠습니다
+- Thumper 번역
 
-혹시 몰라서 제가 쓰던 번역 메모도 올려놨어요 (Translation_Memo)
+- 기본값은 false입니다.
+- true로 설정하면 "Thumper"를 썸퍼로 번역합니다. false로 설정하면 덤퍼로 설정됩니다.
 
-코드 좀 하드코딩 + 대충쓰긴 했어요
 
-- if anyone sees this repo please help me write the code
-- im too busy and dont have much time to develop but I wanna finish this mod before v50 is released
+- KG 변환
+- 기본값은 true입니다.
+- true로 설정하면 무게 수치를 kg으로 변환합니다.
+
+## 크레딧
+
+- 
