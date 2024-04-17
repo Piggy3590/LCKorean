@@ -17,6 +17,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.HID;
+using UnityEngine.SceneManagement;
 
 namespace LCKorean.Patches
 {
@@ -28,6 +29,39 @@ namespace LCKorean.Patches
         [HarmonyPatch("Awake")]
         private static void Awake_Postfix(TextMeshProUGUI __instance)
         {
+            try
+            {
+                Translate(__instance);
+            }catch (Exception e)
+            {
+                Plugin.mls.LogError("TMP 텍스트를 번역하는 과정에서 오류가 발생했습니다!\n"+ e);
+            }
+        }
+
+        static void Translate(TextMeshProUGUI __instance)
+        {
+            if (SceneManager.GetActiveScene().name == "ColdOpen1")
+            {
+                __instance.text = __instance.text.Replace("Detecting difficulties...", "문제 감지 중...");
+                __instance.text = __instance.text.Replace("Running reboot diagnostic...", "재부팅 진단 실행 중...");
+                __instance.text = __instance.text.Replace("UNABLE TO START.", "시작할 수 없습니다.");
+                __instance.text = __instance.text.Replace("PLEASE FIX ISSUES", "문제를 해결해주세요");
+                __instance.text = __instance.text.Replace("I BELIEVE IN YOU", "당신을 믿습니다");
+            }
+            else if (SceneManager.GetActiveScene().name == "MainMenu")
+            {
+                __instance.text = __instance.text.Replace("Welcome back!", "돌아오신 것을 환영합니다!");
+                __instance.text = __instance.text.Replace("This update includes a new moon, a new creature, and a bunny suit, as well as many adjustments.", "이번 업데이트에는 새로운 위성, 생명체, 토끼 슈트와 많은 조정 사항이 포함되어 있습니다.");
+                __instance.text = __instance.text.Replace("Others must update their game to play with you on this version.", "이 버전에서 당신과 함께 플레이하려면 다른 사람들도 게임을 업데이트해야 합니다.");
+                __instance.text = __instance.text.Replace("Good luck!", "행운을 빕니다!");
+            }
+            else if (SceneManager.GetActiveScene().name == "InitSceneLaunchOptions")
+            {
+                __instance.text = __instance.text.Replace("This experience has been designed for in-game voice chat, so I recommend giving it a try.",
+                    "이 게임은 게임 내 음성 채팅을 사용하는 것을 전제로 설계되었습니다. 게임 내 음성 채팅 사용을 권장합니다.");
+                __instance.text = __instance.text.Replace("Adjust screen brightness until the symbol on the right is barely visible.",
+                    "오른쪽 아이콘이 거의 보이지 않을 때까지 화면 밝기를 조정하세요.");
+            }
             switch (__instance.text)
             {
                 case "  Online":
@@ -41,6 +75,22 @@ namespace LCKorean.Patches
                     break;
                 case " SET-UP":
                     __instance.text = "설정";
+                    break;
+                case "SET-UP":
+                    __instance.text = "설정";
+                    break;
+
+                case "Tip: This may occur due to an antivirus or other software halting the save file from being read.":
+                    __instance.text = "팁: 이는 바이러스 백신이나 기타 소프트웨어로 인해 저장 파일 읽기가 중단되었기 때문에 발생할 수 있습니다.";
+                    break;
+                case "Your files could not be loaded and may be corrupted. To start the game, the files can be deleted.":
+                    __instance.text = "파일을 불러올 수 없습니다. 저장 파일이 손상되었을 수 있습니다. 파일을 삭제하면 게임이 정상적으로 실행될 것입니다.";
+                    break;
+                case "The game will now close so you can restart it.":
+                    __instance.text = "이제 게임이 종료됩니다. 게임을 재시작하세요.";
+                    break;
+                case "[ Delete files and restart]":
+                    __instance.text = "[모든 저장 파일 삭제하기]";
                     break;
 
                 case "> Host":
@@ -60,6 +110,16 @@ namespace LCKorean.Patches
                     break;
                 case "> Quit":
                     __instance.text = "> 종료";
+                    break;
+
+                case "> Resume":
+                    __instance.text = "> 계속하기";
+                    break;
+                case "Would you like to leave the game?":
+                    __instance.text = "정말 게임을 떠나시겠습니까?";
+                    break;
+                case "> Invite friends":
+                    __instance.text = "> 친구 초대하기";
                     break;
 
                 case "ACCESSIBILITY":
@@ -209,6 +269,18 @@ namespace LCKorean.Patches
                 case "> Confirm changes":
                     __instance.text = "> 변경 사항 저장";
                     break;
+                case "> Confirm":
+                    __instance.text = "> 확인";
+                    break;
+                case "> Cancel":
+                    __instance.text = "> 취소";
+                    break;
+                case "> CONFIRM":
+                    __instance.text = "> 확인";
+                    break;
+                case "  CONFIRM":
+                    __instance.text = "  확인";
+                    break;
                 case "> Change keybinds":
                     __instance.text = "> 조작 키 변경";
                     break;
@@ -294,6 +366,9 @@ namespace LCKorean.Patches
                 case "Typing...":
                     __instance.text = "입력 중...";
                     break;
+                case "Press \"/\" to talk.":
+                    __instance.text = "\"/\"를 눌러 대화합니다.";
+                    break;
                 case "(Some were too far to receive your message.)":
                     __instance.text = "(일부는 너무 멀어 메세지를 받지 못했습니다.)";
                     break;
@@ -318,6 +393,15 @@ namespace LCKorean.Patches
                 case "You did not meet the profit quota before the deadline.":
                     __instance.text = "마감일 전까지 수익 할당량을 충족하지 못했습니다.";
                     break;
+                case "TO MEET PROFIT QUOTA":
+                    __instance.text = "수익 할당량 충족까지";
+                    break;
+                case "QUOTA REACHED!":
+                    __instance.text = "<size=65>할당량을 달성했습니다!</size>";
+                    break;
+                case "NEW PROFIT QUOTA:":
+                    __instance.text = "새로운 수익 할당량:";
+                    break;
                 case "Stats":
                     __instance.text = "통계";
                     break;
@@ -333,6 +417,51 @@ namespace LCKorean.Patches
                 case "HAZARD LEVEL:":
                     __instance.text = "위험 수준:";
                     break;
+
+                case "Notes:":
+                    __instance.text = "노트:";
+                    break;
+
+
+                case "DEBUG/TEST":
+                    __instance.text = "디버그/테스트";
+                    break;
+                case "Enemy type:":
+                    __instance.text = "적 종류:";
+                    break;
+                case "Enemy:":
+                    __instance.text = "적:";
+                    break;
+                case "Number to spawn:":
+                    __instance.text = "생성할 수:";
+                    break;
+                case "Enter text...":
+                    __instance.text = "텍스트를 입력하세요...";
+                    break;
+                case "Spawn creature":
+                    __instance.text = "생명체 생성";
+                    break;
+                case "Spawn item":
+                    __instance.text = "아이템 생성";
+                    break;
+                case "Toggle test room":
+                    __instance.text = "테스트 방 전환";
+                    break;
+                case "Revive players":
+                    __instance.text = "플레이어 소생";
+                    break;
+                case "Toggle invincibility":
+                    __instance.text = "무적 모드 전환";
+                    break;
+                case "Item:":
+                    __instance.text = "아이템:";
+                    break;
+                case "EMPLOYEE RANK":
+                    __instance.text = "직원 계급";
+                    break;
+                case "RECEIVING SIGNAL":
+                    __instance.text = "    신호 수신 중";
+                    break;
             }
             __instance.text.Replace(" collected!", " 수집함!");
             __instance.text.Replace("Value: ", "가치: ");
@@ -340,7 +469,8 @@ namespace LCKorean.Patches
             if (__instance.text.Contains("Boot Distributioner Application v0.04"))
             {
                 __instance.text = "      BG IG, 시스템 행동 연합\r\n      Copyright (C) 2084-2108, Halden Electronics Inc.\r\n\r\nCPU 종류       :     BORSON 300 CPU at 2500 MHz\r\n메모리 테스트  :      4521586K OK\r\n\r\n부트 분배기 애플리케이션 v0.04\r\nCopyright (C) 2107 Distributioner\r\n    Sting X 롬 감지\r\n    웹 LNV 확장기 감지\r\n    심박수 감지 OK\r\n\r\n\r\nUTGF 장치 수신 중...\r\n\r\n신체    ID     신경     장치 클래스\r\n________________________________________\r\n\r\n2      52   Jo152       H515\r\n2      52   Sa5155      H515\r\n2      52   Bo75        H515\r\n2      52   Eri510      H515\r\n1      36   Ell567      H515\r\n1      36   Jos912      H515\r\n0\r\n";
-            }else if (__instance.text.Contains("This is the weekly challenge moon. You have one day to make as much profit as possible."))
+            }
+            else if (__instance.text.Contains("This is the weekly challenge moon. You have one day to make as much profit as possible."))
             {
                 __instance.text = "주간 챌린지 달입니다. 하루 안에 가능한 한 많은 수익을 얻으세요. 원하는 만큼 다시 시도할 수 있습니다.";
             }

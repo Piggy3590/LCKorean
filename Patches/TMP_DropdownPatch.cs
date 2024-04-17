@@ -43,6 +43,11 @@ namespace LCKorean.Patches
                 __instance.options[1].text = "테두리 없는 창";
                 __instance.options[2].text = "최대화된 창";
                 __instance.options[3].text = "창 모드";
+            }else if (__instance.options[0].text == "Inside")
+            {
+                __instance.options[0].text = "내부 적";
+                __instance.options[1].text = "외부 적";
+                __instance.options[2].text = "주간 적";
             }
         }
     }

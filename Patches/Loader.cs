@@ -55,7 +55,17 @@ namespace LCKorean.Patches
             }
             else if (fontName == "3270-HUDIngame - Variant")
             {
-                __instance.font = Plugin.font3270_HUDIngame_Variant;
+                if (__instance.gameObject.name == "BodyText" && __instance.transform.parent.parent.gameObject.name == "GlobalNotification")
+                {
+                    __instance.font.material = Plugin.font3270_HUDIngame_Variant.material;
+                    __instance.fontSize = __instance.fontSize - 0.2f;
+                    __instance.characterSpacing = -3.5f;
+                    __instance.font.fallbackFontAssetTable.Add(Plugin.font3270_HUDIngame_Variant);
+                }
+                else
+                {
+                    //__instance.font = Plugin.font3270_HUDIngame_Variant;
+                }
                 return;
             }
             else if (fontName == "3270-HUDIngameB")

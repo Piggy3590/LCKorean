@@ -25,20 +25,31 @@ namespace LCKorean.Patches
     [HarmonyPatch(typeof(InteractTrigger))]
     internal class InteractTriggerPatch
     {
-        [HarmonyPostfix]
-        [HarmonyPatch("Interact")]
-        private static void Interact_Postfix(ref string ___hoverTip)
+        [HarmonyPostfix, HarmonyPatch("Update")]
+        private static void Update_Postfix(ref string ___hoverTip, ref string ___disabledHoverTip, ref string ___holdTip)
         {
-            if (___hoverTip == "Use ladder : [LMB]")
-            {
-                ___hoverTip = "사다리 사용하기 : [LMB]";
-            }
+            TranslateHudTip(___hoverTip, ___disabledHoverTip, ___holdTip);
         }
 
         [HarmonyPostfix]
         [HarmonyPatch("Start")]
         private static void Start_Prefix(ref string ___hoverTip, ref string ___disabledHoverTip, ref string ___holdTip)
         {
+            ___hoverTip = ___hoverTip.Replace("Play record", "레코드 재생하기");
+            ___hoverTip = ___hoverTip.Replace("Flush", "물 내리기");
+            ___hoverTip = ___hoverTip.Replace("Squeeze", "인형 만지기");
+
+            ___hoverTip = ___hoverTip.Replace("Pull cord", "코드 당기기");
+            ___hoverTip = ___hoverTip.Replace("(Hold)", "(길게 누르기)");
+
+            ___hoverTip = ___hoverTip.Replace("Set candles", "양초 켜기");
+            ___hoverTip = ___hoverTip.Replace("Hit pumpkin", "호박 치기");
+            ___hoverTip = ___hoverTip.Replace("Switch water", "샤워기 전환하기");
+
+            ___hoverTip = ___hoverTip.Replace("Lift glass", "덮개 여닫기");
+            ___hoverTip = ___hoverTip.Replace("Beam up", "작동하기");
+            ___hoverTip = ___hoverTip.Replace("Beam up", "작동하기");
+
             if (___hoverTip == "Charge item : [LMB]")
             {
                 ___hoverTip = "아이템 충전하기 : [LMB]";
@@ -62,6 +73,10 @@ namespace LCKorean.Patches
             else if (___hoverTip == "Open : [LMB]")
             {
                 ___hoverTip = "열기 : [LMB]";
+            }
+            else if (___hoverTip == "Open: [LMB]")
+            {
+                ___hoverTip = "열기: [LMB]";
             }
             else if (___hoverTip == "Open door : [LMB]")
             {
@@ -103,9 +118,9 @@ namespace LCKorean.Patches
             {
                 ___hoverTip = "카메라 전환하기 : [LMB]";
             }
-            else if (___hoverTip == "Turn on/off : [LMB]")
+            else if (___hoverTip.Contains("Switch TV"))
             {
-                ___hoverTip = "전원 켜기/끄기 : [LMB]";
+                ___hoverTip = ___hoverTip.Replace("Switch TV", "TV 전환하기");
             }
 
             if (___disabledHoverTip == "(Requires battery-powered item)")
@@ -119,6 +134,37 @@ namespace LCKorean.Patches
             else if (___disabledHoverTip == "Locked")
             {
                 ___disabledHoverTip = "잠김";
+            }
+            ___hoverTip = ___hoverTip.Replace("Ring bell", "종 울리기");
+            ___hoverTip = ___hoverTip.Replace("Pull switch", "스위치 당기기");
+            ___hoverTip = ___hoverTip.Replace("Flip switch", "스위치 전환하기");
+            ___hoverTip = ___hoverTip.Replace("Pull valve", "밸브 돌리기");
+            ___holdTip = ___holdTip.Replace("[Pulling valve]", "[밸브 돌리는 중]");
+            ___disabledHoverTip = ___disabledHoverTip.Replace("[Cannot pull valve]", "[밸브를 돌릴 수 없음]");
+        }
+
+        static void TranslateHudTip(string ___hoverTip, string ___disabledHoverTip, string ___holdTip)
+        {
+            if (___hoverTip != null)
+            {
+                ___hoverTip = ___hoverTip.Replace("Let go", "내리기");
+                ___hoverTip = ___hoverTip.Replace("Climb", "오르기");
+                ___hoverTip = ___hoverTip.Replace("Use ladder", "사다리 사용하기");
+
+                ___hoverTip = ___hoverTip.Replace("Locked (pickable)", "잠김 (자물쇠 따개 사용 가능)");
+                ___hoverTip = ___hoverTip.Replace("Use door", "문 사용하기");
+            }
+            else if (___disabledHoverTip != null)
+            {
+                ___disabledHoverTip = ___disabledHoverTip.Replace("Picking lock", "자물쇠 따는 중");
+                ___disabledHoverTip = ___disabledHoverTip.Replace(" sec.", "초 남음.");
+
+                ___disabledHoverTip = ___disabledHoverTip.Replace("Use key", "열쇠 사용하기");
+                ___disabledHoverTip = ___disabledHoverTip.Replace("Locked", "잠김");
+            }
+            else if (___holdTip != null)
+            {
+                ___holdTip = ___holdTip.Replace("Picking lock", "자물쇠 따는 중");
             }
         }
     }

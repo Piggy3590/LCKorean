@@ -17,6 +17,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.HID;
+using Steamworks;
 
 namespace LCKorean.Patches
 {
@@ -27,20 +28,18 @@ namespace LCKorean.Patches
         [HarmonyPatch("SetHoverTipAndCurrentInteractTrigger")]
         private static void SetHoverTipAndCurrentInteractTrigger_Postfix(ref TextMeshProUGUI ___cursorTip)
         {
-            if (___cursorTip.text == "Inventory full!")
-            {
-                ___cursorTip.text = "인벤토리 가득 참!";
-            }else if (___cursorTip.text == "(Cannot hold until ship has landed)")
-            {
-                ___cursorTip.text = "(함선이 착륙하기 전까지 집을 수 없음)";
-            }else if (___cursorTip.text == "[Hands full]")
-            {
-                ___cursorTip.text = "[양 손 사용 중]";
-            }else if (___cursorTip.text == "Grab : [E]")
-            {
-                ___cursorTip.text = "줍기 : [E]";
-            }
+            ___cursorTip.text = ___cursorTip.text.Replace("Inventory full!", "인벤토리 가득 참!");
+            ___cursorTip.text = ___cursorTip.text.Replace("(Cannot hold until ship has landed)", "(함선이 착륙하기 전까지 집을 수 없음)");
+            ___cursorTip.text = ___cursorTip.text.Replace("[Hands full]", "[양 손 사용 중]");
+            ___cursorTip.text = ___cursorTip.text.Replace("Grab", "줍기");
+            ___cursorTip.text = ___cursorTip.text.Replace("Locked", "잠김");
+
+            ___cursorTip.text = ___cursorTip.text.Replace("Picking lock", "자물쇠 따는 중");
+            ___cursorTip.text = ___cursorTip.text.Replace(" sec.", "초 남음.");
+
+            ___cursorTip.text = ___cursorTip.text.Replace("Use door", "문 사용하기");
         }
+
         [HarmonyPostfix]
         [HarmonyPatch("SpawnDeadBody")]
         private static void SpawnDeadBody_Postfix()

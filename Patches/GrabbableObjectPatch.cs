@@ -24,7 +24,7 @@ namespace LCKorean.Patches
     {
         [HarmonyPostfix]
         [HarmonyPatch("Start")]
-        private static void Start_Prefix(GrabbableObject __instance, ref Item ___itemProperties)
+        private static void Start_Postfix(GrabbableObject __instance, ref Item ___itemProperties)
         {
             if (___itemProperties.itemName == "clipboard")
             {
@@ -36,17 +36,6 @@ namespace LCKorean.Patches
             {
                 ___itemProperties.itemName = "스티커 메모";
                 ___itemProperties.toolTips[0] = "자세히 보기: [Z]";
-            }
-
-            if (__instance is StunGrenadeItem)
-            {
-                if (__instance.GetComponent<StunGrenadeItem>().throwString == "Toss egg: [RMB]")
-                {
-                    __instance.GetComponent<StunGrenadeItem>().throwString = "달걀 던지기: [RMB]";
-                }else if (__instance.GetComponent<StunGrenadeItem>().throwString == "Throw grenade: [RMB]")
-                {
-                    __instance.GetComponent<StunGrenadeItem>().throwString = "수류탄 던지기: [RMB]";
-                }
             }
         }
     }

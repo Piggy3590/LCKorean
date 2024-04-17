@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
 using BepInEx;
@@ -15,14 +16,17 @@ using UnityEngine.InputSystem;
 
         public static void Setup()
         {
-            GameObject gameObject = new GameObject("TextureReplacer");
-            UnityEngine.Object.DontDestroyOnLoad(gameObject);
-            gameObject.hideFlags = HideFlags.HideAndDontSave;
-            TextureReplacer.Instance = gameObject.AddComponent<TextureReplacer>();
-            TextureReplacer.imagesPath = Path.Combine(Paths.PluginPath, TextureReplacer.imagesPath_str);
-            TextureReplacer.imagesDumpPath = Path.Combine(Paths.PluginPath, TextureReplacer.imagesDumpPath_str);
-            TextureReplacer.getImages();
-            TextureReplacer.Textures = new Texture2D[0];
+        GameObject gameObject = new GameObject("TextureReplacer");
+        UnityEngine.Object.DontDestroyOnLoad(gameObject);
+        gameObject.hideFlags = HideFlags.HideAndDontSave;
+        TextureReplacer.Instance = gameObject.AddComponent<TextureReplacer>();
+
+        string pluginFolderPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        TextureReplacer.imagesPath = Path.Combine(pluginFolderPath, TextureReplacer.imagesPath_str);
+        TextureReplacer.imagesDumpPath = Path.Combine(pluginFolderPath, TextureReplacer.imagesDumpPath_str);
+
+        TextureReplacer.getImages();
+        TextureReplacer.Textures = new Texture2D[0];
         }
         public static string imagesPath { get; set; } = "";
         public static string imagesDumpPath { get; set; } = "";
@@ -558,7 +562,7 @@ using UnityEngine.InputSystem;
         public static DateTime? next_check = null;
         public static TimeSpan check_span = new TimeSpan(0, 0, 0, 2);
         public static List<TextureReplacer.SelectTexture> select_textures = new List<TextureReplacer.SelectTexture>();
-        public static string imagesPath_str = "LCKR_Tex";
+        public static string imagesPath_str = "";
         public static string imagesDumpPath_str = "LCKR_Tex_Dump";
         public static string select_folder = "select";
         public static Texture2D[] Textures = new Texture2D[0];

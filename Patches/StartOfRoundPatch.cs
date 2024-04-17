@@ -2,6 +2,7 @@
 using DunGen;
 using GameNetcodeStuff;
 using HarmonyLib;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,7 @@ using UnityEngine.InputSystem.HID;
 using UnityEngine.InputSystem.XR;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace LCKorean.Patches
 {
@@ -29,11 +31,43 @@ namespace LCKorean.Patches
         [HarmonyPatch("Start")]
         private static void Start_Postfix()
         {
-            TranslateItem();
-            TranslateDialogue();
-            TranslatePlanet();
-            TranslateUnlockableList();
-            ConvertImage();
+            try
+            {
+                TranslateItem();
+            }
+            catch (Exception e)
+            {
+                Plugin.mls.LogError("아이템 이름을 번역하는 과정에서 오류가 발생했습니다!\n" + e);
+            }
+
+            try
+            {
+                TranslateDialogue();
+            }
+            catch (Exception e)
+            {
+                Plugin.mls.LogError("컴퓨터 파일럿 대사를 번역하는 과정에서 오류가 발생했습니다!\n" + e);
+            }
+
+            try
+            {
+                TranslatePlanet();
+            }
+            catch (Exception e)
+            {
+                Plugin.mls.LogError("행성 목록을 번역하는 과정에서 오류가 발생했습니다!\n" + e);
+            }
+
+            try
+            {
+                TranslateUnlockableList();
+            }
+            catch (Exception e)
+            {
+                Plugin.mls.LogError("함선 강화 및 장식 목록을 번역하는 과정에서 오류가 발생했습니다!\n" + e);
+            }
+            //ConvertImage();
+
         }
 
         [HarmonyPostfix]
@@ -51,7 +85,16 @@ namespace LCKorean.Patches
         private static void SetMapScreenInfoToCurrentLevel_Postfix(ref TextMeshProUGUI ___screenLevelDescription)
         {
             TranslatePlanet();
+            foreach (SelectableLevel level in StartOfRound.Instance.levels)
+            {
+                if (level.riskLevel == "Safe")
+                {
+                    level.riskLevel = "안전";
+                }
+            }
             ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("Weather", "날씨");
+
+            ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("Where the Company resides", "회사가 소재하는 지역입니다");
 
             ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("Rainy", "우천");
             ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("Stormy", "뇌우");
@@ -74,7 +117,13 @@ namespace LCKorean.Patches
             ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("7 Dine", "7 다인");
             ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("8 Titan", "8 타이탄");
             
-            ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("67 Artifice", "67 아터피스");
+            if (Plugin.artificePronounce)
+            {
+                ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("67 Artifice", "67 아티피스");
+            }else
+            {
+                ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("67 Artifice", "67 아터피스");
+            }
             ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("5 Embrion", "5 엠브리언");
             ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("44 Liquidation", "44 리퀴데이션");
         }
@@ -155,13 +204,11 @@ namespace LCKorean.Patches
             {
                 if (texture.name == "StopSignTex")
                 {
-                    Graphics.CopyTexture(Plugin.stopSignTex, texture);
-                    //CopyTexture2D(texture, Plugin.stopSignTex);
+                    CopyTexture2D(texture, Plugin.stopSignTex);
                 }
                 else if (texture.name == "YieldSignTex")
                 {
-                    Graphics.CopyTexture(Plugin.yieldSignTex, texture);
-                    //CopyTexture2D(texture, Plugin.yieldSignTex);
+                    CopyTexture2D(texture, Plugin.yieldSignTex);
                 }
                 else if (texture.name == "StickyNoteTex")
                 {
@@ -174,8 +221,7 @@ namespace LCKorean.Patches
                 }
                 else if (texture.name == "endgameAllPlayersDead")
                 {
-                    Graphics.CopyTexture(Plugin.endgameAllPlayersDead, texture);
-                    //CopyTexture2D(texture, Plugin.endgameAllPlayersDead);
+                    CopyTexture2D(texture, Plugin.endgameAllPlayersDead);
                 }
                 else if (texture.name == "endgameStatsBoxes")
                 {
@@ -252,21 +298,33 @@ namespace LCKorean.Patches
             }
         }
 
-        static void CopyTexture2D(Texture2D texture, Texture2D texture2)
+        static void CopyTexture2D(Texture2D originalTexture, Texture2D source)
         {
-            try
-            {
-                Plugin.mls.LogInfo("applying translated texture " + texture.name);
-                Graphics.CopyTexture(texture2, texture);
-            }
-            catch (Exception ex)
-            {
-                Plugin.mls.LogError("error while applying translated texture " + texture.name + " : " + ex);
-            }
+            RenderTexture renderTexture = new RenderTexture(originalTexture.width, originalTexture.height, 0);
+            Graphics.Blit(Plugin.RedUIPanelGlitchBWarningRadiationD, renderTexture);
+            Texture2D combinedTexture = new Texture2D(renderTexture.width, renderTexture.height);
+            RenderTexture.active = renderTexture;
+            originalTexture.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
+            originalTexture.Apply();
         }
-        
+
+        public static Texture2D duplicateTexture(Texture2D source)
+        {
+            RenderTexture temporary = RenderTexture.GetTemporary(source.width, source.height, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default, 1);
+            RenderTexture active = RenderTexture.active;
+            Graphics.Blit(source, temporary);
+            RenderTexture.active = temporary;
+            Texture2D texture2D = new Texture2D(source.width, source.height, TextureFormat.ARGB32, true);
+            texture2D.ReadPixels(new Rect(0f, 0f, (float)temporary.width, (float)temporary.height), 0, 0);
+            texture2D.Apply();
+            RenderTexture.active = active;
+            RenderTexture.ReleaseTemporary(temporary);
+            return texture2D;
+        }
+
         static void TranslatePlanet()
         {
+            Plugin.mls.LogInfo("Translating Planets");
             foreach (SelectableLevel level in StartOfRound.Instance.levels)
             {
                 level.LevelDescription = level.LevelDescription.Replace("POPULATION: Abandoned", "인구: 버려짐");
@@ -277,7 +335,7 @@ namespace LCKorean.Patches
                     "조건: 깊은 계곡과 산이 어우러짐.");
 
                 level.LevelDescription = level.LevelDescription.Replace("CONDITIONS: Waning forests. Abandoned facilities littered across the landscape.",
-                    "조건: 숲이 점점 쇠퇴하고 있으며, 버려진 시설이 곳곳에 흩어져 있습니다.");
+                    "조건: 숲이 점점 사라지고 있습니다. 버려진 시설이 곳곳에 흩어져 있습니다.");
 
                 level.LevelDescription = level.LevelDescription.Replace("CONDITIONS: Jagged and weathered terrain.",
                     "조건: 들쭉날쭉하고 풍화됨.");
@@ -307,7 +365,7 @@ namespace LCKorean.Patches
                     "조건: 습함. 거친 지형. 식물이 많습니다.");
 
                 //
-                level.LevelDescription = level.LevelDescription.Replace("FAUNA: Home to a lively, diverse ecosystem of smaller-sized omnivores",
+                level.LevelDescription = level.LevelDescription.Replace("FAUNA: Home to a lively, diverse ecosystem of smaller-sized omnivores.",
                     "동물군: 활기차고 다양한 생태계의 본거지이며, 작은 크기의 잡식성 동물로 구성되어 있습니다.");
 
                 level.LevelDescription = level.LevelDescription.Replace("FAUNA: Rumored active machinery left behind.",
@@ -335,7 +393,7 @@ namespace LCKorean.Patches
                     "동물군: 경쟁적인 생태계 때문에 공격적인 생명체가 많음.");
 
                 level.LevelDescription = level.LevelDescription.Replace("FAUNA: Dangerous entities have been rumored to take residence in the vast network of tunnels.",
-                    "동물군: 위험한 존재들이 광대한 터널 네트워크에 거주한다는 소문이 돌았습니다.");
+                    "동물군: 위험한 존재들이 광대한 터널 네트워크에 거주한다는 소문이 있습니다.");
                 if (Plugin.translatePlanet)
                 {
                     if (level.PlanetName == "71 Gordion")
@@ -380,7 +438,13 @@ namespace LCKorean.Patches
                     }
                     else if (level.PlanetName == "67 Artifice")
                     {
-                        level.PlanetName = "67 아터피스";
+                        if (Plugin.artificePronounce)
+                        {
+                            level.PlanetName = "67 아티피스";
+                        }else
+                        {
+                            level.PlanetName = "67 아터피스";
+                        }
                     }
                     else if (level.PlanetName == "5 Embrion")
                     {
@@ -395,6 +459,7 @@ namespace LCKorean.Patches
         }
         static void TranslateDialogue()
         {
+            Plugin.mls.LogInfo("Translating Dialogues");
             foreach (DialogueSegment dialogue in StartOfRound.Instance.openingDoorDialogue)
             {
                 switch (dialogue.speakerText)
@@ -423,6 +488,7 @@ namespace LCKorean.Patches
         
         static void TranslateUnlockableList()
         {
+            Plugin.mls.LogInfo("Translating Unlockable List");
             foreach (UnlockableItem unlockableItem in StartOfRound.Instance.unlockablesList.unlockables)
             {
                 switch (unlockableItem.unlockableName)
@@ -517,6 +583,7 @@ namespace LCKorean.Patches
 
         static void TranslateItem()
         {
+            Plugin.mls.LogInfo("Translating Items");
             foreach (Item item in StartOfRound.Instance.allItemsList.itemsList)
             {
                 switch (item.itemName)
