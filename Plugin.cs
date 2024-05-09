@@ -2,7 +2,7 @@
 using BepInEx.Logging;
 using HarmonyLib;
 using System;
-using LCKorean.Patches;
+using PiggyVarietyMod.Patches;
 using UnityEngine;
 using System.IO;
 using TMPro;
@@ -13,15 +13,20 @@ using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using Texture_Replacer;
 using UnityEngine.Video;
+using LethalLib.Modules;
+using System.Linq;
+using static UnityEngine.Mesh;
+using BepInEx.Bootstrap;
+using MoreEmotes.Patch;
 
-namespace LCKorean
+namespace PiggyVarietyMod
 {
     [BepInPlugin(modGUID, modName, modVersion)]
     public class Plugin : BaseUnityPlugin
     {
-        private const string modGUID = "Piggy.LCKorean";
-        private const string modName = "LCKorean";
-        private const string modVersion = "1.1.3";
+        private const string modGUID = "Piggy.PiggyVarietyMod";
+        private const string modName = "PiggyVarietyMod";
+        private const string modVersion = "1.1.22";
 
         private readonly Harmony harmony = new Harmony(modGUID);
 
@@ -30,69 +35,51 @@ namespace LCKorean
         public static ManualLogSource mls;
         public static AssetBundle Bundle;
 
-        public static TMP_FontAsset font3270_HUDIngame;
-        public static TMP_FontAsset font3270_HUDIngame_Variant;
-        public static TMP_FontAsset font3270_HUDIngameB;
-        public static TMP_FontAsset font3270_Regular_SDF;
-        public static TMP_FontAsset font3270_b;
-        public static TMP_FontAsset font3270_DialogueText;
-        public static TMP_FontAsset fontEdunline;
+        public static GameObject teslaGateSpawn;
+        public static GameObject teslaGatePrefab;
 
-        public static Texture2D artificeHint;
-        public static Texture2D endgameAllPlayersDead;
-        public static Texture2D endgameStatsBoxes;
-        public static Texture2D endgameStatsDeceased;
-        public static Texture2D endgameStatsMissing;
-        public static Texture2D flashbangBottleTexture;
+        public static AudioClip teslaIdleStart;
+        public static AudioClip teslaIdle;
+        public static AudioClip teslaIdleEnd;
 
-        public static Texture2D manual1;
-        public static Texture2D manual2v2;
-        public static Texture2D manual3v2;
-        public static Texture2D manual4v2;
+        public static AudioClip teslaCrack;
+        public static AudioClip teslaBeep;
+        public static AudioClip teslaWindUp;
+        public static AudioClip teslaUnderbass;
+        public static AudioClip teslaClimax;
 
-        public static Texture2D playerLevelStickers;
-        public static Texture2D playerLevelStickers1;
-        public static Texture2D posters;
-        public static Texture2D TipsPoster2;
-        public static Texture2D powerBoxTextures;
+        public static Item revolverItem;
+        public static Item revolverAmmoItem;
 
-        public static Texture2D RedUIPanelGlitchBWarningRadiation;
-        public static Texture2D RedUIPanelGlitchBWarningRadiationB;
-        public static Texture2D RedUIPanelGlitchBWarningRadiationC;
-        public static Texture2D RedUIPanelGlitchBWarningRadiationD;
+        public static int revolverRarity;
+        public static int revolverAmmoRarity;
 
-        public static Texture2D StickyNoteTex;
-        public static Texture2D yieldSignTex;
-        public static Texture2D stopSignTex;
+        public static int revolverPrice;
+        public static int revolverAmmoPrice;
 
-        public static VideoClip snareKorean;
+        public static float teslaSpawnWeight;
+        public static float teslaSoundVolume;
 
-        public static bool fullyKoreanMoons;
-        public static string confirmString;
-        public static string denyString;
+        public static bool translateKorean;
 
-        public static bool translateModdedContent;
-        public static bool translatePlanet;
-        public static bool patchFont;
-        public static bool thumperTranslation;
-        public static bool toKG;
-        public static bool artificePronounce = false;
         
-        //Translation
-        public static string deathText;
-        public static string quotaReached;
-        public static string firedText;
-        public static string sellText;
-        public static string injuryText;
-        public static string systemOnlineText;
+        /*
+        public static GameObject revolverPrefab;
+        public static GameObject revolverAmmoPrefab;
+        */
 
-        public static string allDead1;
-        public static string allDead2;
+        public static AudioClip revolverAmmoInsert;
+        public static AudioClip revolverCylinderOpen;
+        public static AudioClip revolverCylinderClose;
+        public static AudioClip revolverDryFire;
 
-        public static string autoTakeoff1;
-        public static string autoTakeoff2;
+        public static AudioClip revolverBlast1;
+        public static AudioClip revolverBlast2;
 
-        public static string midnightWarning;
+        public static RuntimeAnimatorController playerAnimator;
+        public static RuntimeAnimatorController otherPlayerAnimator;
+
+        public static bool foundMoreEmotes;
 
         public static string PluginDirectory;
 
@@ -105,40 +92,53 @@ namespace LCKorean
             Plugin.PluginDirectory = base.Info.Location;
 
             LoadAssets();
-            TextureReplacer.Setup();
-
-            patchFont = (bool)base.Config.Bind<bool>("폰트", "폰트 변경", true, "기본값은 true입니다.\nFontPatcher 등 외부 폰트 모드를 사용하려면 이 값을 true로 설정하세요. 이 값을 false로 설정한다면 바닐라 폰트로 적용되며, 한글이 깨져보일 수도 있습니다.").Value;
-
-            fullyKoreanMoons = (bool)base.Config.Bind<bool>("접근성", "터미널 카탈로그 한글 입력", false, "기본값은 false입니다.\n위성 카탈로그 \"MOONS\"나 상점 카탈로그 \"STORE\"같은 키워드를 \"위성\" 및 \"상점\"으로 변경합니다.\n(help => 도움말, moons => 위성, store => 상점, bestiary => 도감, other => 기타, eject => 사출, sigurd는 그대로입니다)").Value;
-            confirmString = (string)base.Config.Bind<string>("접근성", "확정 키워드", "confirm", "기본값은 confirm입니다.\n컨펌 노드 (Confirm)를 설정합니다. *초성, 띄어쓰기와 한 글자는 인식하지 못합니다!*").Value;
-            denyString = (string)base.Config.Bind<string>("접근성", "취소 키워드", "deny", "기본값은 deny입니다.\n컨펌 취소 노드 (Deny)를 설정합니다. *초성, 띄어쓰기와 한 글자는 인식하지 못합니다!*").Value;
-
-            translateModdedContent = (bool)base.Config.Bind<bool>("번역", "모드 번역", true, "기본값은 true입니다.\n다른 모드의 여러 컨텐츠(아이템, 행성)를 한글로 번역합니다.\n\n지원 모드:\nImmersiveScrap(XuXiaolan), ").Value;
-            translatePlanet = (bool)base.Config.Bind<bool>("번역", "행성 내부 이름 번역", false, "기본값은 false입니다.\n코드에서 사용되는 행성의 내부 이름을 한글화합니다. 게임 플레이에서 달라지는 부분은 없지만, true로 하면 모드 인테리어의 구성을 변경할 때 행성 명을 한글로 입력해야 합니다. false로 두면 그대로 영어로 입력하시면 됩니다.").Value;
-            thumperTranslation = (bool)base.Config.Bind<bool>("번역", "Thumper 번역", false, "기본값은 false입니다.\ntrue로 설정하면 \"Thumper\"를 썸퍼로 번역합니다. false로 설정하면 덤퍼로 설정됩니다.").Value;
-            toKG = (bool)base.Config.Bind<bool>("번역", "KG 변환", true, "기본값은 true입니다.\ntrue로 설정하면 무게 수치를 kg으로 변환합니다.").Value;
-            
-            
-            deathText = (string)base.Config.Bind<string>("번역", "사망 텍스트", "[생명 신호: 오프라인]", "기본값은 《[생명 신호: 오프라인]》 입니다.\n사망 시 화면에 출력되는 텍스트를 수정합니다.").Value;
-            quotaReached = (string)base.Config.Bind<string>("번역", "할당량 달성 텍스트", "할당량을 달성했습니다!", "기본값은 《할당량을 달성했습니다!》 입니다.\n할당량 달성 시 화면에 출력되는 텍스트를 수정합니다.").Value;
-            firedText = (string)base.Config.Bind<string>("번역", "해고 텍스트", "해고당했습니다.", "기본값은 《해고당했습니다.》 입니다.\n해고 시 출력되는 텍스트를 수정합니다.").Value;
-            sellText = (string)base.Config.Bind<string>("번역", "판매 텍스트", "급여를 받았습니다!", "기본값은 《급여를 받았습니다!》 입니다.\n아이템 판매 시 패널에 출력되는 텍스트를 수정합니다.").Value;
-            injuryText = (string)base.Config.Bind<string>("번역", "치명적인 부상 텍스트", "치명적인 부상", "기본값은 《치명적인 부상》 입니다.\n치명적인 부상 발생 시 화면에 출력되는 텍스트를 수정합니다.").Value;
-            systemOnlineText = (string)base.Config.Bind<string>("번역", "시스템 온라인 텍스트", "시스템 온라인", "기본값은 《시스템 온라인》 입니다.\n로비 접속 시 화면에 출력되는 텍스트를 수정합니다.").Value;
-
-            allDead1 = (string)base.Config.Bind<string>("파일럿 컴퓨터 대사 번역", "전원 사망 1", "경고! 모든 팀원이 응답하지 않으며 함선에 돌아오지 않았습니다. 긴급 코드가 활성화되었습니다.", "기본값은\n《경고! 모든 팀원이 응답하지 않으며 함선에 돌아오지 않았습니다. 긴급 코드가 활성화되었습니다.》\n입니다.\n전원 사망 시 화면에 출력되는 텍스트를 수정합니다.").Value;
-            allDead2 = (string)base.Config.Bind<string>("파일럿 컴퓨터 대사 번역", "전원 사망 2", "가까운 기지로 이동합니다. 모든 폐품을 분실했습니다.", "기본값은\n《가까운 기지로 이동합니다. 모든 폐품을 분실했습니다.》\n입니다.\n전원 사망 시 화면에 출력되는 텍스트를 수정합니다.").Value;
-
-            autoTakeoff1 = (string)base.Config.Bind<string>("파일럿 컴퓨터 대사 번역", "자동 이륙1", "경고! 위험한 상황으로 인해 함선이 이륙하고 있습니다.", "기본값은\n《경고! 위험한 상황으로 인해 함선이 이륙하고 있습니다.》\n입니다.\n자동 이륙 시 화면에 출력되는 텍스트를 수정합니다.").Value;
-            autoTakeoff2 = (string)base.Config.Bind<string>("파일럿 컴퓨터 대사 번역", "자동 이륙2", "회사는 독점 하드웨어에 대한 손상 위험을 최소화해야 합니다. 안녕히 계세요!", "기본값은\n《회사는 독점 하드웨어에 대한 손상 위험을 최소화해야 합니다. 안녕히 계세요!》\n입니다.\n자동 이륙 시 화면에 출력되는 텍스트를 수정합니다.").Value;
-            
-            midnightWarning = (string)base.Config.Bind<string>("파일럿 컴퓨터 대사 번역", "자정 경고", "경고!!! 함선이 자정에 이륙합니다. 빠르게 복귀하세요.", "기본값은\n《경고!!! 함선이 자정에 이륙합니다. 빠르게 복귀하세요.》\n입니다.\n자정 경고 시 화면에 출력되는 텍스트를 수정합니다.").Value;
-
-
-            //artificePronounce = (bool)base.Config.Bind<bool>("번역", "아 \"티\" 피스", false, "기본값은 false입니다.\ntrue로 설정하면 Artifice를 아\"터\"피스 대신 아\"티\"피스로 번역합니다.").Value;
 
             mls = BepInEx.Logging.Logger.CreateLogSource(modGUID);
-            mls.LogInfo("LC Korean is loaded");
+            mls.LogInfo("Piggy's Variety Mod is loaded");
+
+            teslaSoundVolume = (float)base.Config.Bind<float>("Generic", "TeslaGateVolume", 1, "(Default 1) Sets the sound volume for the Tesla Gate.").Value;
+            teslaSpawnWeight = (float)base.Config.Bind<float>("Spawn", "TeslaGateWeight", 1, "(Default 1) Sets the spawn weight for the Tesla Gate.").Value;
+
+            revolverRarity = (int)base.Config.Bind<int>("Scrap", "RevolverRarity", 20, "(Default 20) Sets the spawn rarity for the revolver.").Value;
+            revolverAmmoRarity = (int)base.Config.Bind<int>("Scrap", "RevolverAmmoRarity", 60, "(Default 60) Sets the spawn rarity for the revolver ammo.").Value;
+
+            revolverPrice = (int)base.Config.Bind<int>("Store", "RevolverPrice", -1, "(Recommended -1 or 550) Set the price of the revolver. If -1, removes the item from the store list.").Value;
+            revolverAmmoPrice = (int)base.Config.Bind<int>("Store", "RevolverAmmoPrice", -1, "(Recommended -1 or 30) Set the price of the revolver ammo. If -1, removes the item from the store list.").Value;
+
+            translateKorean = (bool)base.Config.Bind<bool>("Translation", "Enable Korean", false, "Set language to Korean.").Value;
+
+            LethalLib.Modules.NetworkPrefabs.RegisterNetworkPrefab(teslaGatePrefab);
+
+            LethalLib.Modules.NetworkPrefabs.RegisterNetworkPrefab(revolverItem.spawnPrefab);
+            LethalLib.Modules.NetworkPrefabs.RegisterNetworkPrefab(revolverAmmoItem.spawnPrefab);
+            Utilities.FixMixerGroups(revolverItem.spawnPrefab);
+            Utilities.FixMixerGroups(revolverAmmoItem.spawnPrefab);
+
+            LethalLib.Modules.Items.RegisterItem(revolverItem);
+            LethalLib.Modules.Items.RegisterItem(revolverAmmoItem);
+
+            foreach (KeyValuePair<string, PluginInfo> pluginInfo in Chainloader.PluginInfos)
+            {
+                BepInPlugin metadata = pluginInfo.Value.Metadata;
+                if (metadata.GUID.Equals("MoreEmotes", StringComparison.OrdinalIgnoreCase))
+                {
+                    foundMoreEmotes = true;
+                    mls.LogInfo("[Piggys Variety Mod] Detected More Emotes!");
+                }
+            }
+
+            if (translateKorean)
+            { 
+                Translate();
+            }
+            CreateShopItem();
+            LethalLib.Modules.Items.RegisterScrap(revolverItem, revolverRarity, Levels.LevelTypes.All);
+            LethalLib.Modules.Items.RegisterScrap(revolverAmmoItem, revolverAmmoRarity, Levels.LevelTypes.All);
+
+            /*
+            LethalLib.Modules.NetworkPrefabs.RegisterNetworkPrefab(revolverPrefab);
+            LethalLib.Modules.NetworkPrefabs.RegisterNetworkPrefab(revolverAmmoPrefab);
+            */
 
             Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
         }
@@ -147,7 +147,7 @@ namespace LCKorean
         {
             try
             {
-                Plugin.Bundle = AssetBundle.LoadFromFile(Path.Combine(Path.GetDirectoryName(Plugin.PluginDirectory), "lckorean"));
+                Plugin.Bundle = AssetBundle.LoadFromFile(Path.Combine(Path.GetDirectoryName(Plugin.PluginDirectory), "piggyvarietymod"));
             }
             catch (Exception ex)
             {
@@ -156,49 +156,219 @@ namespace LCKorean
             }
             try
             {
-                font3270_HUDIngame = Plugin.Bundle.LoadAsset<TMP_FontAsset>("3270-HUDIngame.asset");
-                font3270_HUDIngame_Variant = Plugin.Bundle.LoadAsset<TMP_FontAsset>("3270-HUDIngame - Variant.asset");
-                font3270_HUDIngameB = Plugin.Bundle.LoadAsset<TMP_FontAsset>("3270-HUDIngameB.asset");
-                font3270_Regular_SDF = Plugin.Bundle.LoadAsset<TMP_FontAsset>("3270-Regular SDF.asset");
-                font3270_b = Plugin.Bundle.LoadAsset<TMP_FontAsset>("b.asset");
-                font3270_DialogueText = Plugin.Bundle.LoadAsset<TMP_FontAsset>("DialogueText.asset");
+                teslaGateSpawn = Bundle.LoadAsset<GameObject>("TeslaGateSpawn.prefab");
+                teslaGatePrefab = Bundle.LoadAsset<GameObject>("TeslaGate.prefab");
+                teslaGatePrefab.AddComponent<TeslaGate>();
 
-                fontEdunline = Plugin.Bundle.LoadAsset<TMP_FontAsset>("edunline SDF.asset");
+                teslaCrack = Bundle.LoadAsset<AudioClip>("Tesla_Crack.ogg");
+                teslaBeep = Bundle.LoadAsset<AudioClip>("Tesla_Beeps.ogg");
+                teslaWindUp = Bundle.LoadAsset<AudioClip>("Tesla_WindUp.ogg");
+                teslaUnderbass = Bundle.LoadAsset<AudioClip>("Tesla_Underbass.ogg");
+                teslaClimax = Bundle.LoadAsset<AudioClip>("Tesla_Climax.ogg");
 
-                stopSignTex = Plugin.Bundle.LoadAsset<Texture2D>("StopSignTex.png");
-                yieldSignTex = Plugin.Bundle.LoadAsset<Texture2D>("YieldSignTex.png");
-                StickyNoteTex = Plugin.Bundle.LoadAsset<Texture2D>("StickyNoteTex.png");
+                teslaIdleStart = Bundle.LoadAsset<AudioClip>("Tesla_IdleStarts.ogg");
+                teslaIdle = Bundle.LoadAsset<AudioClip>("Tesla_IdleLoop.ogg");
+                teslaIdleEnd = Bundle.LoadAsset<AudioClip>("Tesla_IdleEnd.ogg");
 
-                artificeHint = Plugin.Bundle.LoadAsset<Texture2D>("artificeHint.png");
-                endgameAllPlayersDead = Plugin.Bundle.LoadAsset<Texture2D>("endgameAllPlayersDead.png");
-                endgameStatsBoxes = Plugin.Bundle.LoadAsset<Texture2D>("endgameStatsBoxes.png");
-                endgameStatsDeceased = Plugin.Bundle.LoadAsset<Texture2D>("endgameStatsDeceased.png");
-                endgameStatsMissing = Plugin.Bundle.LoadAsset<Texture2D>("endgameStatsMissing.png");
-                flashbangBottleTexture = Plugin.Bundle.LoadAsset<Texture2D>("FlashbangBottleTexture.png");
+                revolverItem = Bundle.LoadAsset<Item>("Revolver.asset");
+                revolverAmmoItem = Bundle.LoadAsset<Item>("RevolverAmmo.asset");
 
-                manual1 = Plugin.Bundle.LoadAsset<Texture2D>("manual1.png");
-                manual2v2 = Plugin.Bundle.LoadAsset<Texture2D>("manual2v2.png");
-                manual3v2 = Plugin.Bundle.LoadAsset<Texture2D>("manual3v2.png");
-                manual4v2 = Plugin.Bundle.LoadAsset<Texture2D>("manual4v2.png");
+                /*
+                revolverPrefab = Bundle.LoadAsset<GameObject>("RevolverItem.prefab");
+                revolverAmmoPrefab = Bundle.LoadAsset<GameObject>("RevolverAmmo.prefab");
+                */
 
-                playerLevelStickers = Plugin.Bundle.LoadAsset<Texture2D>("PlayerLevelStickers.png");
-                playerLevelStickers1 = Plugin.Bundle.LoadAsset<Texture2D>("PlayerLevelStickers 1.png");
-                posters = Plugin.Bundle.LoadAsset<Texture2D>("posters.png");
-                TipsPoster2 = Plugin.Bundle.LoadAsset<Texture2D>("TipsPoster2.png");
-                powerBoxTextures = Plugin.Bundle.LoadAsset<Texture2D>("powerBoxTextures.png");
+                revolverAmmoInsert = Bundle.LoadAsset<AudioClip>("RevolverReload.wav");
+                revolverCylinderOpen = Bundle.LoadAsset<AudioClip>("RevolverCylinderOpen.wav");
+                revolverCylinderClose = Bundle.LoadAsset<AudioClip>("RevolverCylinderClose.wav");
 
-                RedUIPanelGlitchBWarningRadiation = Plugin.Bundle.LoadAsset<Texture2D>("RedUIPanelGlitchBWarningRadiation.png");
-                RedUIPanelGlitchBWarningRadiationB = Plugin.Bundle.LoadAsset<Texture2D>("RedUIPanelGlitchBWarningRadiationB.png");
-                RedUIPanelGlitchBWarningRadiationC = Plugin.Bundle.LoadAsset<Texture2D>("RedUIPanelGlitchBWarningRadiationC.png");
-                RedUIPanelGlitchBWarningRadiationD = Plugin.Bundle.LoadAsset<Texture2D>("RedUIPanelGlitchBWarningRadiationD.png");
+                revolverDryFire = Bundle.LoadAsset<AudioClip>("RevolverDryFire.wav");
 
-                snareKorean = Plugin.Bundle.LoadAsset<VideoClip>("SnareFleaTipChannel2.m4v");
+                revolverBlast1 = Bundle.LoadAsset<AudioClip>("RevolverBlast1.wav");
+                revolverBlast2 = Bundle.LoadAsset<AudioClip>("RevolverBlast2.wav");
+
+                playerAnimator = Bundle.LoadAsset<RuntimeAnimatorController>("PlayerAnimator.controller");
+                otherPlayerAnimator = Bundle.LoadAsset<RuntimeAnimatorController>("OtherPlayerAnimator.controller");
+
+                RevolverItem revolverScript = revolverItem.spawnPrefab.AddComponent<RevolverItem>();
+
+                revolverScript.grabbable = true;
+                revolverScript.grabbableToEnemies = true;
+                revolverScript.gunReloadSFX = revolverAmmoInsert;
+                revolverScript.cylinderOpenSFX = revolverCylinderOpen;
+                revolverScript.cylinderCloseSFX = revolverCylinderClose;
+
+                revolverScript.gunShootSFX.Add(revolverBlast1);
+                revolverScript.gunShootSFX.Add(revolverBlast2);
+
+                revolverScript.noAmmoSFX = revolverDryFire;
+                revolverScript.gunSafetySFX = revolverDryFire;
+                revolverScript.switchSafetyOffSFX = revolverDryFire;
+                revolverScript.switchSafetyOnSFX = revolverDryFire;
+
+                revolverScript.gunAudio = revolverScript.gameObject.GetComponent<AudioSource>();
+                revolverScript.gunShootAudio = revolverScript.gameObject.transform.GetChild(1).GetComponent<AudioSource>();
+                revolverScript.gunBulletsRicochetAudio = revolverScript.gameObject.transform.GetChild(2).GetComponent<AudioSource>();
+
+                revolverScript.gunAnimator = revolverScript.gameObject.GetComponent<Animator>();
+
+                revolverScript.revolverRayPoint = revolverScript.gameObject.transform.GetChild(3);
+                revolverScript.gunShootParticle = revolverScript.gameObject.transform.GetChild(3).GetChild(0).GetComponent<ParticleSystem>();
+
+                revolverScript.cylinderTransform = revolverScript.gameObject.transform.GetChild(5).GetChild(0).GetChild(0);
+
+                revolverScript.revolverAmmos.Add(revolverScript.gameObject.transform.GetChild(5).GetChild(0).GetChild(0).GetChild(0).GetComponent<MeshRenderer>());
+                revolverScript.revolverAmmos.Add(revolverScript.gameObject.transform.GetChild(5).GetChild(0).GetChild(0).GetChild(1).GetComponent<MeshRenderer>());
+                revolverScript.revolverAmmos.Add(revolverScript.gameObject.transform.GetChild(5).GetChild(0).GetChild(0).GetChild(2).GetComponent<MeshRenderer>());
+                revolverScript.revolverAmmos.Add(revolverScript.gameObject.transform.GetChild(5).GetChild(0).GetChild(0).GetChild(3).GetComponent<MeshRenderer>());
+                revolverScript.revolverAmmos.Add(revolverScript.gameObject.transform.GetChild(5).GetChild(0).GetChild(0).GetChild(4).GetComponent<MeshRenderer>());
+                revolverScript.revolverAmmos.Add(revolverScript.gameObject.transform.GetChild(5).GetChild(0).GetChild(0).GetChild(5).GetComponent<MeshRenderer>());
+
+                revolverScript.revolverAmmoInHandTransform = revolverScript.gameObject.transform.GetChild(0);
+                revolverScript.revolverAmmoInHand = revolverScript.gameObject.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>();
+                revolverScript.gunCompatibleAmmoID = 500;
+
+                revolverScript.itemProperties = revolverItem;
 
                 base.Logger.LogInfo("Successfully loaded assets!");
             }
             catch (Exception ex2)
             {
                 base.Logger.LogError("Couldn't load assets: " + ex2.Message);
+            }
+        }
+
+        void Translate()
+        {
+            revolverItem.toolTips[0] = "격발 : [RMB]";
+            revolverItem.toolTips[1] = "탄약 삽탄하기 : [E]";
+            revolverItem.toolTips[2] = "실린더 열기 : [Q]";
+
+            revolverItem.spawnPrefab.GetComponentInChildren<ScanNodeProperties>().headerText = "리볼버";
+
+            revolverAmmoItem.spawnPrefab.GetComponentInChildren<ScanNodeProperties>().headerText = "총알";
+        }
+
+        void CreateShopItem()
+        {
+            if (translateKorean)
+            {
+                revolverAmmoItem.itemName = "총알";
+                revolverItem.itemName = "리볼버";
+            }
+            else
+            {
+                revolverAmmoItem.itemName = "Bullet";
+                revolverItem.itemName = "Revolver";
+            }
+
+            TerminalNode revolverItemShopNode = ScriptableObject.CreateInstance<TerminalNode>();
+            if (translateKorean)
+            {
+                revolverItemShopNode.displayText = "리볼버를 주문하려고 합니다. 수량: [variableAmount]. \r\n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력하세요.\n\n";
+            }else
+            {
+                revolverItemShopNode.displayText = "You have requested to order revolvers. Amount: [variableAmount]. \r\nTotal cost of items: [totalCost].\n\nPlease CONFIRM or DENY.\n\n";
+            }
+            revolverItemShopNode.clearPreviousText = true;
+            revolverItemShopNode.isConfirmationNode = true;
+            revolverItemShopNode.maxCharactersToType = 15;
+            revolverItemShopNode.buyRerouteToMoon = -1;
+            revolverItemShopNode.displayPlanetInfo = -1;
+            revolverItemShopNode.shipUnlockableID = -1;
+            revolverItemShopNode.creatureFileID = -1;
+            revolverItemShopNode.storyLogFileID = -1;
+
+            TerminalNode revolverItemShopNode2 = ScriptableObject.CreateInstance<TerminalNode>();
+            if (translateKorean)
+            {
+                revolverItemShopNode2.displayText = "[variableAmount]개의 리볼버를 주문했습니다. 당신의 현재 소지금은 [playerCredits]입니다.\n\n우리의 계약자는 작업 중에도 빠른 무료 배송 혜택을 누릴 수 있습니다! 구매한 모든 상품은 1시간마다 대략적인 위치에 도착합니다..\n\n";
+            }else
+            {
+                revolverItemShopNode2.displayText = "Ordered [variableAmount] revolvers. Your new balance is [playerCredits].\n\nOur contractors enjoy fast, free shipping while on the job! Any purchased items will arrive hourly at your approximate location.\n\n";
+            }
+            revolverItemShopNode2.clearPreviousText = true;
+            revolverItemShopNode2.maxCharactersToType = 15;
+            revolverItemShopNode2.buyRerouteToMoon = -1;
+            revolverItemShopNode2.displayPlanetInfo = -1;
+            revolverItemShopNode2.shipUnlockableID = -1;
+            revolverItemShopNode2.creatureFileID = -1;
+            revolverItemShopNode2.storyLogFileID = -1;
+
+            TerminalNode revolverItemShopInfo = ScriptableObject.CreateInstance<TerminalNode>();
+            if (translateKorean)
+            {
+                revolverItemShopInfo.displayText = "\n더욱 강력한 자기 보호를 위해!\n실린더를 열고 리볼버 탄약을 삽탄하여 장전하세요.\n\n";
+            }else
+            {
+                revolverItemShopInfo.displayText = "\nFor more powerful self-defense!\nOpen the cylinder and insert revolver ammo to load it.\n\n";
+            }
+            revolverItemShopInfo.clearPreviousText = true;
+            revolverItemShopInfo.maxCharactersToType = 15;
+            revolverItemShopInfo.buyRerouteToMoon = -1;
+            revolverItemShopInfo.displayPlanetInfo = -1;
+            revolverItemShopInfo.shipUnlockableID = -1;
+            revolverItemShopInfo.creatureFileID = -1;
+            revolverItemShopInfo.storyLogFileID = -1;
+
+            TerminalNode revolverAmmoShopNode = ScriptableObject.CreateInstance<TerminalNode>();
+            if (translateKorean)
+            {
+                revolverAmmoShopNode.displayText = "리볼버 탄약을 주문하려고 합니다. 수량: [variableAmount]. \r\n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력하세요.\n\n";
+            }
+            else
+            {
+                revolverAmmoShopNode.displayText = "You have requested to order revolver ammos. Amount: [variableAmount]. \r\nTotal cost of items: [totalCost].\n\nPlease CONFIRM or DENY.\n\n";
+            }
+            revolverAmmoShopNode.clearPreviousText = true;
+            revolverAmmoShopNode.isConfirmationNode = true;
+            revolverAmmoShopNode.maxCharactersToType = 15;
+            revolverAmmoShopNode.buyRerouteToMoon = -1;
+            revolverAmmoShopNode.displayPlanetInfo = -1;
+            revolverAmmoShopNode.shipUnlockableID = -1;
+            revolverAmmoShopNode.creatureFileID = -1;
+            revolverAmmoShopNode.storyLogFileID = -1;
+
+            TerminalNode revolverAmmoShopNode2 = ScriptableObject.CreateInstance<TerminalNode>();
+            if (translateKorean)
+            {
+                revolverAmmoShopNode2.displayText = "[variableAmount]개의 리볼버 탄약을 주문했습니다. 당신의 현재 소지금은 [playerCredits]입니다.\n\n우리의 계약자는 작업 중에도 빠른 무료 배송 혜택을 누릴 수 있습니다! 구매한 모든 상품은 1시간마다 대략적인 위치에 도착합니다..\n\n";
+            }else
+            {
+                revolverAmmoShopNode2.displayText = "Ordered [variableAmount] revolver ammos. Your new balance is [playerCredits].\n\nOur contractors enjoy fast, free shipping while on the job! Any purchased items will arrive hourly at your approximate location.\n\n";
+            }
+            revolverAmmoShopNode2.clearPreviousText = true;
+            revolverAmmoShopNode2.maxCharactersToType = 15;
+            revolverAmmoShopNode2.buyRerouteToMoon = -1;
+            revolverAmmoShopNode2.displayPlanetInfo = -1;
+            revolverAmmoShopNode2.shipUnlockableID = -1;
+            revolverAmmoShopNode2.creatureFileID = -1;
+            revolverAmmoShopNode2.storyLogFileID = -1;
+
+            TerminalNode revolverAmmoShopInfo = ScriptableObject.CreateInstance<TerminalNode>();
+            if (translateKorean)
+            {
+                revolverAmmoShopInfo.displayText = "\n리볼버에 장전하고 <b>치명적인</b> 순간에 격발하세요!\n\n";
+            }
+            else
+            {
+                revolverAmmoShopInfo.displayText = "\nLoad to your revolver and fire at LETHAL moments!\n\n";
+            }
+            revolverAmmoShopInfo.clearPreviousText = true;
+            revolverAmmoShopInfo.maxCharactersToType = 15;
+            revolverAmmoShopInfo.buyRerouteToMoon = -1;
+            revolverAmmoShopInfo.displayPlanetInfo = -1;
+            revolverAmmoShopInfo.shipUnlockableID = -1;
+            revolverAmmoShopInfo.creatureFileID = -1;
+            revolverAmmoShopInfo.storyLogFileID = -1;
+
+            if (revolverPrice > -1)
+            {
+                LethalLib.Modules.Items.RegisterShopItem(revolverItem, revolverItemShopNode, revolverItemShopNode2, revolverItemShopInfo, revolverPrice);
+            }
+            if (revolverAmmoPrice > -1)
+            {
+                LethalLib.Modules.Items.RegisterShopItem(revolverAmmoItem, revolverAmmoShopNode, revolverAmmoShopNode2, revolverAmmoShopInfo, revolverAmmoPrice);
             }
         }
     }

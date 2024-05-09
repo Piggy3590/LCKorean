@@ -1,7 +1,9 @@
 ﻿using BepInEx.Logging;
 using DunGen;
+using DunGen.Graph;
 using GameNetcodeStuff;
 using HarmonyLib;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,24 +14,91 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using TMPro;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.HID;
+using UnityEngine.InputSystem.XR;
+using UnityEngine.Rendering;
+using UnityEngine.UI;
+using static System.Net.Mime.MediaTypeNames;
 
-namespace LCKorean.Patches
+namespace PiggyVarietyMod.Patches
 {
     [HarmonyPatch(typeof(RoundManager))]
     internal class RoundManagerPatch
     {
         [HarmonyPostfix]
-        [HarmonyPatch("GenerateNewLevelClientRpc")]
-        private static void GenerateNewLevelClientRpc_Postfix()
+        [HarmonyPatch("Start")]
+        private static void Start_Postfix(ref DungeonFlow[] ___dungeonFlowTypes)
         {
-            if (HUDManager.Instance.loadingText.text.Contains("Random seed"))
+            /*
+            Plugin.mls.LogInfo("TESTING flow: " + ___dungeonFlowTypes[0]);
+            Plugin.mls.LogInfo("TESTING archetype: " + ___dungeonFlowTypes[0].Lines[0].DungeonArchetypes[0]);
+            Plugin.mls.LogInfo("TESTING archetype name: " + ___dungeonFlowTypes[0].Lines[0].DungeonArchetypes[0].name);
+            Plugin.mls.LogInfo("TESTING flow namne: " + ___dungeonFlowTypes[0].name);
+            foreach (DungeonFlow dungeonFlow in ___dungeonFlowTypes)
             {
-                HUDManager.Instance.loadingText.text = HUDManager.Instance.loadingText.text.Replace("Random seed", "무작위 시드");
+                Plugin.mls.LogInfo("Found DungeonFlow: " + dungeonFlow.ToString());
+                if (dungeonFlow.Lines != null)
+                {
+                    foreach (GraphLine line in dungeonFlow.Lines)
+                    {
+                        Plugin.mls.LogInfo("[TESLA GATE] Finding Dungeon Archetype in " + dungeonFlow.name);
+                        if (line.DungeonArchetypes != null)
+                        {
+                            foreach (DungeonArchetype archetype in line.DungeonArchetypes)
+                            {
+                                if (archetype.TileSets != null)
+                                {
+                                    foreach (TileSet tileSet in archetype.TileSets)
+                                    {
+                                        FindBigDoorRoomInTileSet(tileSet);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            */
+        }
+
+        static void FindBigDoorRoomInTileSet(TileSet tileSet)
+        {
+            Plugin.mls.LogInfo("[TESLA GATE] Found Tileset: " + tileSet.name);
+            if (tileSet.TileWeights.Weights != null)
+            {
+                foreach (GameObjectChance weight in tileSet.TileWeights.Weights)
+                {
+                    Plugin.mls.LogInfo("[TESLA GATE] Found weight in Tileset: " + tileSet.name);
+                    if (weight.Value.transform != null)
+                    {
+                        foreach (Transform child in weight.Value.transform)
+                        {
+                            if (child.GetComponent<Doorway>())
+                            {
+                                Plugin.mls.LogInfo("[TESLA GATE] Find Doorway: " + child.gameObject.name);
+                                Doorway doorway = child.GetComponent<Doorway>();
+                                foreach (GameObjectWeight gameObjectWeight in doorway.ConnectorPrefabWeights)
+                                {
+                                    if (gameObjectWeight.GameObject.name == "BigDoorSpawn")
+                                    {
+                                        if (gameObjectWeight.GameObject.name == "TeslaGateSpawn")
+                                        {
+                                            return;
+                                        }
+                                        GameObjectWeight newWeight = new GameObjectWeight();
+                                        newWeight.Weight = 100f;
+                                        newWeight.GameObject = Plugin.teslaGateSpawn;
+                                        doorway.ConnectorPrefabWeights.Add(newWeight);
+                                        Plugin.mls.LogInfo("added tesla to " + child.gameObject.name);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
