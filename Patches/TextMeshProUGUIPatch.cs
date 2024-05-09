@@ -361,7 +361,7 @@ namespace LCKorean.Patches
                     __instance.text = "스캔 : [RMB]";
                     break;
                 case "SYSTEMS ONLINE":
-                    __instance.text = "시스템 온라인";
+                    __instance.text = Plugin.systemOnlineText;
                     break;
                 case "Typing...":
                     __instance.text = "입력 중...";
@@ -376,16 +376,16 @@ namespace LCKorean.Patches
                     __instance.text = "확정: [V]   |   회전: [R]   |   보관: [X]";
                     break;
                 case "CRITICAL INJURY":
-                    __instance.text = "치명적인 부상";
+                    __instance.text = Plugin.injuryText;
                     break;
                 case "Paycheck!":
-                    __instance.text = "급여를 받았습니다!";
+                    __instance.text = Plugin.sellText;
                     break;
                 case "TOTAL:":
                     __instance.text = "합계:";
                     break;
                 case "YOU ARE FIRED.":
-                    __instance.text = "해고당했습니다.";
+                    __instance.text = Plugin.firedText;
                     break;
                 case "You will keep your employee rank. Your ship and credits will be reset.":
                     __instance.text = "직원 계급은 유지되지만, 당신의 함선과 크레딧은 초기화됩니다.";
@@ -397,7 +397,7 @@ namespace LCKorean.Patches
                     __instance.text = "수익 할당량 충족까지";
                     break;
                 case "QUOTA REACHED!":
-                    __instance.text = "<size=65>할당량을 달성했습니다!</size>";
+                    __instance.text = "<size=65>" + Plugin.quotaReached + "</size>";
                     break;
                 case "NEW PROFIT QUOTA:":
                     __instance.text = "새로운 수익 할당량:";
@@ -406,7 +406,7 @@ namespace LCKorean.Patches
                     __instance.text = "통계";
                     break;
                 case "[LIFE SUPPORT: OFFLINE]":
-                    __instance.text = "[생명 신호: 오프라인]";
+                    __instance.text = Plugin.deathText;
                     break;
                 case "(Dead)":
                     __instance.text = "(사망)";
@@ -420,6 +420,9 @@ namespace LCKorean.Patches
 
                 case "Notes:":
                     __instance.text = "노트:";
+                    break;
+                case "PERFORMANCE REPORT":
+                    __instance.text = "성과 보고서";
                     break;
 
 
@@ -461,6 +464,10 @@ namespace LCKorean.Patches
                     break;
                 case "RECEIVING SIGNAL":
                     __instance.text = "    신호 수신 중";
+                    break;
+
+                case "DOOR HYDRAULICS:":
+                    __instance.text = "문 유압 장치:";
                     break;
             }
             __instance.text.Replace(" collected!", " 수집함!");

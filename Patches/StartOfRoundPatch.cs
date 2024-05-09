@@ -34,6 +34,10 @@ namespace LCKorean.Patches
             try
             {
                 TranslateItem();
+                if (Plugin.translateModdedContent)
+                {
+                    TranslateModdedItem();
+                }
             }
             catch (Exception e)
             {
@@ -60,7 +64,7 @@ namespace LCKorean.Patches
 
             try
             {
-                TranslateUnlockableList();
+                //TranslateUnlockableList();
             }
             catch (Exception e)
             {
@@ -78,6 +82,16 @@ namespace LCKorean.Patches
             {
                 HUDManager.Instance.loadingText.text = "세계 불러오는 중...";
             }
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch("FirePlayersAfterDeadlineClientRpc")]
+        private static void FirePlayersAfterDeadlineClientRpc_Postfix()
+        {
+            HUDManager.Instance.EndOfRunStatsText.text = HUDManager.Instance.EndOfRunStatsText.text.Replace("Days on the job", "근무일수");
+            HUDManager.Instance.EndOfRunStatsText.text = HUDManager.Instance.EndOfRunStatsText.text.Replace("Scrap value collected", "수집한 폐품의 가치");
+            HUDManager.Instance.EndOfRunStatsText.text = HUDManager.Instance.EndOfRunStatsText.text.Replace("Deaths", "사망 횟수");
+            HUDManager.Instance.EndOfRunStatsText.text = HUDManager.Instance.EndOfRunStatsText.text.Replace("Steps taken", "걸음 수");
         }
 
         [HarmonyPostfix]
@@ -116,86 +130,27 @@ namespace LCKorean.Patches
             ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("85 Rend", "85 렌드");
             ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("7 Dine", "7 다인");
             ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("8 Titan", "8 타이탄");
-            
-            if (Plugin.artificePronounce)
-            {
-                ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("67 Artifice", "67 아티피스");
-            }else
-            {
-                ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("67 Artifice", "67 아터피스");
-            }
+            ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("68 Artifice", "68 아티피스");
+
             ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("5 Embrion", "5 엠브리언");
             ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("44 Liquidation", "44 리퀴데이션");
         }
 
-        [HarmonyPrefix]
+        [HarmonyPostfix]
         [HarmonyPatch("WritePlayerNotes")]
-        public static void WritePlayerNotes_Prefix(ref EndOfGameStats ___gameStats, ref PlayerControllerB[] ___allPlayerScripts, ref int ___connectedPlayersAmount,
+        public static void WritePlayerNotes_Postfix(ref EndOfGameStats ___gameStats, ref PlayerControllerB[] ___allPlayerScripts, ref int ___connectedPlayersAmount,
             ref bool ___localPlayerWasMostProfitableThisRound)
         {
-            for (int i = 0; i < ___gameStats.allPlayerStats.Length; i++)
+            for (int i = 0 ; i < ___allPlayerScripts.Length ; i++)
             {
-                ___gameStats.allPlayerStats[i].isActivePlayer = ___allPlayerScripts[i].disconnectedMidGame || ___allPlayerScripts[i].isPlayerDead || ___allPlayerScripts[i].isPlayerControlled;
-            }
-            int num = 0;
-            int num2 = 0;
-            for (int j = 0; j < ___gameStats.allPlayerStats.Length; j++)
-            {
-                if (___gameStats.allPlayerStats[j].isActivePlayer && (j == 0 || ___gameStats.allPlayerStats[j].stepsTaken < num))
+                for (int j = 0; j < ___gameStats.allPlayerStats[i].playerNotes.Count; j++)
                 {
-                    num = ___gameStats.allPlayerStats[j].stepsTaken;
-                    num2 = j;
+                    ___gameStats.allPlayerStats[i].playerNotes[j] = ___gameStats.allPlayerStats[i].playerNotes[j].Replace("The laziest employee.", "가장 게으른 직원.");
+                    ___gameStats.allPlayerStats[i].playerNotes[j] = ___gameStats.allPlayerStats[i].playerNotes[j].Replace("The most paranoid employee.", "가장 피해망상이 심한 직원.");
+                    ___gameStats.allPlayerStats[i].playerNotes[j] = ___gameStats.allPlayerStats[i].playerNotes[j].Replace("Sustained the most injuries.", "가장 많은 부상을 입음.");
+                    ___gameStats.allPlayerStats[i].playerNotes[j] = ___gameStats.allPlayerStats[i].playerNotes[j].Replace("Most profitable", "가장 수익성이 높음");
                 }
             }
-            if (___connectedPlayersAmount > 0 && num > 10)
-            {
-                ___gameStats.allPlayerStats[num2].playerNotes.Add("가장 게으른 직원.");
-            }
-            num = 0;
-            for (int k = 0; k < ___gameStats.allPlayerStats.Length; k++)
-            {
-                if (___gameStats.allPlayerStats[k].isActivePlayer && ___gameStats.allPlayerStats[k].turnAmount > num)
-                {
-                    num = ___gameStats.allPlayerStats[k].turnAmount;
-                    num2 = k;
-                }
-            }
-            if (___connectedPlayersAmount > 0)
-            {
-                ___gameStats.allPlayerStats[num2].playerNotes.Add("가장 피해망상이 심한 직원.");
-            }
-            num = 0;
-            for (int l = 0; l < ___gameStats.allPlayerStats.Length; l++)
-            {
-                if (___gameStats.allPlayerStats[l].isActivePlayer && !___allPlayerScripts[l].isPlayerDead && ___gameStats.allPlayerStats[l].damageTaken > num)
-                {
-                    num = ___gameStats.allPlayerStats[l].damageTaken;
-                    num2 = l;
-                }
-            }
-            if (___connectedPlayersAmount > 0)
-            {
-                ___gameStats.allPlayerStats[num2].playerNotes.Add("가장 많은 부상을 입음.");
-            }
-            num = 0;
-            for (int m = 0; m < ___gameStats.allPlayerStats.Length; m++)
-            {
-                if (___gameStats.allPlayerStats[m].isActivePlayer && ___gameStats.allPlayerStats[m].profitable > num)
-                {
-                    num = ___gameStats.allPlayerStats[m].profitable;
-                    num2 = m;
-                }
-            }
-            if (___connectedPlayersAmount > 0 && num > 50)
-            {
-                if (num2 == (int)GameNetworkManager.Instance.localPlayerController.playerClientId)
-                {
-                    ___localPlayerWasMostProfitableThisRound = true;
-                }
-                ___gameStats.allPlayerStats[num2].playerNotes.Add("가장 수익성이 높음");
-            }
-
-            return;
         }
 
         static void ConvertImage()
@@ -332,13 +287,13 @@ namespace LCKorean.Patches
                 level.LevelDescription = level.LevelDescription.Replace("POPULATION: Unknown", "인구: 알 수 없음");
 
                 level.LevelDescription = level.LevelDescription.Replace("CONDITIONS: A landscape of deep valleys and mountains.",
-                    "조건: 깊은 계곡과 산이 어우러짐.");
+                    "조건: 깊은 계곡과 산이 어우러졌습니다.");
 
                 level.LevelDescription = level.LevelDescription.Replace("CONDITIONS: Waning forests. Abandoned facilities littered across the landscape.",
                     "조건: 숲이 점점 사라지고 있습니다. 버려진 시설이 곳곳에 흩어져 있습니다.");
 
                 level.LevelDescription = level.LevelDescription.Replace("CONDITIONS: Jagged and weathered terrain.",
-                    "조건: 들쭉날쭉하고 풍화됨.");
+                    "조건: 들쭉날쭉하고 풍화되었습니다.");
 
                 level.LevelDescription = level.LevelDescription.Replace("CONDITIONS: No land masses. Continual storms.",
                     "조건: 육지가 없습니다. 지속적으로 폭풍이 일어납니다.");
@@ -347,7 +302,7 @@ namespace LCKorean.Patches
                     "조건: 얼어붙은 바위로 이루어졌으며, 백색 왜성 주위를 공전하고 있습니다.");
 
                 level.LevelDescription = level.LevelDescription.Replace("CONDITIONS: Desolate, made of amethyst.",
-                    "조건: 황폐함, 자수정으로 이루어짐.");
+                    "조건: 황폐합니다. 자수정으로 이루어졌습니다.");
 
                 level.LevelDescription = level.LevelDescription.Replace("CONDITIONS: Arid. Thick haze, worsened by industrial artifacts.",
                     "조건: 건조하며, 거주 가능성이 낮습니다. 산업 인공물로 인해 악화되었습니다.");
@@ -356,7 +311,7 @@ namespace LCKorean.Patches
                     "조건: 풍부한 산업 자원으로 채굴되던 리퀴데이션은 이제는 대부분 해양 위성으로 남아 있습니다.");
 
                 level.LevelDescription = level.LevelDescription.Replace("CONDITIONS: Expansive. Constant rain.",
-                    "조건: 방대함. 지속적으로 비가 내림.");
+                    "조건: 방대합니다. 지속적으로 비가 내립니다.");
 
                 level.LevelDescription = level.LevelDescription.Replace("CONDITIONS: Frozen, rocky. This moon was mined for resources. It's easy to get lost here.",
                     "조건: 얼어붙은 바위로 이루어졌습니다. 이 달은 자원을 얻기 위해 채굴되었습니다. 이곳에서는 길을 잃기 쉽습니다.");
@@ -372,7 +327,7 @@ namespace LCKorean.Patches
                     "동물군: 아직 작동 중인 기계가 방치되어 있다는 소문이 있습니다.");
 
                 level.LevelDescription = level.LevelDescription.Replace("FAUNA: Ecosystem supports territorial behaviour.",
-                    "동물군: 영역 행동이 빈번함.");
+                    "동물군: 영역 행동이 빈번합니다.");
 
                 level.LevelDescription = level.LevelDescription.Replace("FAUNA: Unknown",
                     "동물군: 알 수 없음");
@@ -384,16 +339,95 @@ namespace LCKorean.Patches
                     "동물군: 엠브리언에는 생물학적 생명체가 존재하지 않습니다.");
 
                 level.LevelDescription = level.LevelDescription.Replace("FAUNA: Dominated by a few species.",
-                    "동물군: 몇몇 종이 지배하고 있음.");
+                    "동물군: 몇몇 종이 지배하고 있습니다.");
 
                 level.LevelDescription = level.LevelDescription.Replace("FAUNA: Diverse",
                     "동물군: 다양함");
 
                 level.LevelDescription = level.LevelDescription.Replace("FAUNA: A competitive ecosystem supports aggressive lifeforms.",
-                    "동물군: 경쟁적인 생태계 때문에 공격적인 생명체가 많음.");
+                    "동물군: 경쟁적인 생태계 때문에 공격적인 생명체가 많습니다.");
 
                 level.LevelDescription = level.LevelDescription.Replace("FAUNA: Dangerous entities have been rumored to take residence in the vast network of tunnels.",
                     "동물군: 위험한 존재들이 광대한 터널 네트워크에 거주한다는 소문이 있습니다.");
+
+                //모드행성
+                if (Plugin.translateModdedContent)
+                {
+                    level.LevelDescription = level.LevelDescription.Replace("POPULATION: Left/Deceased", "인구: 떠남/사망함");
+                    level.LevelDescription = level.LevelDescription.Replace("POPULATION: Gone", "인구: 떠남");
+                    level.LevelDescription = level.LevelDescription.Replace("POPULATION: Transformed", "인구: 변형됨");
+                    level.LevelDescription = level.LevelDescription.Replace("POPULATION: Drowned", "인구: 익사함");
+                    level.LevelDescription = level.LevelDescription.Replace("POPULATION: Killed", "인구: 사망함");
+                    level.LevelDescription = level.LevelDescription.Replace("POPULATION: Lost", "인구: 잃음");
+                    level.LevelDescription = level.LevelDescription.Replace("POPULATION: Missing", "인구: 실종됨");
+                    level.LevelDescription = level.LevelDescription.Replace("POPULATION: Sacrificed/Deceased", "인구: 희생됨/사망함");
+                    level.LevelDescription = level.LevelDescription.Replace("POPULATION: Several tribes detected, no human life in designated area.", "인구: 여러 부족이 발견되었으며, 지정된 지역에 인명 피해는 없습니다.");
+                    level.LevelDescription = level.LevelDescription.Replace("POPULATION: ???", "인구: ???");
+
+                    level.LevelDescription = level.LevelDescription.Replace("CONDITIONS: Cold, hard rocky terrain, no surface plant life detected.",
+                        "조건: 차갑고 딱딱한 암석 지형으로 이루어졌습니다. 표면에는 어떠한 식물도 감지되지 않습니다.");
+                    level.LevelDescription = level.LevelDescription.Replace("FAUNA: A dead ecosystem.",
+                        "동물군: 이곳의 생태계는 죽어가고 있음.");
+
+                    level.LevelDescription = level.LevelDescription.Replace("CONDITIONS: Cold wet terrain, supports aquatic plant life.",
+                        "조건: 차갑고 습한 지형으로 이루어졌습니다. 수생 식물의 생활을 지원합니다.");
+                    level.LevelDescription = level.LevelDescription.Replace("FAUNA: A healthy ecosystem, fauna supports neutral behaviour.",
+                        "동물군: 정상적인 생태계를 가지고 있습니다. 동물군이 중립적인 행동을 지원합니다.");
+
+                    level.LevelDescription = level.LevelDescription.Replace("FAUNA: ???",
+                        "동물군: ???");
+                    level.LevelDescription = level.LevelDescription.Replace("UNKNOWN ANOMALY DETECTED",
+                        "알 수 없는 이상 현상이 감지됩니다");
+
+                    level.LevelDescription = level.LevelDescription.Replace("CONDITIONS: Dead, desolate landscape, no healthy flora present.",
+                        "조건: 황량하며, 정상적인 식물이 존재하지 않습니다.");
+                    level.LevelDescription = level.LevelDescription.Replace("FAUNA: A dying ecosystem, remaining fauna display agressive behaviour.",
+                        "동물군: 이곳의 생태계는 죽어가고 있으며, 동물들은 공격적인 행동을 보입니다.");
+
+                    level.LevelDescription = level.LevelDescription.Replace("CONDITIONS: Warm, Dry sandy terrain, supports plant life such as cactaceae and rarely polypodiophyta.",
+                        "조건: 따뜻하고 건조한 모래 지형으로 이루어졌습니다. 선인장과 같은 식물의 생활을 지원하며 드물게 다발성 식물도 있습니다.");
+                    level.LevelDescription = level.LevelDescription.Replace("FAUNA: A thriving ecosystem, creatures support agressive behaviour.",
+                        "동물군: 번성하는 생태계로, 생명체들이 공격적인 행동을 지원합니다.");
+
+                    level.LevelDescription = level.LevelDescription.Replace("Hot dry toxic terrain, no surviving flora.",
+                        "조건: 뜨겁고 건조한 독성 지형으로 이루어졌습니다. 이곳에서 살아남은 식물군은 없습니다.");
+                    level.LevelDescription = level.LevelDescription.Replace("An irradiated ecosystem.",
+                        "동물군: 방사선이 산출되는 생태계를 가지고 있습니다.");
+
+                    level.LevelDescription = level.LevelDescription.Replace("CONDITIONS: Cold moist terrain, roofed trees present.",
+                        "조건: 차갑고 습한 지형으로 이루어졌습니다. 지붕처럼 덮힌 나무가 존재합니다.");
+                    level.LevelDescription = level.LevelDescription.Replace("A flowering ecosystem, agressive behaviour present.",
+                        "동물군: 꽃이 만발한 생태계를 가지고 있습니다. 공격적인 행동이 존재합니다.");
+
+                    level.LevelDescription = level.LevelDescription.Replace("CONDITIONS: Warm, Dry dirt terrain, supports plant life such as Fabaceae.",
+                        "조건: 따뜻하고 건조한 흙 지형으로, 콩과 같은 식물의 생활을 지원합니다.");
+                    level.LevelDescription = level.LevelDescription.Replace("FAUNA: A thriving Avian ecosystem, creatures support agressive behaviour.",
+                        "동물군: 조류 생태계가 번성하며, 공격적인 행동이 잦습니다.");
+
+                    level.LevelDescription = level.LevelDescription.Replace("Extremely hot, Dry dusty terrain, Rarely supports living plant life due to recent volcanic activity.",
+                        "조건: 매우 덥고 건조한 먼지가 많은 지형으로, 최근 화산 활동으로 인해 식물 생육이 거의 이루어지지 않았습니다.");
+                    level.LevelDescription = level.LevelDescription.Replace("A desperate ecosystem, remaining creatures support agressive behaviour.",
+                        "동물군: 절망적인 생태계로, 이곳에 남은 생물들은 공격적인 행동이 잦습니다.");
+
+                    level.LevelDescription = level.LevelDescription.Replace("CONDITIONS: Warm, very lush terrain, supports plenty of flora, always sunny.",
+                        "조건: 따뜻하고 매우 울창한 지형으로, 많은 식물이 서식하며 항상 화창합니다.");
+                    level.LevelDescription = level.LevelDescription.Replace("FAUNA: A very healthy ecosystem, fauna exhibits neutral behaviour.",
+                        "동물군: 매우 건강한 생태계로, 동물들은 중립적인 행동을 보입니다.");
+
+                    level.LevelDescription = level.LevelDescription.Replace("CONDITIONS: Hot thin terrain, no surviving flora, high pressure within outer crust.",
+                        "조건: 덥고 얇은 지형으로 이루어졌으며, 살아남은 식물군은 없습니다. 외부 지각 내부에 높은 압력이 존재합니다.");
+                    level.LevelDescription = level.LevelDescription.Replace("FAUNA: A desperate ecosystem, remaining fauna display agressive behaviour.",
+                        "동물군: 절망적인 생태계로, 이곳에 남은 생물들은 공격적인 행동이 잦습니다");
+
+                    level.LevelDescription = level.LevelDescription.Replace("CONDITIONS: Cold, wet snowy terrain, supports plant life.",
+                        "조건: 춥고 습한 눈 덮인 지형으로 이루어졌습니다. 식물의 생활을 지원합니다.");
+                    level.LevelDescription = level.LevelDescription.Replace("FAUNA: A balanced ecosystem, creatures support very agressive behaviour.",
+                        "동물군: 균형 잡힌 생태계로, 생명체들은 매우 공격적으로 행동합니다.");
+
+                    level.LevelDescription = level.LevelDescription.Replace("CONDITIONS: Warm lush terrain, supports pleny of flora, acidic pools present.",
+                        "조건: 따뜻하고 무성한 지형으로 이루어졌으며, 많은 식물을 지원하고 산성 웅덩이가 존재합니다.");
+                }
+
                 if (Plugin.translatePlanet)
                 {
                     if (level.PlanetName == "71 Gordion")
@@ -436,15 +470,9 @@ namespace LCKorean.Patches
                     {
                         level.PlanetName = "20 애더먼스";
                     }
-                    else if (level.PlanetName == "67 Artifice")
+                    else if (level.PlanetName == "68 Artifice")
                     {
-                        if (Plugin.artificePronounce)
-                        {
-                            level.PlanetName = "67 아티피스";
-                        }else
-                        {
-                            level.PlanetName = "67 아터피스";
-                        }
+                        level.PlanetName = "68 아터피스";
                     }
                     else if (level.PlanetName == "5 Embrion")
                     {
@@ -788,7 +816,7 @@ namespace LCKorean.Patches
                         item.itemName = "탄약";
                         break;
                     case "Spray paint":
-                        item.itemName = "스프레이 페인트";
+                        item.itemName = "페인트 스프레이";
                         item.toolTips[0] = "스프레이 뿌리기 : [RMB]";
                         item.toolTips[1] = "캔 흔들기 : [Q]";
                         break;
@@ -820,6 +848,494 @@ namespace LCKorean.Patches
                         break;
                     case "Easter egg":
                         item.itemName = "부활절 달걀";
+                        break;
+                }
+            }
+        }
+
+
+        static void TranslateModdedItem()
+        {
+            Plugin.mls.LogInfo("Translating Items");
+            foreach (Item item in StartOfRound.Instance.allItemsList.itemsList)
+            {
+                switch (item.itemName)
+                {
+                    case "Alcohol Flask":
+                        item.itemName = "알코올 플라스크";
+                        break;
+                    case "Anvil":
+                        item.itemName = "모루";
+                        break;
+                    case "Baseball bat":
+                        item.itemName = "야구 방망이";
+                        break;
+                    case "Beer can":
+                        item.itemName = "맥주 캔";
+                        break;
+                    case "Brick":
+                        item.itemName = "벽돌";
+                        break;
+                    case "Broken engine":
+                        item.itemName = "망가진 엔진";
+                        break;
+                    case "Bucket":
+                        item.itemName = "양동이";
+                        break;
+                    case "Can paint":
+                        item.itemName = "페인트 캔";
+                        break;
+                    case "Canteen":
+                        item.itemName = "수통";
+                        break;
+                    case "Car battery":
+                        item.itemName = "자동차 배터리";
+                        break;
+                    case "Clamp":
+                        item.itemName = "조임틀";
+                        break;
+                    case "Clock":
+                        item.itemName = "시계";
+                        break;
+                    case "Fancy Painting":
+                        item.itemName = "멋진 그림";
+                        break;
+                    case "Fan":
+                        item.itemName = "선풍기";
+                        break;
+                    case "Fireaxe":
+                        item.itemName = "소방 도끼";
+                        break;
+                    case "Fire extinguisher":
+                        item.itemName = "소화기";
+                        break;
+                    case "Fire hydrant":
+                        item.itemName = "소화전";
+                        break;
+                    case "Food can":
+                        item.itemName = "통조림";
+                        break;
+                    case "Gameboy":
+                        item.itemName = "게임보이";
+                        break;
+                    case "Garbage":
+                        item.itemName = "쓰레기";
+                        break;
+                    case "Hammer":
+                        item.itemName = "망치";
+                        break;
+                    case "Jerrycan":
+                        item.itemName = "기름통";
+                        break;
+                    case "Keyboard":
+                        item.itemName = "키보드";
+                        break;
+                    case "Lantern":
+                        item.itemName = "랜턴";
+                        break;
+                    case "Library lamp":
+                        item.itemName = "도서관 램프";
+                        break;
+                    case "Plant":
+                        item.itemName = "식물";
+                        break;
+                    case "Pliers":
+                        item.itemName = "플라이어";
+                        break;
+                    case "Plunger":
+                        item.itemName = "뚫어뻥";
+                        break;
+                    case "Retro Toy":
+                        item.itemName = "레트로 장난감";
+                        break;
+                    case "Screwdriver":
+                        item.itemName = "스크류 드라이버";
+                        break;
+                    case "Sink":
+                        item.itemName = "싱크대";
+                        break;
+                    case "Socket Wrench":
+                        item.itemName = "소켓 렌치";
+                        break;
+                    case "Squeaky toy":
+                        item.itemName = "고무 오리";
+                        break;
+                    case "Suitcase":
+                        item.itemName = "여행 가방";
+                        break;
+                    case "Toaster":
+                        item.itemName = "토스터기";
+                        break;
+                    case "Toolbox":
+                        item.itemName = "공구 상자";
+                        break;
+                    case "Top hat":
+                        item.itemName = "실크햇";
+                        break;
+                    case "Traffic cone":
+                        item.itemName = "라바콘";
+                        break;
+                    case "Vent":
+                        item.itemName = "환풍구";
+                        break;
+                    case "Watering Can":
+                        item.itemName = "물뿌리개";
+                        break;
+                    case "Wheel":
+                        item.itemName = "바퀴";
+                        break;
+                    case "Wine bottle":
+                        item.itemName = "와인 병";
+                        break;
+                    case "Wrench":
+                        item.itemName = "렌치";
+                        break;
+
+
+                    case "Syringe":
+                        item.itemName = "주사기";
+                        break;
+                    case "Syringe Gun":
+                        item.itemName = "주사기총";
+                        break;
+                    case "Corner Pipe":
+                        item.itemName = "코너 파이프";
+                        break;
+                    case "Small Pipe":
+                        item.itemName = "작은 파이프";
+                        break;
+                    case "Flow Pipe":
+                        item.itemName = "파이프";
+                        break;
+                    case "Brain Jar":
+                        item.itemName = "뇌가 담긴 병";
+                        break;
+                    case "Toy Nutcracker":
+                        item.itemName = "호두까기 인형 장난감";
+                        break;
+                    case "Test Tube":
+                        item.itemName = "시험관";
+                        break;
+                    case "Test Tube Rack":
+                        item.itemName = "시험관 랙";
+                        break;
+                    case "Nutcracker Eye":
+                        item.itemName = "호두까기 인형 눈";
+                        break;
+                    case "Blue Test Tube":
+                        item.itemName = "파란색 시험관";
+                        break;
+                    case "Yellow Test Tube":
+                        item.itemName = "노란색 시험관";
+                        break;
+                    case "Red Test Tube":
+                        item.itemName = "빨간색 시험관";
+                        break;
+                    case "Green Test Tube":
+                        item.itemName = "초록색 시험관";
+                        break;
+                    case "Crowbar":
+                        item.itemName = "쇠지렛대";
+                        break;
+                    case "Plzen":
+                        item.itemName = "플젠";
+                        break;
+                    case "Cup":
+                        item.itemName = "컵";
+                        break;
+                    case "Microwave":
+                        item.itemName = "전자레인지";
+                        break;
+                    case "bubblegun":
+                        item.itemName = "비눗방울 총";
+                        break;
+                    case "Broken P88":
+                        item.itemName = "망가진 P88";
+                        break;
+                    case "employee":
+                        item.itemName = "직원";
+                        break;
+                    case "Mine":
+                        item.itemName = "지뢰";
+                        break;
+                    case "Toothles":
+                        item.itemName = "투슬리스";
+                        break;
+                    case "Crossbow":
+                        item.itemName = "석궁";
+                        break;
+                    case "physgun":
+                        item.itemName = "피직스건";
+                        break;
+                    case "Ammo crate":
+                        item.itemName = "탄약 상자";
+                        break;
+                    case "Drink":
+                        item.itemName = "음료수";
+                        break;
+                    case "Radio":
+                        item.itemName = "라디오";
+                        break;
+                    case "Mouse":
+                        item.itemName = "마우스";
+                        break;
+                    case "Monitor":
+                        item.itemName = "모니터";
+                        break;
+                    case "Battery":
+                        item.itemName = "건전지";
+                        break;
+                    case "Cannon":
+                        item.itemName = "대포";
+                        break;
+                    case "Health Drink":
+                        item.itemName = "건강 음료";
+                        break;
+                    case "Chemical":
+                        item.itemName = "화학 약품";
+                        break;
+                    case "Disinfecting Alcohol":
+                        item.itemName = "소독용 알코올";
+                        break;
+                    case "Ampoule":
+                        item.itemName = "앰풀";
+                        break;
+                    case "Blood Pack":
+                        item.itemName = "혈액 팩";
+                        break;
+                    case "Flip Lighter":
+                        item.itemName = "라이터";
+                        break;
+                    case "Rubber Ball":
+                        item.itemName = "고무 공";
+                        break;
+                    case "Video Tape":
+                        item.itemName = "비디오 테이프";
+                        break;
+                    case "First Aid Kit":
+                        item.itemName = "구급 상자";
+                        break;
+                    case "Gold Medallion":
+                        item.itemName = "금메달";
+                        break;
+                    case "Steel Pipe":
+                        item.itemName = "금속 파이프";
+                        break;
+                    case "Axe":
+                        item.itemName = "도끼";
+                        break;
+                    case "Emergency Hammer":
+                        item.itemName = "비상용 망치";
+                        break;
+                    case "Katana":
+                        item.itemName = "카타나";
+                        break;
+                    case "Silver Medallion":
+                        item.itemName = "은메달";
+                        break;
+                    case "Pocket Radio":
+                        item.itemName = "휴대용 라디오";
+                        break;
+                    case "Teddy Plush":
+                        item.itemName = "곰 인형";
+                        break;
+                    case "Experiment Log Hyper Acid":
+                        item.itemName = "Hyper Acid 실험 기록";
+                        break;
+                    case "Experiment Log Comedy Mask":
+                        item.itemName = "희극 가면 실험 기록";
+                        break;
+                    case "Experiment Log Cursed Coin":
+                        item.itemName = "저주받은 동전 실험 기록";
+                        break;
+                    case "Experiment Log BIO HXNV7":
+                        item.itemName = "바이오 HXNV7 실험 기록";
+                        break;
+                    case "Blue Folder":
+                        item.itemName = "파란색 폴더";
+                        break;
+                    case "Red Folder":
+                        item.itemName = "빨간색 폴더";
+                        break;
+                    case "Fire Extinguisher":
+                        item.itemName = "소화기";
+                        break;
+                    case "Coil":
+                        item.itemName = "코일";
+                        break;
+                    case "Typewriter":
+                        item.itemName = "타자기";
+                        break;
+                    case "Documents":
+                        item.itemName = "서류 더미";
+                        break;
+                    case "Stapler":
+                        item.itemName = "스테이플러";
+                        break;
+                    case "Old Computer":
+                        item.itemName = "구식 컴퓨터";
+                        break;
+                    case "Bronze Trophy":
+                        item.itemName = "브론즈 트로피";
+                        break;
+                    case "Banana":
+                        item.itemName = "바나나";
+                        break;
+                    case "Stun Baton":
+                        item.itemName = "스턴봉";
+                        break;
+                    case "BIO-HXNV7":
+                        item.itemName = "바이오-HXNV7";
+                        break;
+                    case "Recovered Secret Log":
+                        item.itemName = "복구된 비밀 일지";
+                        break;
+                    case "Experiment Log Golden Dagger":
+                        item.itemName = "황금 단검 실험 기록";
+                        break;
+                    case "Clam":
+                        item.itemName = "대합";
+                        break;
+                    case "Turtle Shell":
+                        item.itemName = "거북이 등딱지";
+                        break;
+                    case "Fish Bones":
+                        item.itemName = "생선 뼈";
+                        break;
+                    case "Horned Shell":
+                        item.itemName = "뿔 달린 껍질";
+                        break;
+                    case "Porcelain Teacup":
+                        item.itemName = "도자기 찻잔";
+                        break;
+                    case "Marble":
+                        item.itemName = "대리석";
+                        break;
+                    case "Porcelain Bottle":
+                        item.itemName = "도자기 병";
+                        break;
+                    case "Porcelain Perfume Bottle":
+                        item.itemName = "도자기 향수 병";
+                        break;
+                    case "Glowing Orb":
+                        item.itemName = "발광구";
+                        break;
+                    case "Golden Skull":
+                        item.itemName = "황금 해골";
+                        break;
+                    case "Map of Cosmocos":
+                        item.itemName = "코스모코스 지도";
+                        break;
+                    case "Wet Note 1":
+                        item.itemName = "젖은 노트 1";
+                        break;
+                    case "Wet Note 2":
+                        item.itemName = "젖은 노트 2";
+                        break;
+                    case "Wet Note 3":
+                        item.itemName = "젖은 노트 3";
+                        break;
+                    case "Wet Note 4":
+                        item.itemName = "젖은 노트 4";
+                        break;
+                    case "Cosmic Shard":
+                        item.itemName = "우주빛 파편";
+                        break;
+                    case "Cosmic Growth":
+                        item.itemName = "우주 생장물";
+                        break;
+                    case "Chunk of Celestial Brain":
+                        item.itemName = "천상의 두뇌 덩어리";
+                        break;
+                    case "Bucket of Shards":
+                        item.itemName = "파편이 든 양동이";
+                        break;
+                    case "Cosmic Flashlight":
+                        item.itemName = "우주빛 손전등";
+                        break;
+                    case "Forgotten Log 1":
+                        item.itemName = "잊혀진 일지 1";
+                        break;
+                    case "Forgotten Log 2":
+                        item.itemName = "잊혀진 일지 2";
+                        break;
+                    case "Forgotten Log 3":
+                        item.itemName = "잊혀진 일지 3";
+                        break;
+                    case "Glasses":
+                        item.itemName = "안경";
+                        break;
+                    case "Grown Petri Dish":
+                        item.itemName = "생장한 배양 접시";
+                        break;
+                    case "Petri Dish":
+                        item.itemName = "배양 접시";
+                        break;
+                    case "Cosmochad":
+                        item.itemName = "코스모채드";
+                        break;
+                    case "Dying Cosmic Flashlight":
+                        item.itemName = "죽어가는 우주빛 손전등";
+                        break;
+                    case "Dying Cosmic Growth":
+                        item.itemName = "죽어가는 우주 생장물";
+                        break;
+                    case "Blood Petri Dish":
+                        item.itemName = "혈액 배양 접시";
+                        break;
+                    case "Evil Cosmochad":
+                        item.itemName = "악마 코스모채드";
+                        break;
+                    case "Evil Cosmo":
+                        item.itemName = "악마 코스모";
+                        break;
+                    case "Lil Cosmo":
+                        item.itemName = "릴 코스모";
+                        break;
+                    case "Dying Grown Petri Dish":
+                        item.itemName = "죽어가는 생장물 배양 접시";
+                        break;
+                    case "Watching Petri Dish":
+                        item.itemName = "감시하는 배양 접시";
+                        break;
+                    case "Microscope":
+                        item.itemName = "현미경";
+                        break;
+                    case "Round Vile":
+                        item.itemName = "원통형 바일";
+                        break;
+                    case "Square Vile":
+                        item.itemName = "사각형 바일";
+                        break;
+                    case "Oval Vile":
+                        item.itemName = "타원형 바일";
+                        break;
+                    case "Harrington Log 1":
+                        item.itemName = "해링턴 일지 1";
+                        break;
+                    case "Harrington Log 2":
+                        item.itemName = "해링턴 일지 2";
+                        break;
+                    case "Harrington Log 3":
+                        item.itemName = "해링턴 일지 3";
+                        break;
+                    case "Harrington Log 4":
+                        item.itemName = "해링턴 일지 4";
+                        break;
+                    case "Jar of Growth":
+                        item.itemName = "생장물이 든 병";
+                        break;
+                    case "Tape Player Log 1":
+                        item.itemName = "테이프 플레이어 일지 1";
+                        break;
+                    case "Tape Player Log 2":
+                        item.itemName = "테이프 플레이어 일지 1";
+                        break;
+                    case "Tape Player Log 3":
+                        item.itemName = "테이프 플레이어 일지 1";
+                        break;
+                    case "Tape Player Log 4":
+                        item.itemName = "테이프 플레이어 일지 1";
                         break;
                 }
             }

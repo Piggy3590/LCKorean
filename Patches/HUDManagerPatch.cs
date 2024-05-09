@@ -107,6 +107,13 @@ namespace LCKorean.Patches
         }
 
         [HarmonyPostfix]
+        [HarmonyPatch("SetSpectatingTextToPlayer")]
+        private static void SetSpectatingTextToPlayer_Postfix(ref TextMeshProUGUI ___spectatingPlayerText)
+        {
+            ___spectatingPlayerText.text = ___spectatingPlayerText.text.Replace("Spectating", "관전 중");
+        }
+
+        [HarmonyPostfix]
         [HarmonyPatch("ApplyPenalty")]
         private static void ApplyPenalty_Postfix(ref EndOfGameStatUIElements ___statsUIElements)
         {
@@ -128,21 +135,21 @@ namespace LCKorean.Patches
                 switch (dialogue.bodyText)
                 {
                     case "Warning! No response from crew, which has not returned. Emergency code activated.":
-                        dialogue.bodyText = "경고! 모든 팀원이 응답하지 않으며 함선에 돌아오지 않았습니다. 긴급 코드가 활성화되었습니다.";
+                        dialogue.bodyText = Plugin.allDead1;
                         break;
                     case "The autopilot will now attempt to fly to the closest safe spaceport. Your items have been lost.":
-                        dialogue.bodyText = "가까운 기지로 이동합니다. 모든 폐품을 분실했습니다.";
+                        dialogue.bodyText = Plugin.allDead2;
                         break;
 
                     case "Alert! The autopilot is leaving due to dangerous conditions.":
-                        dialogue.bodyText = "경고! 위험한 상황으로 인해 함선이 이륙하고 있습니다.";
+                        dialogue.bodyText = Plugin.autoTakeoff1;
                         break;
                     case "The Company must minimize risk of damage to proprietary hardware. Goodbye!":
-                        dialogue.bodyText = "우리 회사는 독점 하드웨어에 대한 손상 위험을 최소화해야 합니다. 안녕히 계세요!";
+                        dialogue.bodyText = Plugin.autoTakeoff2;
                         break;
 
                     case "WARNING!!! The autopilot ship will leave at midnight. Please return quickly.":
-                        dialogue.bodyText = "경고!!! 함선이 자정에 이륙합니다. 빠르게 복귀하세요.";
+                        dialogue.bodyText = Plugin.midnightWarning;
                         break;
                 }
 
@@ -305,54 +312,36 @@ namespace LCKorean.Patches
             if (___planetInfoHeaderText.text.Contains("CELESTIAL BODY:"))
             {
                 ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("CELESTIAL BODY:", "천체:");
-                if (___planetInfoHeaderText.text.Contains("Experimentation"))
+
+                ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Experimentation", "익스페리멘테이션");
+                ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Where the Company resides", "회사가 소재하는 지역입니다");
+                ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Assurance", "어슈어런스");
+                ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Offense", "오펜스");
+                ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Adamance", "애더먼스");
+                ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Rend", "렌드");
+                ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Dine", "다인");
+                ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("March", "머치");
+                ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Vow", "보우");
+                ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Titan", "타이탄");
+                ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Artifice", "아터피스");
+                ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Embrion", "엠브리언");
+                ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Gordion", "고르디온");
+
+                if (Plugin.translateModdedContent)
                 {
-                    ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Experimentation", "익스페리멘테이션");
-                    ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Where the Company resides", "회사가 소재하는 지역입니다");
-                }
-                else if (___planetInfoHeaderText.text.Contains("Assurance"))
-                {
-                    ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Assurance", "어슈어런스");
-                }
-                else if (___planetInfoHeaderText.text.Contains("Offense"))
-                {
-                    ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Offense", "오펜스");
-                }
-                else if (___planetInfoHeaderText.text.Contains("Adamance"))
-                {
-                    ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Adamance", "애더먼스");
-                }
-                else if (___planetInfoHeaderText.text.Contains("Rend"))
-                {
-                    ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Rend", "렌드");
-                }
-                else if (___planetInfoHeaderText.text.Contains("Dine"))
-                {
-                    ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Dine", "다인");
-                }
-                else if (___planetInfoHeaderText.text.Contains("March"))
-                {
-                    ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("March", "머치");
-                }
-                else if (___planetInfoHeaderText.text.Contains("Vow"))
-                {
-                    ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Vow", "보우");
-                }
-                else if (___planetInfoHeaderText.text.Contains("Titan"))
-                {
-                    ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Titan", "타이탄");
-                }
-                else if (___planetInfoHeaderText.text.Contains("Artifice"))
-                {
-                    ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Artifice", "아터피스");
-                }
-                else if (___planetInfoHeaderText.text.Contains("Embrion"))
-                {
-                    ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Embrion", "엠브리언");
-                }
-                else if (___planetInfoHeaderText.text.Contains("Gordion"))
-                {
-                    ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Gordion", "고르디온");
+                    ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Asteroid", "아스테로이드");
+                    ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Atlantica", "아틀란티카");
+                    ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Cosmocos", "코스모코스");
+                    ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Desolation", "디솔레이션");
+                    ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Etern", "이턴");
+                    ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Fission", "피션");
+                    ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Gloom", "글룸");
+                    ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Gratar", "그라타");
+                    ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Infernis", "인퍼니스");
+                    ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Junic", "주닉");
+                    ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Oldred", "올드레드");
+                    ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Polarus", "폴라러스");
+                    ___planetInfoHeaderText.text = ___planetInfoHeaderText.text.Replace("Acidir", "어시디어");
                 }
             }
 
@@ -374,6 +363,10 @@ namespace LCKorean.Patches
             try
             {
                 TranslateScanNode(node);
+                if (Plugin.translateModdedContent)
+                {
+                    TranslateModdedContent(node);
+                }
             }
             catch (Exception e)
             {
@@ -584,22 +577,22 @@ namespace LCKorean.Patches
                 node.headerText = "사탕";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Cash register"))
+            else if (node.headerText == "Cash register")
             {
                 node.headerText = "금전 등록기";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Chemical jug"))
+            else if (node.headerText == "Chemical jug")
             {
                 node.headerText = "화학 용기";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Clown horn"))
+            else if (node.headerText == "Clown horn")
             {
                 node.headerText = "광대 나팔";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Large axle"))
+            else if (node.headerText == "Large axle")
             {
                 node.headerText = "대형 축";
                 node.subText = node.subText.Replace("Value:", "가격:");
@@ -609,77 +602,77 @@ namespace LCKorean.Patches
                 node.headerText = "틀니";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Dust pan"))
+            else if (node.headerText == "Dust pan")
             {
                 node.headerText = "쓰레받기";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Egg beater"))
+            else if (node.headerText == "Egg beater")
             {
                 node.headerText = "달걀 거품기";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("V-type engine"))
+            else if (node.headerText == "V-type engine")
             {
                 node.headerText = "V형 엔진";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Golden cup"))
+            else if (node.headerText == "Golden cup")
             {
                 node.headerText = "황금 컵";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Fancy lamp"))
+            else if (node.headerText == "Fancy lamp")
             {
                 node.headerText = "멋진 램프";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Painting"))
+            else if (node.headerText == "Painting")
             {
                 node.headerText = "그림";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Plastic fish"))
+            else if (node.headerText == "Plastic fish")
             {
                 node.headerText = "플라스틱 물고기";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Laser pointer"))
+            else if (node.headerText == "Laser pointer")
             {
                 node.headerText = "레이저 포인터";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Gold Bar"))
+            else if (node.headerText == "Gold Bar")
             {
                 node.headerText = "금 주괴";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Hairdryer"))
+            else if (node.headerText == "Hairdryer")
             {
                 node.headerText = "헤어 드라이기";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Magnifying glass"))
+            else if (node.headerText == "Magnifying glass")
             {
                 node.headerText = "돋보기";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Tattered metal sheet"))
+            else if (node.headerText == "Tattered metal sheet")
             {
                 node.headerText = "너덜너덜한 금속 판";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Cookie mold pan"))
+            else if (node.headerText == "Cookie mold pan")
             {
                 node.headerText = "쿠키 틀";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Coffee mug"))
+            else if (node.headerText == "Coffee mug")
             {
                 node.headerText = "커피 머그잔";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Perfume bottle"))
+            else if (node.headerText == "Perfume bottle")
             {
                 node.headerText = "향수 병";
                 node.subText = node.subText.Replace("Value:", "가격:");
@@ -689,12 +682,12 @@ namespace LCKorean.Patches
                 node.headerText = "구식 전화기";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Jar of pickles"))
+            else if (node.headerText == "Jar of pickles")
             {
                 node.headerText = "피클 병";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Pill bottle"))
+            else if (node.headerText == "Pill bottle")
             {
                 node.headerText = "약 병";
                 node.subText = node.subText.Replace("Value:", "가격:");
@@ -704,52 +697,52 @@ namespace LCKorean.Patches
                 node.headerText = "리모컨";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Wedding ring"))
+            else if (node.headerText == "Wedding ring")
             {
                 node.headerText = "결혼 반지";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Robot Toy"))
+            else if (node.headerText == "Robot Toy")
             {
                 node.headerText = "로봇 장난감";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Rubber ducky"))
+            else if (node.headerText == "Rubber ducky")
             {
                 node.headerText = "고무 오리";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Red soda"))
+            else if (node.headerText == "Red soda")
             {
                 node.headerText = "빨간색 소다";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Steering wheel"))
+            else if (node.headerText == "Steering wheel")
             {
                 node.headerText = "운전대";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Stop sign"))
+            else if (node.headerText == "Stop sign")
             {
                 node.headerText = "정지 표지판";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Tea Kettle"))
+            else if (node.headerText == "Tea Kettle")
             {
                 node.headerText = "찻주전자";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Toothpaste"))
+            else if (node.headerText == "Toothpaste")
             {
                 node.headerText = "치약";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Toy cube"))
+            else if (node.headerText == "Toy cube")
             {
                 node.headerText = "장난감 큐브";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Bee hive"))
+            else if (node.headerText == "Bee hive")
             {
                 node.headerText = "벌집";
                 node.subText = node.subText.Replace("Value:", "가격:");
@@ -759,7 +752,7 @@ namespace LCKorean.Patches
             {
                 node.subText = "(레이더 부스터)";
             }
-            else if (node.headerText.Contains("Yield sign"))
+            else if (node.headerText == "Yield sign")
             {
                 node.headerText = "양보 표지판";
                 node.subText = node.subText.Replace("Value:", "가격:");
@@ -779,7 +772,7 @@ namespace LCKorean.Patches
                 node.headerText = "산탄총 탄약";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Homemade Flashbang"))
+            else if (node.headerText == "Homemade Flashbang")
             {
                 node.headerText = "사제 섬광탄";
                 node.subText = node.subText.Replace("Value:", "가격:");
@@ -794,7 +787,7 @@ namespace LCKorean.Patches
                 node.headerText = "선물 상자";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Flask"))
+            else if (node.headerText == "Flask")
             {
                 node.headerText = "플라스크";
                 node.subText = node.subText.Replace("Value:", "가격:");
@@ -809,12 +802,12 @@ namespace LCKorean.Patches
                 node.headerText = "희극";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Whoopie cushion"))
+            else if (node.headerText == "Whoopie cushion")
             {
                 node.headerText = "방퀴 쿠션";
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
-            else if (node.headerText.Contains("Kitchen knife"))
+            else if (node.headerText == "Kitchen knife")
             {
                 node.headerText = "식칼";
                 node.subText = node.subText.Replace("Value:", "가격:");
@@ -822,6 +815,201 @@ namespace LCKorean.Patches
             else if (node.headerText == "Easter egg")
             {
                 node.headerText = "부활절 달걀";
+                node.subText = node.subText.Replace("Value:", "가격:");
+            }
+        }
+
+        static void TranslateModdedContent(ScanNodeProperties node)
+        {
+            //ImmersiveScraps
+            ModdedTranslateScanNode(node, "Alcohol Flask", "알코올 플라스크");
+            ModdedTranslateScanNode(node, "Anvil", "모루");
+            ModdedTranslateScanNode(node, "Baseball bat", "야구 방망이");
+            ModdedTranslateScanNode(node, "Beer can", "맥주 캔");
+            ModdedTranslateScanNode(node, "Brick", "벽돌");
+            ModdedTranslateScanNode(node, "Broken engine", "망가진 엔진");
+            ModdedTranslateScanNode(node, "Bucket", "양동이");
+            ModdedTranslateScanNode(node, "Can paint", "페인트 캔");
+            ModdedTranslateScanNode(node, "Canteen", "수통");
+            ModdedTranslateScanNode(node, "Car battery", "자동차 배터리");
+            ModdedTranslateScanNode(node, "Clamp", "조임틀");
+            ModdedTranslateScanNode(node, "Clock", "시계");
+            ModdedTranslateScanNode(node, "Fancy Painting", "멋진 그림");
+            ModdedTranslateScanNode(node, "Fan", "선풍기");
+            ModdedTranslateScanNode(node, "Fireaxe", "소방 도끼");
+            ModdedTranslateScanNode(node, "Fire extinguisher", "소화기");
+            ModdedTranslateScanNode(node, "Fire hydrant", "소화전");
+            ModdedTranslateScanNode(node, "Food can", "통조림");
+            ModdedTranslateScanNode(node, "Gameboy", "게임보이");
+            ModdedTranslateScanNode(node, "Garbage", "쓰레기");
+            ModdedTranslateScanNode(node, "Hammer", "망치");
+            ModdedTranslateScanNode(node, "Jerrycan", "기름통");
+            ModdedTranslateScanNode(node, "Keyboard", "키보드");
+            ModdedTranslateScanNode(node, "Lantern", "랜턴");
+            ModdedTranslateScanNode(node, "Library lamp", "도서관 램프");
+            ModdedTranslateScanNode(node, "Plant", "식물");
+            ModdedTranslateScanNode(node, "Pliers", "플라이어");
+            ModdedTranslateScanNode(node, "Plunger", "뚫어뻥");
+            ModdedTranslateScanNode(node, "Retro Toy", "레트로 장난감");
+            ModdedTranslateScanNode(node, "Screwdriver", "스크류 드라이버");
+            ModdedTranslateScanNode(node, "Sink", "싱크대");
+            ModdedTranslateScanNode(node, "Socket Wrench", "소켓 렌치");
+            ModdedTranslateScanNode(node, "Squeaky toy", "고무 오리");
+            ModdedTranslateScanNode(node, "Suitcase", "여행 가방");
+            ModdedTranslateScanNode(node, "Toaster", "토스터기");
+            ModdedTranslateScanNode(node, "Toolbox", "공구 상자");
+            ModdedTranslateScanNode(node, "Top hat", "실크햇");
+            ModdedTranslateScanNode(node, "Traffic cone", "라바콘");
+            ModdedTranslateScanNode(node, "Vent", "환풍구");
+            ModdedTranslateScanNode(node, "Watering Can", "물뿌리개");
+            ModdedTranslateScanNode(node, "Wheel", "바퀴");
+            ModdedTranslateScanNode(node, "Wine bottle", "와인 병");
+            ModdedTranslateScanNode(node, "Wrench", "렌치");
+
+            //Wesleys
+            ModdedTranslateScanNode(node, "Amethyst Cluster", "자수정 군집");
+            ModdedTranslateScanNode(node, "Syringe", "주사기");
+            ModdedTranslateScanNode(node, "Syringe Gun", "주사기총");
+            ModdedTranslateScanNode(node, "Corner Pipe", "코너 파이프");
+            ModdedTranslateScanNode(node, "Small Pipe", "작은 파이프");
+            ModdedTranslateScanNode(node, "Flow Pipe", "파이프");
+            ModdedTranslateScanNode(node, "Brain Jar", "뇌가 담긴 병");
+            ModdedTranslateScanNode(node, "Toy Nutcracker", "호두까기 인형 장난감");
+            ModdedTranslateScanNode(node, "Test Tube", "시험관");
+            ModdedTranslateScanNode(node, "Test Tube Rack", "시험관 랙");
+            ModdedTranslateScanNode(node, "Nutcracker Eye", "호두까기 인형 눈");
+            ModdedTranslateScanNode(node, "Blue Test Tube", "파란색 시험관");
+            ModdedTranslateScanNode(node, "Yellow Test Tube", "노란색 시험관");
+            ModdedTranslateScanNode(node, "Red Test Tube", "빨간색 시험관");
+            ModdedTranslateScanNode(node, "Green Test Tube", "초록색 시험관");
+            ModdedTranslateScanNode(node, "Crowbar", "쇠지렛대");
+            ModdedTranslateScanNode(node, "Plzen", "플젠");
+            ModdedTranslateScanNode(node, "Cup", "컵");
+            ModdedTranslateScanNode(node, "Microwave", "전자레인지");
+            ModdedTranslateScanNode(node, "bubblegun", "비눗방울 총");
+            ModdedTranslateScanNode(node, "Broken P88", "망가진 P88");
+            ModdedTranslateScanNode(node, "employee", "직원");
+            ModdedTranslateScanNode(node, "Mine", "지뢰");
+            ModdedTranslateScanNode(node, "Gravity Gun", "중력건");
+            ModdedTranslateScanNode(node, "Redbull", "레드불");
+            ModdedTranslateScanNode(node, "Diamond ore", "다이아몬드 광석");
+            ModdedTranslateScanNode(node, "Stone", "돌");
+            ModdedTranslateScanNode(node, "Diamond block", "다이아몬드 블록");
+            ModdedTranslateScanNode(node, "Tau Cannon", "타우 캐논");
+            ModdedTranslateScanNode(node, "Toothles", "투슬리스");
+            ModdedTranslateScanNode(node, "Crossbow", "석궁");
+            ModdedTranslateScanNode(node, "physgun", "피직스건");
+            ModdedTranslateScanNode(node, "Ammo crate", "탄약 상자");
+            ModdedTranslateScanNode(node, "Drink", "음료수");
+            ModdedTranslateScanNode(node, "Radio", "라디오");
+            ModdedTranslateScanNode(node, "Mouse", "마우스");
+            ModdedTranslateScanNode(node, "Monitor", "모니터");
+            ModdedTranslateScanNode(node, "Battery", "건전지");
+            ModdedTranslateScanNode(node, "Cannon", "대포");
+            ModdedTranslateScanNode(node, "Health Drink", "건강 음료");
+            ModdedTranslateScanNode(node, "Chemical", "화학 약품");
+            ModdedTranslateScanNode(node, "Disinfecting Alcohol", "소독용 알코올");
+            ModdedTranslateScanNode(node, "Ampoule", "앰풀");
+            ModdedTranslateScanNode(node, "Blood Pack", "혈액 팩");
+            ModdedTranslateScanNode(node, "Flip Lighter", "라이터");
+            ModdedTranslateScanNode(node, "Rubber Ball", "고무 공");
+            ModdedTranslateScanNode(node, "Video Tape", "비디오 테이프");
+            ModdedTranslateScanNode(node, "First Aid Kit", "구급 상자");
+            ModdedTranslateScanNode(node, "Gold Medallion", "금메달");
+            ModdedTranslateScanNode(node, "Steel Pipe", "금속 파이프");
+            ModdedTranslateScanNode(node, "Axe", "도끼");
+            ModdedTranslateScanNode(node, "Emergency Hammer", "비상용 망치");
+            ModdedTranslateScanNode(node, "Katana", "카타나");
+            ModdedTranslateScanNode(node, "Silver Medallion", "은메달");
+            ModdedTranslateScanNode(node, "Pocket Radio", "휴대용 라디오");
+            ModdedTranslateScanNode(node, "Teddy Plush", "곰 인형");
+            ModdedTranslateScanNode(node, "LEDx Transilluminator", "LEDx 트랜스일루미네이터");
+            ModdedTranslateScanNode(node, "Graphics Card", "그래픽 카드");
+            ModdedTranslateScanNode(node, "Labs Access Keycard", "Labs 접근 키카드");
+            ModdedTranslateScanNode(node, "Tetriz portable game console", "Tetriz 휴대용 게임기");
+            ModdedTranslateScanNode(node, "Gas Analyzer", "가스 측정기");
+            ModdedTranslateScanNode(node, "Bitcoin", "비트코인");
+            ModdedTranslateScanNode(node, "Tank Battery", "탱크 배터리");
+            ModdedTranslateScanNode(node, "Secure Container Kappa", "보안 컨테이너 카파");
+            ModdedTranslateScanNode(node, "AI-2 Medkit", "AI-2 응급 치료 키트");
+            ModdedTranslateScanNode(node, "Bronze Lion", "사자 동상");
+            ModdedTranslateScanNode(node, "Raven Figurine", "까마귀 조각상");
+            ModdedTranslateScanNode(node, "Golden Rooster Figurine", "황금 수탉 조각상");
+            ModdedTranslateScanNode(node, "Red Rebel Ice Pick", "레드 레벨 아이스 픽");
+            ModdedTranslateScanNode(node, "UVSR Taiga-1 survival machete", "UVSR Taiga-1 생존용 마체테");
+            ModdedTranslateScanNode(node, "Experiment Log Hyper Acid", "Hyper Acid 실험 기록");
+            ModdedTranslateScanNode(node, "Experiment Log Comedy Mask", "희극 가면 실험 기록");
+            ModdedTranslateScanNode(node, "Experiment Log Cursed Coin", "저주받은 동전 실험 기록");
+            ModdedTranslateScanNode(node, "Experiment Log BIO HXNV7", "바이오 HXNV7 실험 기록");
+            ModdedTranslateScanNode(node, "Blue Folder", "파란색 폴더");
+            ModdedTranslateScanNode(node, "Red Folder", "빨간색 폴더");
+            ModdedTranslateScanNode(node, "Fire Extinguisher", "소화기");
+            ModdedTranslateScanNode(node, "Coil", "코일");
+            ModdedTranslateScanNode(node, "Typewriter", "타자기");
+            ModdedTranslateScanNode(node, "Documents", "서류 더미");
+            ModdedTranslateScanNode(node, "Stapler", "스테이플러");
+            ModdedTranslateScanNode(node, "Old Computer", "구식 컴퓨터");
+            ModdedTranslateScanNode(node, "Bronze Trophy", "브론즈 트로피");
+            ModdedTranslateScanNode(node, "Banana", "바나나");
+            ModdedTranslateScanNode(node, "Stun Baton", "스턴봉");
+            ModdedTranslateScanNode(node, "BIO-HXNV7", "바이오-HXNV7");
+            ModdedTranslateScanNode(node, "Recovered Secret Log", "복구된 비밀 일지");
+            ModdedTranslateScanNode(node, "Experiment Log Golden Dagger", "황금 단검 실험 기록");
+            ModdedTranslateScanNode(node, "Clam", "대합");
+            ModdedTranslateScanNode(node, "Turtle Shell", "거북이 등딱지");
+            ModdedTranslateScanNode(node, "Fish Bones", "생선 뼈");
+            ModdedTranslateScanNode(node, "Horned Shell", "뿔 달린 껍질");
+            ModdedTranslateScanNode(node, "Porcelain Teacup", "도자기 찻잔");
+            ModdedTranslateScanNode(node, "Marble", "대리석");
+            ModdedTranslateScanNode(node, "Porcelain Bottle", "도자기 병");
+            ModdedTranslateScanNode(node, "Porcelain Perfume Bottle", "도자기 향수 병");
+            ModdedTranslateScanNode(node, "Glowing Orb", "발광구");
+            ModdedTranslateScanNode(node, "Golden Skull", "황금 해골");
+            ModdedTranslateScanNode(node, "Map of Cosmocos", "코스모코스 지도");
+            ModdedTranslateScanNode(node, "Wet Note 1", "젖은 노트 1");
+            ModdedTranslateScanNode(node, "Wet Note 2", "젖은 노트 2");
+            ModdedTranslateScanNode(node, "Wet Note 3", "젖은 노트 3");
+            ModdedTranslateScanNode(node, "Wet Note 4", "젖은 노트 4");
+            ModdedTranslateScanNode(node, "Cosmic Shard", "우주빛 파편");
+            ModdedTranslateScanNode(node, "Cosmic Growth", "우주 생장물");
+            ModdedTranslateScanNode(node, "Chunk of Celestial Brain", "천상의 두뇌 덩어리");
+            ModdedTranslateScanNode(node, "Bucket of Shards", "파편이 든 양동이");
+            ModdedTranslateScanNode(node, "Cosmic Flashlight", "우주빛 손전등");
+            ModdedTranslateScanNode(node, "Forgotten Log 1", "잊혀진 일지 1");
+            ModdedTranslateScanNode(node, "Forgotten Log 2", "잊혀진 일지 2");
+            ModdedTranslateScanNode(node, "Forgotten Log 3", "잊혀진 일지 3");
+            ModdedTranslateScanNode(node, "Glasses", "안경");
+            ModdedTranslateScanNode(node, "Grown Petri Dish", "생장한 배양 접시");
+            ModdedTranslateScanNode(node, "Petri Dish", "배양 접시");
+            ModdedTranslateScanNode(node, "Cosmochad", "코스모채드");
+            ModdedTranslateScanNode(node, "Dying Cosmic Flashlight", "죽어가는 우주빛 손전등");
+            ModdedTranslateScanNode(node, "Dying Cosmic Growth", "죽어가는 우주 생장물");
+            ModdedTranslateScanNode(node, "Blood Petri Dish", "혈액 배양 접시");
+            ModdedTranslateScanNode(node, "Evil Cosmochad", "악마 코스모채드");
+            ModdedTranslateScanNode(node, "Evil Cosmo", "악마 코스모");
+            ModdedTranslateScanNode(node, "Lil Cosmo", "릴 코스모");
+            ModdedTranslateScanNode(node, "Dying Grown Petri Dish", "죽어가는 생장물 배양 접시");
+            ModdedTranslateScanNode(node, "Watching Petri Dish", "감시하는 배양 접시");
+            ModdedTranslateScanNode(node, "Microscope", "현미경");
+            ModdedTranslateScanNode(node, "Round Vile", "원통형 바일");
+            ModdedTranslateScanNode(node, "Square Vile", "사각형 바일");
+            ModdedTranslateScanNode(node, "Oval Vile", "타원형 바일");
+            ModdedTranslateScanNode(node, "Harrington Log 1", "해링턴 일지 1");
+            ModdedTranslateScanNode(node, "Harrington Log 2", "해링턴 일지 2");
+            ModdedTranslateScanNode(node, "Harrington Log 3", "해링턴 일지 3");
+            ModdedTranslateScanNode(node, "Harrington Log 4", "해링턴 일지 4");
+            ModdedTranslateScanNode(node, "Jar of Growth", "생장물이 든 병");
+            ModdedTranslateScanNode(node, "Tape Player Log 1", "테이프 플레이어 일지 1");
+            ModdedTranslateScanNode(node, "Tape Player Log 2", "테이프 플레이어 일지 1");
+            ModdedTranslateScanNode(node, "Tape Player Log 3", "테이프 플레이어 일지 1");
+            ModdedTranslateScanNode(node, "Tape Player Log 4", "테이프 플레이어 일지 1");
+        }
+
+        static void ModdedTranslateScanNode(ScanNodeProperties node, string oldHeader, string newHeader)
+        {
+            if (node.headerText == oldHeader)
+            {
+                node.headerText = newHeader;
                 node.subText = node.subText.Replace("Value:", "가격:");
             }
         }

@@ -28,11 +28,17 @@ namespace LCKorean.Patches
     {
         [HarmonyPostfix]
         [HarmonyPatch("Start")]
-        private static void Start_Postfix(ref TerminalNodesList ___terminalNodes, ref List<TerminalNode> ___enemyFiles)
+        private static void Start_Postfix(ref TerminalNodesList ___terminalNodes, ref List<TerminalNode> ___enemyFiles,
+            ref TMP_InputField ___screenText, ref string ___currentText)
         {
             TranslateKeyword(___terminalNodes, ___enemyFiles);
+            foreach (UnlockableItem unlockableItem in StartOfRound.Instance.unlockablesList.unlockables)
+            {
+                TranslateUnlockable(unlockableItem.shopSelectionNode);
+            }
             TranslateNode(___terminalNodes);
         }
+
         [HarmonyPostfix]
         [HarmonyPatch("BeginUsingTerminal")]
         private static void BeginUsingTerminal_Postfix()
@@ -51,6 +57,121 @@ namespace LCKorean.Patches
         [HarmonyPatch("Update")]
         private static void Update_Postfix(ref TMP_InputField ___screenText, ref string ___currentText, ref int ___numberOfItemsInDropship)
         {
+            if (Plugin.fullyKoreanMoons)
+            {
+                ___screenText.text = ___screenText.text.Replace("Type \"Help\" for a list of commands.", "명령 목록을 보려면 \"도움말\"을 입력하세요.");
+                ___currentText = ___currentText.Replace("Type \"Help\" for a list of commands.", "명령 목록을 보려면 \"도움말\"을 입력하세요.");
+            }
+            else
+            {
+                ___screenText.text = ___screenText.text.Replace("Type \"Help\" for a list of commands.", "명령 목록을 보려면 \"Help\"를 입력하세요.");
+                ___currentText = ___currentText.Replace("Type \"Help\" for a list of commands.", "명령 목록을 보려면 \"Help\"를 입력하세요.");
+            }
+            //Startnode
+            ___screenText.text = ___screenText.text.Replace("Welcome to the FORTUNE-9 OS", "FORTUNE-9 OS에 오신 것을 환영합니다");
+            ___currentText = ___currentText.Replace("Welcome to the FORTUNE-9 OS", "FORTUNE-9 OS에 오신 것을 환영합니다");
+
+            ___screenText.text = ___screenText.text.Replace("Courtesy of the Company", "회사 제공");
+            ___currentText = ___currentText.Replace("Courtesy of the Company", "회사 제공");
+
+            ___screenText.text = ___screenText.text.Replace("Monday.", "월요일 되세요.");
+            ___currentText = ___currentText.Replace("Monday.", "월요일 되세요.");
+            ___screenText.text = ___screenText.text.Replace("Tuesday.", "화요일 되세요.");
+            ___currentText = ___currentText.Replace("Tuesday.", "화요일 되세요.");
+            ___screenText.text = ___screenText.text.Replace("Wednesday.", "수요일 되세요.");
+            ___currentText = ___currentText.Replace("Wednesday.", "수요일 되세요.");
+            ___screenText.text = ___screenText.text.Replace("Thursday.", "목요일 되세요.");
+            ___currentText = ___currentText.Replace("Thursday.", "목요일 되세요.");
+            ___screenText.text = ___screenText.text.Replace("Friday.", "금요일 되세요.");
+            ___currentText = ___currentText.Replace("Friday.", "금요일 되세요.");
+            ___screenText.text = ___screenText.text.Replace("Saturday.", "토요일 되세요.");
+            ___currentText = ___currentText.Replace("Saturday.", "토요일 되세요.");
+            ___screenText.text = ___screenText.text.Replace("Sunday.", "일요일 되세요.");
+            ___currentText = ___currentText.Replace("Sunday.", "일요일 되세요.");
+                    
+            ___screenText.text = ___screenText.text.Replace("Happy ", "좋은 ");
+            ___currentText = ___currentText.Replace("Happy ", "좋은 ");
+            //___screenText.text = ___screenText.text.Replace("Happy [currentDay].", "좋은 [currentDay] 되세요.");
+
+            //LLL 바닐라 행성
+            ___screenText.text = ___screenText.text.Replace("Experimentation", "익스페리멘테이션");
+            ___currentText = ___currentText.Replace("Experimentation", "익스페리멘테이션");
+
+            ___screenText.text = ___screenText.text.Replace("Assurance", "어슈어런스");
+            ___currentText = ___currentText.Replace("Assurance", "어슈어런스");
+
+            ___screenText.text = ___screenText.text.Replace("Vow", "보우");
+            ___currentText = ___currentText.Replace("Vow", "보우");
+
+            ___screenText.text = ___screenText.text.Replace("March", "머치");
+            ___currentText = ___currentText.Replace("March", "머치");
+
+            ___screenText.text = ___screenText.text.Replace("Offense", "오펜스");
+            ___currentText = ___currentText.Replace("Offense", "오펜스");
+
+            ___screenText.text = ___screenText.text.Replace("Adamance", "애더먼스");
+            ___currentText = ___currentText.Replace("Adamance", "애더먼스");
+
+            ___screenText.text = ___screenText.text.Replace("Rend", "렌드");
+            ___currentText = ___currentText.Replace("Rend", "렌드");
+
+            ___screenText.text = ___screenText.text.Replace("Dine", "다인");
+            ___currentText = ___currentText.Replace("Dine", "다인");
+
+            ___screenText.text = ___screenText.text.Replace("Titan", "타이탄");
+            ___currentText = ___currentText.Replace("Titan", "타이탄");
+
+            ___screenText.text = ___screenText.text.Replace("Artifice", "아터피스");
+            ___currentText = ___currentText.Replace("Artifice", "아터피스");
+
+            ___screenText.text = ___screenText.text.Replace("Embrion", "엠브리언");
+            ___currentText = ___currentText.Replace("Embrion", "엠브리언");
+
+            //LLL 모드 행성
+            if (Plugin.translateModdedContent)
+            {
+                ___screenText.text = ___screenText.text.Replace("Asteroid", "아스테로이드");
+                ___currentText = ___currentText.Replace("Asteroid", "아스테로이드");
+
+                ___screenText.text = ___screenText.text.Replace("Atlantica", "아틀란티카");
+                ___currentText = ___currentText.Replace("Atlantica", "아틀란티카");
+
+                ___screenText.text = ___screenText.text.Replace("Cosmocos", "코스모코스");
+                ___currentText = ___currentText.Replace("Cosmocos", "코스모코스");
+
+                ___screenText.text = ___screenText.text.Replace("Desolation", "디솔레이션");
+                ___currentText = ___currentText.Replace("Desolation", "디솔레이션");
+
+                ___screenText.text = ___screenText.text.Replace("Etern", "이턴");
+                ___currentText = ___currentText.Replace("Etern", "이턴");
+
+                ___screenText.text = ___screenText.text.Replace("Fission", "피션");
+                ___currentText = ___currentText.Replace("Fission", "피션");
+
+                ___screenText.text = ___screenText.text.Replace("Gloom", "글룸");
+                ___currentText = ___currentText.Replace("Gloom", "글룸");
+
+                ___screenText.text = ___screenText.text.Replace("Gratar", "그라타");
+                ___currentText = ___currentText.Replace("Gratar", "그라타");
+
+                ___screenText.text = ___screenText.text.Replace("Infernis", "인퍼니스");
+                ___currentText = ___currentText.Replace("Infernis", "인퍼니스");
+
+                ___screenText.text = ___screenText.text.Replace("Junic", "주닉");
+                ___currentText = ___currentText.Replace("Junic", "주닉");
+
+                ___screenText.text = ___screenText.text.Replace("Oldred", "올드레드");
+                ___currentText = ___currentText.Replace("Oldred", "올드레드");
+
+                ___screenText.text = ___screenText.text.Replace("Polarus", "폴라러스");
+                ___currentText = ___currentText.Replace("Polarus", "폴라러스");
+
+                ___screenText.text = ___screenText.text.Replace("Acidir", "어시디어");
+                ___currentText = ___currentText.Replace("Acidir", "어시디어");
+            }
+
+
+            //날씨
             ___screenText.text = ___screenText.text.Replace("mild weather", "맑음");
             ___currentText = ___currentText.Replace("mild weather", "맑음");
 
@@ -96,7 +217,7 @@ namespace LCKorean.Patches
 
             ___screenText.text = ___screenText.text.Replace("[ALL DATA HAS BEEN CORRUPTED OR OVERWRITTEN]", "[모든 데이터가 손상되거나 덮어쓰기되었습니다]");
             ___currentText = ___currentText.Replace("[ALL DATA HAS BEEN CORRUPTED OR OVERWRITTEN]", "[모든 데이터가 손상되거나 덮어쓰기되었습니다]");
-            
+
 
             if (___screenText.text.Contains("numberOfItemsOnRoute2"))
             {
@@ -383,12 +504,28 @@ namespace LCKorean.Patches
                 switch (node.name)
                 {
                     case "Start":
-                        node.displayText = "FORTUNE-9 OS에 오신 것을 환영합니다\n\t회사 제공\n\n행복한 [currentDay] 되세요.\n\n명령 목록을 보려면 \"Help\"를 입력하세요.\n\n\n\n\n";
+                        node.displayText.Replace("Welcome to the FORTUNE-9 OS", "FORTUNE-9 OS에 오신 것을 환영합니다");
+                        node.displayText.Replace("Courtesy of the Company", "회사 제공");
+                        node.displayText.Replace("Happy [currentDay].", "좋은 [currentDay] 되세요.");
+                        if (Plugin.fullyKoreanMoons)
+                        {
+                            node.displayText.Replace("Type \"Help\" for a list of commands.", "명령 목록을 보려면 \"도움말\"을 입력하세요.");
+                        }
+                        else
+                        {
+                            node.displayText.Replace("Type \"Help\" for a list of commands.", "명령 목록을 보려면 \"Help\"를 입력하세요.");
+                        }
                         break;
                     case "StartFirstTime":
                         node.displayText.Replace("Welcome to the FORTUNE-9 OS", "FORTUNE-9 OS에 오신 것을 환영합니다");
                         node.displayText.Replace("Courtesy of the Company", "회사 제공");
-                        node.displayText.Replace("Type \"Help\" for a list of commands.", "명령 목록을 보려면 \"Help\"를 입력하세요.");
+                        if (Plugin.fullyKoreanMoons)
+                        {
+                            node.displayText.Replace("Type \"Help\" for a list of commands.", "명령 목록을 보려면 \"도움말\"을 입력하세요.");
+                        }else
+                        {
+                            node.displayText.Replace("Type \"Help\" for a list of commands.", "명령 목록을 보려면 \"Help\"를 입력하세요.");
+                        }
                         break;
                     case "ParserError1":
                         node.displayText = "[이 단어에 제공되는 작업이 없습니다.]\n\n";
@@ -463,6 +600,25 @@ namespace LCKorean.Patches
                         node.displayText = "챌린지 위성 저장 파일을 선택했습니다. 챌린지 도중에는 다른 위성으로 이동할 수 없습니다.";
                         break;
                 }
+            }
+        }
+
+        static void TranslateUnlockable(TerminalNode terminalNodes)
+        {
+            switch (terminalNodes.name)
+            {
+                case "Bunkbeds1":
+                    terminalNodes.displayText = "벙커침대\n\n";
+                    terminalNodes.creatureName = "벙커침대";
+                    break;
+                case "FileCabinet1":
+                    terminalNodes.displayText = "파일 캐비닛\n\n";
+                    terminalNodes.creatureName = "파일 캐비닛";
+                    break;
+                case "Cupboard1":
+                    terminalNodes.displayText = "수납장\n\n";
+                    terminalNodes.creatureName = "수납장";
+                    break;
             }
         }
 
@@ -562,7 +718,7 @@ namespace LCKorean.Patches
                         node.creatureName = "집사";
                         break;
                     case "MaskHornetsFile":
-                        node.displayText = "위장 말벌\r\n\r\n위장 말벌";
+                        node.displayText = "위장 말벌\n\n위장 말벌";
                         node.creatureName = "위장 말벌";
                         break;
                     case "TulipSnakeFile":
@@ -573,175 +729,298 @@ namespace LCKorean.Patches
             }
             foreach (TerminalKeyword keyword in terminalNodes.allKeywords)
             {
+                if (Plugin.translateModdedContent)
+                {
+                    Plugin.mls.LogInfo(keyword.word);
+                    switch (keyword.word)
+                    {
+                        case "asteroid13":
+                            keyword.word = "아스테로이드13";
+                            break;
+                        case "atlantica":
+                            keyword.word = "아틀란티카";
+                            break;
+                        case "cosmocos":
+                            keyword.word = "코스모코스";
+                            break;
+                        case "desolation":
+                            keyword.word = "디솔레이션";
+                            break;
+                        case "etern":
+                            keyword.word = "이턴";
+                            break;
+                        case "fissionc":
+                            keyword.word = "피션";
+                            break;
+                        case "gloom":
+                            keyword.word = "글룸";
+                            break;
+                        case "gratar":
+                            keyword.word = "그라타";
+                            break;
+                        case "infernis":
+                            keyword.word = "인퍼니스";
+                            break;
+                        case "junic":
+                            keyword.word = "주닉";
+                            break;
+                        case "oldred":
+                            keyword.word = "올드레드";
+                            break;
+                        case "polarus":
+                            keyword.word = "폴라러스";
+                            break;
+                        case "acidir":
+                            keyword.word = "어시디어";
+                            break;
+                    }
+                }
                 switch (keyword.word)
                 {
+                    case "first":
+                        keyword.word = "첫번째";
+                        foreach (CompatibleNoun noun in keyword.defaultVerb.compatibleNouns)
+                        {
+                            switch (noun.noun.name)
+                            {
+                                case "LogFile1Keyword":
+                                    noun.noun.word = "첫번째";
+                                    noun.result.creatureName = "첫번째 일지 - 8월 22일";
+                                    noun.result.displayText = "";
+                                    break;
+                                case "LogFile2Keyword":
+                                    noun.noun.word = "냄새";
+                                    noun.result.creatureName = "냄새 나! - 8월 24일";
+                                    noun.result.displayText = "맙소사, 이 슈트 망할 미라마냥 날 쥐어짜고 있어! 난 다 큰 성인인라고, 다리 사이에 공간 좀 줘! 나 죽겠다, 죽겠어! 아빠가 기뻐할 거야. 나 드디어 일자리를 구했어. 에라이! 여기 사람들 다 냄새 나. 특히 리치. 나 쟤 호수에 던져버릴 거야. 이게 뭘로 만들어졌는지는 내 알 바 아냐. 그리고 카메라 임무 하는거 재밌네. 오\n날짜 쓰는 걸 까먹었네 1968년 8월 24일이야. 이 키보드에는 ㅇㄴㅁ어ㅑㅣㄻㄴㅄ..ㄹ/ㅎ;...\n\n\n오늘 우리는 후라이팬 두 개와 커다란 나사를 발견했다. 딱히 쓸모가 없다. 회사는 이딴 걸 어디에 쓰려고 하는 거지\n\n";
+                                    break;
+                                case "LogFile3Keyword":
+                                    noun.noun.word = "상황의";
+                                    noun.result.creatureName = "상황의 변화 - 8월 27일";
+                                    noun.result.displayText = "우리는 지난 며칠 동안 \"상황의 변화\"에 빠져 있었다. 리치가 계속해서 했던 말인데, 걔한테선 썩은 참치 통조림 냄새가 난다고. 내가 ㄱㅏ본 여름 캠프 중 최악이다. 날짜는 1968년 8월 27일.\\n\\n우리는 우리 중 한명이 모든 움직이는 것들을 때려잡을 수 있는 삽을 가지고 있는지 확인하고, 다른 한명을 항상 \"카메라 임무\"에 투입해서 그들이 글자와 숫자로 이 큰 보안문을 열 수 있도록 한다. 마법사 데스몬드에게 어떻게 작동하는지 물어봐봐. 내 생각에 데스몬드는 그냥 문에 있는 코드를 입력하는 것 같다.\\n. 그게 다야.\\n\\n우리는 오늘 일부 상품을 70% 가치로 회사에 판매했다. 카운터 뒤에서 나는 빌어먹을 정신병 걸릴 듯한 소리를 들으니 오싹해졌 다. 다들 조금도. ??쓰지 않는다.?\\n신경쓰여! 내 손전등이 제대로 안들어오고, 빛만 어두워졌다고.\\n\\n";
+                                    break;
+                                case "LogFile4Keyword":
+                                    noun.noun.word = "수상한";
+                                    noun.result.creatureName = "수상한 - 8월 31일";
+                                    noun.result.displayText = "날짜는 1968년 8월 31일. 나는 다시 카메라 임무를 받았고 어쨌든 이 위성 위를 걷는 것이 싫다. 아하 쟤들 꼴 좀 보라지, 막 비가 내리기 시작했다!!! 난 그냥 앉아만 있다. 개미들이나 쓸 만한 이 작은 침대에서는 잠을 잘 수 없어\n\n\n수 없이 생각해봤다. 이 일이 수상하다고 생각한다. 이 글을 읽고 있는 당신도 아마 나와 마찬가지로 여기까지 왔을 것이다. 보수도 괜찮고 계약은 한 계절밖에 되지 않아. 그들은 이상한 목소리로 전화로 \"평가 시험\"을 통과시켰고, 당신은 나머지 팀원들과 셔틀에서 계약에 서명했을 거야. 하지만 당신은 그 동안 아무에게도 말을 하지 않았을 테지. 셔틀이 자동 조종됐었어. 내 생각엔 전화에서 들린 목소리가 가짜였던 것 같다. 최악의 꿈을 꿨다. 그냥 집으로 돌아가고 싶다. 하지만 집에 기어가서 울면서 아빠 현관문을 긁지는 않을 것이다. 그건 시구르드답지 않다고!\\n\\n";
+                                    break;
+                                case "LogFile5Keyword":
+                                    noun.noun.word = "뒤에서";
+                                    noun.result.creatureName = "뒤에서 난 소리 - 9월 4일";
+                                    noun.result.displayText = "날짜: 1968년 9월 4일\n\n오늘 아침은 쓸모없는 쓰레기나 팔러 회사로 일찍 갔다. 정산 비율은 120%였는데, 데스몬드는 그게 희귀한 일이라고 했고 놓치고 싶지 않다고 했다. 그리고 그게 멍청한 주식인 것 마냥 쳐다보고 있고는 했다.\n\n여전히 여긴 개판인게, 리치에게서는 여전히 똥 냄새가 나거든. 잠도 거의 못 잘 정도야. 회사 건물 벽 뒤에서 엄청 끔찍한 소리를 들었는데, 그 소리는 마치 우리 어머니가 씨앗과 향신료를 절구공이에 담아 으깰 때 나는 것 같이, 울부짖는 붉은 얼굴들이 마구 뒤섞여 콘크리트에 휩쓸려 가는 소리 같았다,. 아직도 그 소리가 들린다. 악몽이야. 아무도 저 소리를 듣지 못했어. 쟤넨 뭘 해야 할지도 몰라. 제스는 내가 \"향수병\"에 걸린 거라고 생각하고 있어. 그게 아니라 이 싸구려 슈트에 병이 날 정도로 질린 거다\n\n";
+                                    break;
+                                case "LogFile6Keyword":
+                                    noun.noun.word = "작별";
+                                    noun.result.creatureName = "작별 - 9월 7일";
+                                    noun.result.displayText = "우린 리치를 버리고 왔다. 방 하나만 확인하면 일과가 끝인데, 문을 열 수가 없었다. 그리고 뒤를 보니 리치는 거기에 없었다. 쭈글쭈글한 피부를 가진 망할 이족보행 꽃대가리 인간이었어! 그게 걔 목을 꺾었어. 난 무언가 꺾이는 소리를 들었지만, 걔는 거기에 없었어. 리치의 시체라도 찾고 싶었는데, 다들 그저 겁쟁이들이야! 그들의 얼굴은 멍청한 듯이 텅 비어 있었고, 그들의 멍청한 대가리는 움직이지 않았다. 마찬가지로 그들은 나를 떠날 것이었다. 우리 모두는 리치를 싫어했지만 이런 걸 원하지 않았다. 이건 이럴 가치가 없어. 그냥 이럴 가치가 없다고. 우리는 아무 가치도 없겠지만 팔 수 있는 가위 한 개, 우표가 가득 담긴 상자 한 개, 코드 묶음을 얻었다. 이럴 ㄱㅏ치도 없는 일인데, 회사가 원하는 게 대체 뭘까?\n\n\n마지막으로 리치를 본 날짜는 1968년 9월 7일이다.\n\n";
+                                    break;
+                                case "LogFile7Keyword":
+                                    noun.noun.word = "비명";
+                                    noun.result.creatureName = "비명 - 9월 13일";
+                                    noun.result.displayText = "날짜: 1968년 9월 13일\n\n무슨 이유에서인지 사고 신고를 위해 회사 전화번호로 전화를 걸어야 했던 사람은 바로 나였다. 다른 사람들은 너무 겁을 먹어서 하지 못했다. 집에서 본 전화 인터뷰랑 바보 같은 훈련용 영상들에서 나왔던 가짜 목소리와 똑같았다. 하지만 내 생각에 그것은 내가 했던 말을 들었던 것 같았다, 왜냐하면 그것은 그 가족과 연락해서 대체자를 찾는다는 말과 다른 뭔가를 말했기 때문이다. 말이 정말 빨랐다.\n\n\n회사 건물 벽에 가면 무전기에서 항상 비명소리를 들을 수 있다는 것을 배웠다. 그들은 내 말을 믿지 않았지만, 글쎄 지금은 믿을걸. 내가 몇 주 전에 들었을 때처럼 들렸거든. 그들은 그만두고 싶어해. 나는 겁쟁이가 아니라고 말했다. 이 직업을 얻었은 지 얼마 안 됐거든\n\n";
+                                    break;
+                                case "LogFile8Keyword":
+                                    noun.noun.word = "황금빛";
+                                    noun.result.creatureName = "황금빛 행성 - 8월 ??일";
+                                    noun.result.displayText = "무전기로 목소리를 들려주었는데 비명소리의 일부 같았다. 그는 황금빛 행성이 실제로 존재했다고 말했고, 전설이 아니라고 말했다. 그리고 그것이 단지 유성에 부딪힌 것이 아니라고 말했다. 그는 행성이 \"짐승\"에 의해 삼켜졌고, 소화되고 있다고 말했다. 그 짐승이 뭐냐고 물었더니 모른다고 하더군!. 그는 그것이 행성을 먹어치웠고 그들은 모든 것을 잊어버렸다고 말했다. \\n\\n말을 멈추도록 할 수는 없었다. 하지만 나는 그가 큰 벽의 반대편에 있으니 꺼내줄 수 있다고 말했다. 나는 그가 건물 안에 있다고 말했고, 그때 그는 몹시 놀라기 시작했다/. 한마디도 알아들을 수 없었고, \"껍질을 뱉어낸다\"고 뭔가 말한 것 같다. 그래서 그냥 껐다. 정말 엉망이었다\\n\\n제스는 황금빛 행성은 단지 이야기일 뿐이라고 했다. 안다고 말했다. 나도 바보가 아니라고. 글쎄, 그녀는 내가 그만둬야 한다고 말했고, 내가 그만두면 제스도 그만둔다고 한다. 그래서 그 사람으 여전히 하고있다.\\n\\n";
+                                    break;
+                                case "LogFile9Keyword":
+                                    noun.noun.word = "아이디어";
+                                    noun.result.creatureName = "아이디어 - 9월 19일";
+                                    noun.result.displayText = "날짜: 1968년 9월 19일\n지난 주말에 데스몬드와 제스가 깨어난 것 같다. 우리는 며칠 안에 네 번째 팀원을 데려올 예정이다. 우리는 더 이상 어떤 위험도 감수하지 않고, 그만큼 많이 얻지도 않지만 더 안전하다고 느꼈고, 더 편하게 잘 수 있게 됐어. 근데 아직도 힘들어. 아직도 똥 냄새가 난다. 아직도 리치 냄새가 나 걔는 그 정도로 냄새가 심했거든\n\n\n난 전화에서 들리던 목소리가 가짜 같다고 얘기하고 있었다. 그러다 데스몬드가 이상한 아이디어를 떠올렸다. 자기는 마법사니까 내가 회사 번호로 전화한 걸로 그 목소리가 어디에서 나오는지 알아낼 수 있겠다고 생각했어. 왜 그러려는지는 모르겠지만, 진지해 보였어. 요즘 그는 터미널을 많이 사용하고 있어.\n\n";
+                                    break;
+                                case "LogFile10Keyword":
+                                    noun.noun.word = "헛소리";
+                                    noun.result.creatureName = "헛소리 - 9월 27일";
+                                    noun.result.displayText = "1968년 9월 27일\\n데스몬드는 나보고 우리가 알아낸 내용을 ㄱl록하고 \"헛소리를 최소화\"하길 원하는 것 같아,  그래서 나는 내 헛소리들을 아주 많이 집어넣기로 했다. 엿이나 먹으라지. 새로 온 팀원 이름은 루카스야. 그는 항상 혼란스러워하고 겁에 질려 있는데, 아기가 따로 없어. 적어도 괴물같은 냄새는 안 나네.\\n9월인데도 날씨가 너무 좋아서 이 슈트가 잘 어울리지 않아\\n음 일단 데스몬드가 \"전화를 추적\"해서 회사 건물에서 우리에게 전화하는 \"척\"하는 사람들이 어디에 있는지 알게 됐어. 그들은 태양계 너머에 있어!! 왜 그렇게 멀리 있는 거지?\\n\\n데스몬드는 모른다고 하지만 제 생각은.. 무전기에서 들었던 목소리처럼 정말 회사 건물에 큰 괴물이 있는 거면 어떡해? 그걸 가둬놓고 길들이기 위해 먹이를 주는 것일지도 몰라. 난 그냥 바보같은 일을 하고 싶었을 뿐이라고!!!!!!";
+                                    break;
+                                case "LogFile11Keyword":
+                                    noun.noun.word = "숨어";
+                                    noun.result.creatureName = "숨어 있는 것 - 9월 30일";
+                                    noun.result.displayText = "1968년 9월 27일\n\n\n난 무언가가 회사 건물의 거대한 콘크리트 벽을 뚫고 나오는 꿈을 자주 꾸고 있어. 그게 어떻게 생겼는지는 모르겠는데 그냥 엄청 크고 빠른 것 같아. 우리는 전화 속 목소리가 진짜인지 알아낼 방법을 찾을 수가 없어. 데스몬드는 저게 너무 멀리 있다고 말하더라. 나는 그에게 자동 조종 장치를 직접 조종할 수 있는지 물어봤는데 걔가 나보고 미쳤다고 하고 우릴 죽일 수도 있다고 했어. 그래, 난 미쳤어 데스몬드.\n\n그는 우리가 좌표로 가려면 개인 함선을 타야 할 것이라고 말했고, 거기에 실제로 무엇이 있을지는 누가 알겠냐고 말했어. 만약에.. 그냥 아무것도 아니었다면 어떨까?\n나는 우리가 어떻게 여기까지 왔는지 기억이 안 나. 계약을 맺은 건물로 날아갔던 것처럼 작은 일들만 기억나. 하지만 나는 함선에 어떻게 탔는지도, 심지어 아빠에게 작별 인사를 했던 기억조차 없어. 꿈 속에서는 회사가 그 안에 갇혀 있는 게 아니라 그냥 숨어 있는 것 같아. 내가 집에 돌아갈 수 있을지 잘 모르겠어.\n\n";
+                                    break;
+                                case "LogFile12Keyword":
+                                    noun.noun.word = "진짜";
+                                    noun.result.creatureName = "진짜 직업 - 10월 1일";
+                                    noun.result.displayText = "날짜 : 1968년 10월 1일\\n과자와 레모네이드 팩이 또 동났다. 데스몬드는 기절 수류탄이 \"더 효과적\"이라고 생각하고 있어. 내 물건 주문을 다음 날로 미루면 난 조종 레버에 응가 싸놓고 기절 수류탄에 대해 어떻게 생각하는지 물어볼 거야. 데스몬드 이거 읽지 마\\n\\n\\n내가 마법사가 아니라는 건 알지만 오늘도 컴퓨터 담당인 것 같아. 내가 보우에 나갈 때마다 죽은 것처럼 창백해진다고 해서 스크린 업무를 시켰어. 내가 약해졌다고 생각하나 봐. 어쨌든 루카스는 겁이 많아. 걔가 미치지 않게 잘 지켜봐. 난 밤에도 내 집 뒷마당인 것 처럼 산책할 수 있어!! 그냥 강 건너편 언덕에서 리치를 봐서 그래. 그게 3일 전이야. 난 무섭지 않아. 그냥 밖이 추울 뿐이야. 사실 그냥 걔네는 내가 매일 스크린 업무를 하길 바라는 것 같은데 그냥 다들 핑계를 대고 있는 것 같아\\n\\n아빠가 그립다. 나는 아빠가 타이탄에 머물지 않기를 바란다. 사람들은 2년 뒤엔 예전 같을 거라고 말했다. 제스는 곧 전쟁이 일어날 거라고 했고 모두가 그걸 기다리고 있다고 말했다. 우리가 물건을 팔러 갈 때마다 회사 건물이 안에 용광로가 있는 것처럼 요란하게 흔들린다. 그들은 그만두는 것을 너무 두려워한다. 우리는 할당량을 맞추기 위해 잠도 거의 못 자고, 상황은 매번 더 힘들어진다. 마치 바늘 구멍을 통과하려고 쥐어짜내지는 기분이다. 다시 돌아갈 수 있었으면 좋겠다. 그냥 매일 용돈만 받더라도 아빠 밑에서 일하는 게 더 나았다. 나는 아빠가 폭포를 보기 위해 우리를 마을 밖으로 데려가서 우리가 오래된 나무 계단을 걸어 올라갔던 때가 좋았다. 난 그냥 진짜 직업을 원했을 뿐인데\\n\\n";
+                                    break;
+                                case "LogFile13Keyword":
+                                    noun.noun.word = "데스몬드";
+                                    noun.result.creatureName = "데스몬드 - 10월 15일";
+                                    noun.result.displayText = "데스몬드. 1968년 10월 3일. 이 일지가 발견되면 시스템째로 삭제될 것 같아 이것을 숨기기 위해 암호화하고 있습니다. 모두 위장이었습니다. 이 모든 것이 단순히 거래하는 것처럼 보이지만, 우리의 진짜 임무는 공포를 계속 먹여 키우는 것이었습니다. 배부름이 끝나고 그것의 배고픔이 어느 것으로도 채워지지 않을 때까지 얼마나 걸릴 지는 아무도 모릅니다. 어쩌면 이 모든 황량한 위성들과 관련이 있을지도 모릅니다. 이 글을 읽는 사람에게, 부담스럽게 해서 죄송합니다. 제발 밤낮으로 좋은 시간 되길 바랍니다. 우리가 할 일이 또 무엇이 있겠습니까";
+                                    break;
+                            }
+                        }
+                        break;
                     case "buy":
                         foreach (CompatibleNoun noun in keyword.compatibleNouns)
                         {
                             switch (noun.result.name)
                             {
                                 case "buyProFlashlight1":
-                                    noun.result.displayText = "프로 손전등을 주문하려고 합니다. 수량: [variableAmount]. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "프로 손전등을 주문하려고 합니다. 수량: [variableAmount]. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
+
                                     noun.result.terminalOptions[0].result.displayText = "[variableAmount]개의 프로 손전등을 주문했습니다. 당신의 현재 소지금은 [playerCredits]입니다.\n\n우리의 계약자는 작업 중에도 빠른 무료 배송 혜택을 누릴 수 있습니다! 구매한 모든 상품은 1시간마다 대략적인 위치에 도착합니다.\n\n\n";
+                                    noun.result.terminalOptions[0].noun.word = Plugin.confirmString;
                                     noun.result.terminalOptions[1].result.displayText = "주문을 취소했습니다.\n\n";
+                                    noun.result.terminalOptions[1].noun.word = Plugin.denyString;
                                     break;
                                 case "buyFlash":
-                                    noun.result.displayText = "손전등을 주문하려고 합니다. 수량: [variableAmount]. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "손전등을 주문하려고 합니다. 수량: [variableAmount]. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "[variableAmount]개의 손전등을 주문했습니다. 당신의 현재 소지금은 [playerCredits]입니다.\n\n우리의 계약자는 작업 중에도 빠른 무료 배송 혜택을 누릴 수 있습니다! 구매한 모든 상품은 1시간마다 대략적인 위치에 도착합니다.\n\n\n";
                                     break;
                                 case "buyLockpickers":
-                                    noun.result.displayText = "자물쇠 따개를 주문하려고 합니다. 수량: [variableAmount]. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "자물쇠 따개를 주문하려고 합니다. 수량: [variableAmount]. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "[variableAmount]개의 자물쇠 따개를 주문했습니다. 당신의 현재 소지금은 [playerCredits]입니다.\n\n우리의 계약자는 작업 중에도 빠른 무료 배송 혜택을 누릴 수 있습니다! 구매한 모든 상품은 1시간마다 대략적인 위치에 도착합니다.\n\n\n";
                                     break;
                                 case "buyBoombox":
-                                    noun.result.displayText = "붐박스를 주문하려고 합니다. 수량: [variableAmount]. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "붐박스를 주문하려고 합니다. 수량: [variableAmount]. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "[variableAmount]개의 붐박스를 주문했습니다. 당신의 현재 소지금은 [playerCredits]입니다.\n\n우리의 계약자는 작업 중에도 빠른 무료 배송 혜택을 누릴 수 있습니다! 구매한 모든 상품은 1시간마다 대략적인 위치에 도착합니다.\n\n\n";
                                     break;
                                 case "buyExtensLadder":
-                                    noun.result.displayText = "연장형 사다리를 주문하려고 합니다. 수량: [variableAmount]. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "연장형 사다리를 주문하려고 합니다. 수량: [variableAmount]. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "[variableAmount]개의 연장형 사다리를 주문했습니다. 당신의 현재 소지금은 [playerCredits]입니다.\n\n우리의 계약자는 작업 중에도 빠른 무료 배송 혜택을 누릴 수 있습니다! 구매한 모든 상품은 1시간마다 대략적인 위치에 도착합니다.\n\n\n";
                                     break;
                                 case "buyJetpack":
-                                    noun.result.displayText = "제트팩을 주문하려고 합니다. 수량: [variableAmount]. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "제트팩을 주문하려고 합니다. 수량: [variableAmount]. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "[variableAmount]개의 제트팩을 주문했습니다. 당신의 현재 소지금은 [playerCredits]입니다.\n\n우리의 계약자는 작업 중에도 빠른 무료 배송 혜택을 누릴 수 있습니다! 구매한 모든 상품은 1시간마다 대략적인 위치에 도착합니다.\n\n\n";
                                     break;
                                 case "buyRadarBooster":
-                                    noun.result.displayText = "레이더 부스터를 주문하려고 합니다. 수량: [variableAmount]. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "레이더 부스터를 주문하려고 합니다. 수량: [variableAmount]. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "[variableAmount]개의 레이더 부스터를 주문했습니다. 당신의 현재 소지금은 [playerCredits]입니다.\n\n우리의 계약자는 작업 중에도 빠른 무료 배송 혜택을 누릴 수 있습니다! 구매한 모든 상품은 1시간마다 대략적인 위치에 도착합니다.\n\n\n";
                                     break;
                                 case "buyShovel":
-                                    noun.result.displayText = "철제 삽을 주문하려고 합니다. 수량: [variableAmount]. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "철제 삽을 주문하려고 합니다. 수량: [variableAmount]. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "[variableAmount]개의 철제 삽을 주문했습니다. 당신의 현재 소지금은 [playerCredits]입니다.\n\n우리의 계약자는 작업 중에도 빠른 무료 배송 혜택을 누릴 수 있습니다! 구매한 모든 상품은 1시간마다 대략적인 위치에 도착합니다.\n\n\n";
                                     break;
                                 case "buySpraypaint":
-                                    noun.result.displayText = "스프레이 페인트를 주문하려고 합니다. 수량: [variableAmount]. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "스프레이 페인트를 주문하려고 합니다. 수량: [variableAmount]. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "[variableAmount]개의 스프레이 페인트를 주문했습니다. 당신의 현재 소지금은 [playerCredits]입니다.\n\n우리의 계약자는 작업 중에도 빠른 무료 배송 혜택을 누릴 수 있습니다! 구매한 모든 상품은 1시간마다 대략적인 위치에 도착합니다.\n\n\n";
                                     break;
                                 case "buyStunGrenade":
-                                    noun.result.displayText = "기절 수류탄을 주문하려고 합니다. 수량: [variableAmount]. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "기절 수류탄을 주문하려고 합니다. 수량: [variableAmount]. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "[variableAmount]개의 기절 수류탄을 주문했습니다. 당신의 현재 소지금은 [playerCredits]입니다.\n\n우리의 계약자는 작업 중에도 빠른 무료 배송 혜택을 누릴 수 있습니다! 구매한 모든 상품은 1시간마다 대략적인 위치에 도착합니다.\n\n\n";
                                     break;
                                 case "buyTZP":
-                                    noun.result.displayText = "TZP-흡입제를 주문하려고 합니다. 수량: [variableAmount]. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "TZP-흡입제를 주문하려고 합니다. 수량: [variableAmount]. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "[variableAmount]개의 TZP-흡입제를 주문했습니다. 당신의 현재 소지금은 [playerCredits]입니다.\n\n우리의 계약자는 작업 중에도 빠른 무료 배송 혜택을 누릴 수 있습니다! 구매한 모든 상품은 1시간마다 대략적인 위치에 도착합니다.\n\n\n";
                                     break;
                                 case "buyWalkieTalkie":
-                                    noun.result.displayText = "무전기를 주문하려고 합니다. 수량: [variableAmount]. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "무전기를 주문하려고 합니다. 수량: [variableAmount]. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "[variableAmount]개의 무전기를 주문했습니다. 당신의 현재 소지금은 [playerCredits]입니다.\n\n우리의 계약자는 작업 중에도 빠른 무료 배송 혜택을 누릴 수 있습니다! 구매한 모든 상품은 1시간마다 대략적인 위치에 도착합니다.\n\n\n";
                                     break;
                                 case "buyZapGun":
-                                    noun.result.displayText = "잽건을 주문하려고 합니다. 수량: [variableAmount]. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "잽건을 주문하려고 합니다. 수량: [variableAmount]. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "[variableAmount]개의 잽건을 주문했습니다. 당신의 현재 소지금은 [playerCredits]입니다.\n\n우리의 계약자는 작업 중에도 빠른 무료 배송 혜택을 누릴 수 있습니다! 구매한 모든 상품은 1시간마다 대략적인 위치에 도착합니다.\n\n\n";
                                     break;
 
                                 case "CozyLightsBuy1":
                                     noun.result.creatureName = "아늑한 조명";
-                                    noun.result.displayText = "아늑한 조명을 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "아늑한 조명을 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "아늑한 조명을 주문했습니다! 당신의 현재 소지금은 [playerCredits]입니다.\n전등 스위치를 사용해 아늑한 조명을 활성화하세요.\n\n";
                                     break;
                                 case "GreenSuitBuy1":
                                     noun.result.creatureName = "초록색 슈트";
-                                    noun.result.displayText = "초록색 슈트를 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "초록색 슈트를 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "초록색 슈트를 주문했습니다! 당신의 현재 소지금은 [playerCredits]입니다.\n\n";
                                     break;
                                 case "HazardSuitBuy1":
                                     noun.result.creatureName = "방호복 슈트";
-                                    noun.result.displayText = "방호복 슈트를 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "방호복 슈트를 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "방호복 슈트를 주문했습니다! 당신의 현재 소지금은 [playerCredits]입니다.\n\n";
                                     break;
                                 case "LoudHornBuy1":
                                     noun.result.creatureName = "시끄러운 경적";
-                                    noun.result.displayText = "시끄러운 경적을 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "시끄러운 경적을 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "시끄러운 경적을 주문했습니다! 당신의 현재 소지금은 [playerCredits]입니다.\n함선 안의 물체를 재배치하려면 [B]를 누르세요. 배치를 확정하려면 [V]를 누르세요.\n코드를 길게 당겨 시끄러운 경적을 활성화합니다.\n\n";
                                     break;
                                 case "PajamaSuitBuy1":
                                     noun.result.creatureName = "파자마 슈트";
-                                    noun.result.displayText = "파자마 슈트를 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "파자마 슈트를 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "파자마 슈트를 주문했습니다! 당신의 현재 소지금은 [playerCredits]입니다.\n\n";
                                     break;
                                 case "PurpleSuitBuy1":
                                     noun.result.creatureName = "보라색 슈트";
-                                    noun.result.displayText = "보라색 슈트를 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "보라색 슈트를 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "보라색 슈트를 주문했습니다! 당신의 현재 소지금은 [playerCredits]입니다.\n\n";
                                     break;
                                 case "RomTableBuy1":
                                     noun.result.creatureName = "로맨틱한 테이블";
-                                    noun.result.displayText = "로맨틱한 테이블을 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "로맨틱한 테이블을 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "로맨틱한 테이블을 주문했습니다! 당신의 현재 소지금은 [playerCredits]입니다.\n함선 안의 물체를 재배치하려면 [B]를 누르세요. 배치를 확정하려면 [V]를 누르세요.\n\n";
                                     break;
                                 case "ShowerBuy1":
                                     noun.result.creatureName = "샤워 부스";
-                                    noun.result.displayText = "샤워 부스를 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "샤워 부스를 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "샤워 부스를 주문했습니다! 당신의 현재 소지금은 [playerCredits]입니다.\n함선 안의 물체를 재배치하려면 [B]를 누르세요. 배치를 확정하려면 [V]를 누르세요.\n\n";
                                     break;
                                 case "TableBuy1":
                                     noun.result.creatureName = "테이블";
-                                    noun.result.displayText = "테이블을 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "테이블을 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "테이블을 주문했습니다! 당신의 현재 소지금은 [playerCredits]입니다.\n함선 안의 물체를 재배치하려면 [B]를 누르세요. 배치를 확정하려면 [V]를 누르세요.\n\n";
                                     break;
                                 case "TeleporterBuy1":
                                     noun.result.creatureName = "순간이동기";
-                                    noun.result.displayText = "순간이동기를 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "순간이동기를 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "순간이동기를 주문했습니다! 당신의 현재 소지금은 [playerCredits]입니다.\n버튼을 눌러 순간이동기를 활성화합니다. 현재 함선의 레이더에 모니터링 중인 사람을 순간이동시킵니다. 순간이동기를 통해 보유한 아이템은 보관할 수 없습니다. 재충전하는 데 약 10초가 걸립니다.\n\n함선 안의 물체를 재배치하려면 [B]를 누르세요. 배치를 확정하려면 [V]를 누르세요.\n\n";
                                     break;
                                 case "InverseTeleporterBuy":
                                     noun.result.creatureName = "역방향 순간이동기";
-                                    noun.result.displayText = "역방향 순간이동기를 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "역방향 순간이동기를 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "역방향 순간이동기를 주문했습니다! 당신의 현재 소지금은 [playerCredits]입니다.\n함선 안의 물체를 재배치하려면 [B]를 누르세요. 배치를 확정하려면 [V]를 누르세요.\n\n버튼을 누르고 역방향 순간이동기가 활성화되는 동안 위에 올라가세요.\n\n";
                                     break;
                                 case "TelevisionBuy1":
                                     noun.result.creatureName = "텔레비전";
-                                    noun.result.displayText = "텔레비전을 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "텔레비전을 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "텔레비전을 주문했습니다! 당신의 현재 소지금은 [playerCredits]입니다.\n함선 안의 물체를 재배치하려면 [B]를 누르세요. 배치를 확정하려면 [V]를 누르세요.\n\n";
                                     break;
                                 case "ToiletBuy1":
                                     noun.result.creatureName = "변기";
-                                    noun.result.displayText = "변기를 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "변기를 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "변기를 주문했습니다! 당신의 현재 소지금은 [playerCredits]입니다.\n함선 안의 물체를 재배치하려면 [B]를 누르세요. 배치를 확정하려면 [V]를 누르세요.\n\n";
                                     break;
                                 case "WelcomeMatBuy":
                                     noun.result.creatureName = "웰컴 매트";
-                                    noun.result.displayText = "웰컴 매트를 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "웰컴 매트를 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "웰컴 매트를 주문했습니다! 당신의 현재 소지금은 [playerCredits]입니다.\n함선 안의 물체를 재배치하려면 [B]를 누르세요. 배치를 확정하려면 [V]를 누르세요.\n\n";
                                     break;
                                 case "SignalTranslatorBuy":
                                     noun.result.creatureName = "신호 해석기";
-                                    noun.result.displayText = "신호 해석기를 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "신호 해석기를 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "신호 해석기를 주문했습니다! 당신의 현재 소지금은 [playerCredits]입니다.\n함선 안의 물체를 재배치하려면 [B]를 누르세요. 배치를 확정하려면 [V]를 누르세요.\n\n\n신호 해석기는 'transmit' 명령 뒤에 10글자 미만의 메시지를 입력해서 사용할 수 있습니다.\n\n";
                                     break;
                                 case "FishBowlBuy":
                                     noun.result.creatureName = "금붕어";
-                                    noun.result.displayText = "금붕어 어항을 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "금붕어 어항을 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "금붕어 어항을 주문했습니다! 당신의 현재 소지금은 [playerCredits]입니다.\n함선 안의 물체를 재배치하려면 [B]를 누르세요. 배치를 확정하려면 [V]를 누르세요.\n\n";
                                     break;
                                 case "DiscoBallBuy":
                                     noun.result.creatureName = "디스코 볼";
-                                    noun.result.displayText = "디스코 볼을 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "디스코 볼을 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "디스코 볼을 주문했습니다! 당신의 현재 소지금은 [playerCredits]입니다.\n전등 스위치를 사용해 디스코를 시작합니다.\n\n";
                                     break;
                                 case "RecordPlayerBuy":
                                     noun.result.creatureName = "레코드 플레이어";
-                                    noun.result.displayText = "레코드 플레이어를 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "레코드 플레이어를 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "레코드 플레이어를 주문했습니다! 당신의 현재 소지금은 [playerCredits]입니다.\n함선 안의 물체를 재배치하려면 [B]를 누르세요. 배치를 확정하려면 [V]를 누르세요.\n\n";
                                     break;
                                 case "JackOLanternBuy":
                                     noun.result.creatureName = "잭오랜턴";
-                                    noun.result.displayText = "잭오랜턴을 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "잭오랜턴을 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "잭오랜턴을 주문했습니다! 당신의 현재 소지금은 [playerCredits]입니다.\n함선 안의 물체를 재배치하려면 [B]를 누르세요. 배치를 확정하려면 [V]를 누르세요.\n\n";
                                     break;
                                 case "BunnySuitBuy":
                                     noun.result.creatureName = "토끼 슈트";
-                                    noun.result.displayText = "토끼 슈트를 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "토끼 슈트를 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "토끼 슈트를 주문했습니다! 당신의 현재 소지금은 [playerCredits]입니다.\n\n";
                                     break;
                                 case "BeeSuitBuy":
                                     noun.result.creatureName = "꿀벌 슈트";
-                                    noun.result.displayText = "꿀벌 슈트를 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "꿀벌 슈트를 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "꿀벌 슈트를 주문했습니다! 당신의 현재 소지금은 [playerCredits]입니다.\n\n";
                                     break;
                                 case "PlushiePajamaManBuy":
                                     noun.result.creatureName = "인형 파자마 맨";
-                                    noun.result.displayText = "인형 파자마 맨을 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\nCONFIRM 또는 DENY를 입력해주세요.\n\n";
+                                    noun.result.displayText = "인형 파자마 맨을 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "인형 파자마 맨을 주문했습니다! 당신의 현재 소지금은 [playerCredits]입니다.\n함선 안의 물체를 재배치하려면 [B]를 누르세요. 배치를 확정하려면 [V]를 누르세요.\n\n";
                                     break;
                             }
@@ -841,16 +1120,10 @@ namespace LCKorean.Patches
                                     break;
 
                                 case "ArtificeInfo":
-                                    if (Plugin.artificePronounce)
-                                    {
-                                        noun.result.displayText = "\n68-아티피스\n----------------------\n\n조건: 한때 활기 넘치는 위성이었으나 현재는 버려진 시설들만이 남아 있습니다. \n\n역사: 최소 200년 전으로 거슬러 올라가는 무기와 기밀 기술이 지표면의 다양한 유적지에서 발견되었습니다.\n\n동물군: 아직 작동 중인 기계가 방치되어 있다는 소문이 있습니다.\n\n";
-                                    }else
-                                    {
-                                        noun.result.displayText = "\n68-아터피스\n----------------------\n\n조건: 한때 활기 넘치는 위성이었으나 현재는 버려진 시설들만이 남아 있습니다. \n\n역사: 최소 200년 전으로 거슬러 올라가는 무기와 기밀 기술이 지표면의 다양한 유적지에서 발견되었습니다.\n\n동물군: 아직 작동 중인 기계가 방치되어 있다는 소문이 있습니다.\n\n";
-                                    }
+                                    noun.result.displayText = "\n68-아터피스\n----------------------\n\n조건: 한때 활기 넘치는 위성이었으나 현재는 버려진 시설들만이 남아 있습니다. \n\n역사: 최소 200년 전으로 거슬러 올라가는 무기와 기밀 기술이 지표면의 다양한 유적지에서 발견되었습니다.\n\n동물군: 아직 작동 중인 기계가 방치되어 있다는 소문이 있습니다.\n\n";
                                     break;
                                 case "EmbrionInfo":
-                                    noun.result.displayText = "\n5-엠브리언\n----------------------\n\n조건: 황량하고 평평하며 공기가 통하지 않는 엠브리언의 표면층은 거의 전부가 자수정 석영으로 이루어져 있는데, 이는 엠브리언이 가장 가까운 별과의 거리와 그로 인한 지열 활동 덕분에 가능한 일입니다. 엠브리언의 표면은 매우 뜨겁습니다.\n\n조건: 엠브리언은 불과 지난 세기에 발견되었습니다. 공식적으로 발견되기 훨씬 전부터 올드 버드의 시험장으로 사용되었던 것으로 보입니다. 이러한 위험성 때문에 엠브리언의 상태는 규탄됨으로 표시되어 있습니다. 엠브리언의 표면 아래 광대한 동굴 네트워크에 다양한 지열 생태계가 번성하고 있을 것이라는 학설이 있습니다.\n\n동물군: 엠브리언에는 생물학적 생명체가 존재하지 않습니다.\n\n\r\n";
+                                    noun.result.displayText = "\n5-엠브리언\n----------------------\n\n조건: 황량하고 평평하며 공기가 통하지 않는 엠브리언의 표면층은 거의 전부가 자수정 석영으로 이루어져 있는데, 이는 엠브리언이 가장 가까운 별과의 거리와 그로 인한 지열 활동 덕분에 가능한 일입니다. 엠브리언의 표면은 매우 뜨겁습니다.\n\n조건: 엠브리언은 불과 지난 세기에 발견되었습니다. 공식적으로 발견되기 훨씬 전부터 올드 버드의 시험장으로 사용되었던 것으로 보입니다. 이러한 위험성 때문에 엠브리언의 상태는 규탄됨으로 표시되어 있습니다. 엠브리언의 표면 아래 광대한 동굴 네트워크에 다양한 지열 생태계가 번성하고 있을 것이라는 학설이 있습니다.\n\n동물군: 엠브리언에는 생물학적 생명체가 존재하지 않습니다.\n\n\n";
                                     break;
 
                             }
@@ -864,12 +1137,14 @@ namespace LCKorean.Patches
                             {
                                 noun.result.displayText = noun.result.displayText.Replace("The Company is buying at ", "현재 회사가 물품을 ");
                                 noun.result.displayText = noun.result.displayText.Replace(".\n\nDo you want to route the autopilot to the Company building?", "에 매입하고 있습니다.\n\n회사 건물로 이동할까요?");
-                                
+
                                 noun.result.displayText = noun.result.displayText.Replace(". \n\nDo you want to route the autopilot to the Company building?", "에 매입하고 있습니다.\n\n회사 건물로 이동할까요?");
-                                
+
                                 noun.result.displayText = noun.result.displayText.Replace(". \r\n\r\nDo you want to route the autopilot to the Company building?", "에 매입하고 있습니다.\r\n\r\n회사 건물로 이동할까요?");
 
-                                noun.result.displayText = noun.result.displayText.Replace("Please CONFIRM or DENY.", "CONFIRM 또는 DENY를 입력하세요.");
+                                noun.result.displayText = noun.result.displayText.Replace("Please CONFIRM or DENY.", Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요.");
+
+                                noun.result.displayText = "현재 회사가 물품을 [companyBuyingPercent]에 매입하고 있습니다. \n\n회사 건물로 이동할까요?\n\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n\n";
                             }
                             if (noun.result.displayText.Contains("The cost to route to"))
                             {
@@ -888,9 +1163,30 @@ namespace LCKorean.Patches
                                 noun.result.displayText = noun.result.displayText.Replace("The cost to route to 5-Embrion is", "5-엠브리언의 이동 비용은");
                                 noun.result.displayText = noun.result.displayText.Replace("The cost to route to 68-Artifice is", "68-아터피스의 이동 비용은");
 
+                                //모드행성
+
+                                if (Plugin.translateModdedContent)
+                                {
+                                    noun.result.displayText = noun.result.displayText.Replace("The cost to route to 13-Kast is", "13 카스트의 이동 비용은"); 
+                                    noun.result.displayText = noun.result.displayText.Replace("The cost to route to 57 Asteroid-13 is", "57 아스테로이드-13의 이동 비용은"); 
+                                    noun.result.displayText = noun.result.displayText.Replace("The cost to route to 44 Atlantica is", "44 아틀란티카의 이동 비용은");
+                                    noun.result.displayText = noun.result.displayText.Replace("The cost to route to 42 Cosmocos is", "42 코스모코스의 이동 비용은");
+                                    noun.result.displayText = noun.result.displayText.Replace("The cost to route to 48 Desolation is", "48 디솔레이션의 이동 비용은");
+                                    noun.result.displayText = noun.result.displayText.Replace("The cost to route to 154 Etern is", "154 이턴의 이동 비용은");
+                                    noun.result.displayText = noun.result.displayText.Replace("The cost to route to 25 Fission-C is", "25 피션-C의 이동 비용은");
+                                    noun.result.displayText = noun.result.displayText.Replace("The cost to route to 36 Gloom is", "36 글룸의 이동 비용은");
+                                    noun.result.displayText = noun.result.displayText.Replace("The cost to route to 147 Gratar is", "147 그라타의 이동 비용은");
+                                    noun.result.displayText = noun.result.displayText.Replace("The cost to route to 46 Infernis is", "46 인퍼니스의 이동 비용은");
+                                    noun.result.displayText = noun.result.displayText.Replace("The cost to route to 84 Junic is", "84 주닉의 이동 비용은");
+                                    noun.result.displayText = noun.result.displayText.Replace("The cost to route to 134 Oldred is", "134 올드레드의 이동 비용은");
+                                    noun.result.displayText = noun.result.displayText.Replace("The cost to route to 94 Polarus is", "94 폴라러스의 이동 비용은");
+                                    noun.result.displayText = noun.result.displayText.Replace("The cost to route to 76 Acidir is", "76 어시디어의 이동 비용은");
+                                }
+
                                 noun.result.displayText = noun.result.displayText.Replace(". It is \ncurrently", "입니다.\n 이 위성의 현재 날씨는");
+                                noun.result.displayText = noun.result.displayText.Replace(". It is currently", "입니다.\n 이 위성의 현재 날씨는");
                                 noun.result.displayText = noun.result.displayText.Replace(" on this moon.", "입니다.");
-                                noun.result.displayText = noun.result.displayText.Replace("Please CONFIRM or DENY.", "CONFIRM 또는 DENY를 입력하세요.");
+                                noun.result.displayText = noun.result.displayText.Replace("Please CONFIRM or DENY.", Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요.");
 
                                 noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace("Routing autopilot to the Company building.", "회사 건물로 이동합니다.");
 
@@ -906,6 +1202,28 @@ namespace LCKorean.Patches
                                 noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace("Routing autopilot to 7-Dine.", "7-다인으로 이동합니다.");
                                 noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace("Routing autopilot to 8-Titan.", "8-타이탄으로 이동합니다.");
 
+                                //모드행성
+                                if (Plugin.translateModdedContent)
+                                {
+                                    if (Plugin.translateModdedContent)
+                                    {
+                                        noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace("Routing autopilot to 13-Kast", "13 카스트로 이동합니다.");
+                                        noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace("Routing autopilot to 57 Asteroid-13", "57 아스테로이드-13로 이동합니다.");
+                                        noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace("Routing autopilot to 44 Atlantica", "44 아틀란티카로 이동합니다.");
+                                        noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace("Routing autopilot to 42 Cosmocos", "42 코스모코스로 이동합니다.");
+                                        noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace("Routing autopilot to 48 Desolation", "48 디솔레이션으로 이동합니다.");
+                                        noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace("Routing autopilot to 154 Etern", "154 이턴으로 이동합니다.");
+                                        noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace("Routing autopilot to 25 Fission-C", "25 피션-C로 이동합니다.");
+                                        noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace("Routing autopilot to 36 Gloom", "36 글룸로 이동합니다.");
+                                        noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace("Routing autopilot to 147 Gratar", "147 그라타로 이동합니다.");
+                                        noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace("Routing autopilot to 46 Infernis", "46 인퍼니스로 이동합니다.");
+                                        noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace("Routing autopilot to 84 Junic", "84 주닉으로 이동합니다.");
+                                        noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace("Routing autopilot to 134 Oldred", "134 올드레드로 이동합니다.");
+                                        noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace("Routing autopilot to 94 Polarus", "94 폴라러스로 이동합니다.");
+                                        noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace("Routing autopilot to 76 Acidir", "76 어시디어로 이동합니다.");
+                                    }
+                                }
+
                                 noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace("Your new balance is ", "당신의 현재 소지금은 ");
                                 noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace(".\n\nGood luck.", "입니다.\n\n행운을 빕니다.");
                                 noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace(".\n\nPlease enjoy your flight.", "입니다.\n\n편안한 비행 되세요.");
@@ -917,32 +1235,101 @@ namespace LCKorean.Patches
                         keyword.specialKeywordResult.displayText = keyword.specialKeywordResult.displayText.Replace("To see the list of moons the autopilot can route to.", "항로를 지정할 위성 목록을 봅니다.");
                         keyword.specialKeywordResult.displayText = keyword.specialKeywordResult.displayText.Replace("To see the company store's selection of useful items.", "회사 상점의 유용한 아이템 목록을 봅니다.");
                         keyword.specialKeywordResult.displayText = keyword.specialKeywordResult.displayText.Replace("To see the list of wildlife on record.", "기록된 생명체 목록을 봅니다.");
-                        keyword.specialKeywordResult.displayText = keyword.specialKeywordResult.displayText.Replace("To access objects placed into storage.", "저장소에 있는 물체에 접근합니다.");
-                        keyword.specialKeywordResult.displayText = keyword.specialKeywordResult.displayText.Replace("To see the list of other commands", "저장소에 있는 물체에 접근합니다.");
+                        keyword.specialKeywordResult.displayText = keyword.specialKeywordResult.displayText.Replace("To access objects placed into storage.", "저장고에 있는 물체에 접근합니다.");
+                        keyword.specialKeywordResult.displayText = keyword.specialKeywordResult.displayText.Replace("To see the list of other commands", "기타 명령어 목록을 봅니다.");
+                        
+                        if (Plugin.fullyKoreanMoons)
+                        {
+                            keyword.word = "도움말";
+                            keyword.specialKeywordResult.displayText = keyword.specialKeywordResult.displayText.Replace(">MOONS", ">위성");
+                            keyword.specialKeywordResult.displayText = keyword.specialKeywordResult.displayText.Replace(">STORE", ">상점");
+                            keyword.specialKeywordResult.displayText = keyword.specialKeywordResult.displayText.Replace(">BESTIARY", ">도감");
+                            keyword.specialKeywordResult.displayText = keyword.specialKeywordResult.displayText.Replace(">STORAGE", ">저장고");
+                            keyword.specialKeywordResult.displayText = keyword.specialKeywordResult.displayText.Replace(">OTHER", ">기타");
+                        }
+                        break;
+                    case "storage":
+                        if (Plugin.fullyKoreanMoons)
+                        {
+                            keyword.word = "저장고";
+                        }
+                        
+                        keyword.specialKeywordResult.displayText = keyword.specialKeywordResult.displayText.Replace("While moving furniture with [B], you can press [X] to send it to storage. You can call it back from storage here.", "[B]로 가구를 이동시킬 수 있고, [X]를 눌러 저장고에 보관할 수 있습니다. 보관한 가구는 저장고에서 다시 꺼낼 수 있습니다.");
+                        keyword.specialKeywordResult.displayText = keyword.specialKeywordResult.displayText.Replace("These are the items in storage:", "보관 중인 물품 목록:");
                         break;
                     case "moons":
+                        if (Plugin.fullyKoreanMoons)
+                        {
+                            keyword.word = "위성";
+                        }
                         if (GameNetworkManager.Instance.gameVersionNum <= 49)
                         {
                             keyword.specialKeywordResult.displayText = "위성 카탈로그에 오신 것을 환영합니다.\n함선의 경로를 지정하려면 ROUTE를 입력하세요.\n위성에 대해 알아보려면 INFO를 입력하세요.\n____________________________\n\n* 회사 건물   //   [companyBuyingPercent]에 매입 중.\n\n* 익스페리멘테이션 [planetTime]\n* 어슈어런스 [planetTime]\n* 보우 [planetTime]\n\n* 오펜스 [planetTime]\n* 머치 [planetTime]\n\n* 렌드 [planetTime]\n* 다인 [planetTime]\n* 타이탄 [planetTime]\n\n";
-                        }else
+                        } else
                         {
                             keyword.specialKeywordResult.displayText = "위성 카탈로그에 오신 것을 환영합니다.\n함선의 경로를 지정하려면 ROUTE를 입력하세요.\n위성에 대해 알아보려면 INFO를 입력하세요.\n____________________________\n\n* 회사 건물   //   [companyBuyingPercent]에 매입 중.\n\n* 익스페리멘테이션 [planetTime]\n* 어슈어런스 [planetTime]\n* 보우 [planetTime]\n\n* 오펜스 [planetTime]\n* 머치 [planetTime]\n* 애더먼스 [planetTime]\n\n* 렌드 [planetTime]\n* 다인 [planetTime]\n* 타이탄 [planetTime]\n\n";
                         }
                         break;
                     case "store":
+                        if (Plugin.fullyKoreanMoons)
+                        {
+                            keyword.word = "상점";
+                        }
                         keyword.specialKeywordResult.displayText = "회사 상점에 오신 것을 환영합니다. \n아이템 이름 앞에 BUY와 INFO를 입력해보세요. \n숫자를 입력하여 도구를 여러 개 주문할 수 있습니다.\n____________________________\n\n[buyableItemsList]\n\n함선 강화:\n* 시끄러운 경적    //    가격: $100\n* 신호 해석기    //    가격: $255\n* 순간이동기    //    가격: $375\n* 역방향 순간이동기    //    가격: $425\n\n함선 장식 목록은 할당량별로 순환됩니다. 다음 주에 꼭 다시 확인해보세요:\n------------------------------\n[unlockablesSelectionList]\n\n";
                         break;
                     case "other":
-                        keyword.specialKeywordResult.displayText = "기타 명령어:\n\n>VIEW MONITOR\n메인 모니터의 지도 카메라를 켜고 끕니다.\n\n>SWITCH [플레이어 이름]\n메인 모니터에서 볼 플레이어를 전환합니다.\n\n>PING [레이더 부스터 이름]\n레이더 부스터에 소음을 재생합니다.\n\n>TRANSMIT [메세지]\n신호 해석기로 메세지를 전송합니다\n\n>SCAN\n현재 행성에 남아 있는 아이템 개수를 스캔합니다.\n\n\n";
+                        if (Plugin.fullyKoreanMoons)
+                        {
+                            keyword.word = "기타";
+                            keyword.specialKeywordResult.displayText = "기타 명령어:\n\n>VIEW MONITOR\n메인 모니터의 지도 카메라를 켜고 끕니다.\n\n>SWITCH [플레이어 이름]\n메인 모니터에서 볼 플레이어를 전환합니다.\n\n>PING [레이더 부스터 이름]\n레이더 부스터에 소음을 재생합니다.\n\n>TRANSMIT [메세지]\n신호 해석기로 메세지를 전송합니다\n\n>SCAN\n현재 행성에 남아 있는 아이템 개수를 스캔합니다.\n\n\n";
+                        }else
+                        {
+                            keyword.specialKeywordResult.displayText = "기타 명령어:\n\n>VIEW MONITOR\n메인 모니터의 지도 카메라를 켜고 끕니다.\n\n>SWITCH [플레이어 이름]\n메인 모니터에서 볼 플레이어를 전환합니다.\n\n>PING [레이더 부스터 이름]\n레이더 부스터에 소음을 재생합니다.\n\n>TRANSMIT [메세지]\n신호 해석기로 메세지를 전송합니다\n\n>SCAN\n현재 행성에 남아 있는 아이템 개수를 스캔합니다.\n\n\n";
+                        }
                         break;
+                        /*
+                    case "view":
+                        if (Plugin.fullyKoreanMoons)
+                        {
+                            keyword.word = "확인";
+                        }
+                        foreach (CompatibleNoun noun in keyword.compatibleNouns)
+                        {
+                            if (noun.noun.word == "monitor")
+                            {
+                                noun.noun.word = "모니터";
+                            }
+                        }
+                        break;
+                    case "switch":
+                        if (Plugin.fullyKoreanMoons)
+                        {
+                            keyword.word = "전환";
+                        }
+                        break;
+                    case "scan":
+                        if (Plugin.fullyKoreanMoons)
+                        {
+                            keyword.word = "스캔";
+                        }
+                        break;
+                        */
                     case "sigurd":
-                        keyword.specialKeywordResult.displayText = "시구르드의 일지 기록\n\n일지를 읽으려면, 이름 앞에 \"VIEW\"를 입력하세요.\n---------------------------------\n\n[currentUnlockedLogsList]\n\n\n\n";
+                        keyword.specialKeywordResult.displayText = "시구르드의 일지 기록\n\n일지를 읽으려면, 이름 앞에 \"확인\"를 입력하세요.\n---------------------------------\n\n[currentUnlockedLogsList]\n\n\n\n";
                         break;
                     case "bestiary":
+                        if (Plugin.fullyKoreanMoons)
+                        {
+                            keyword.word = "도감";
+                        }
                         keyword.specialKeywordResult.displayText = "생명체 도감\n\n생명체 파일에 접근하려면, 이름 뒤에 \"INFO\"를 입력하세요.\n---------------------------------\n\n[currentScannedEnemiesList]\n\n\n";
                         break;
                     case "eject":
-                        keyword.specialKeywordResult.displayText = "당신을 포함한 모든 팀원을 사출시키시겠습니까? 이륙한 상태여야 합니다.\n\nCONFIRM 또는 DENY를 입력하세요.\n\n";
+                        if (Plugin.fullyKoreanMoons)
+                        {
+                            keyword.word = "사출";
+                        }
+                        keyword.specialKeywordResult.displayText = "당신을 포함한 모든 팀원을 사출시키시겠습니까? 이륙한 상태여야 합니다.\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                         keyword.specialKeywordResult.terminalOptions[0].result.displayText = "사출을 시작합니다.\n\n";
                         keyword.specialKeywordResult.terminalOptions[1].result.displayText = "사출 절차를 취소했습니다.\n\n";
                         break;
@@ -1121,47 +1508,6 @@ namespace LCKorean.Patches
                     case "bunkbeds":
                         keyword.word = "벙커침대";
                         break;
-
-                    case "first":
-                        keyword.word = "첫번째";
-                        break;
-                    case "smells":
-                        keyword.word = "냄새";
-                        break;
-                    case "swing":
-                        keyword.word = "상황의";
-                        break;
-                    case "shady":
-                        keyword.word = "수상한";
-                        break;
-                    case "sound":
-                        keyword.word = "너머의";
-                        break;
-                    case "goodbye":
-                        keyword.word = "작별";
-                        break;
-                    case "screams":
-                        keyword.word = "비명";
-                        break;
-                    case "golden":
-                        keyword.word = "황금빛";
-                        break;
-                    case "idea":
-                        keyword.word = "아이디어";
-                        break;
-                    case "nonsense":
-                        keyword.word = "헛소리";
-                        break;
-                    case "hiding":
-                        keyword.word = "숨어";
-                        break;
-                    case "desmond":
-                        keyword.word = "데스몬드";
-                        break;
-                    case "real":
-                        keyword.word = "진짜";
-                        break;
-
 
                     case "zap gun":
                         keyword.word = "잽건";
