@@ -471,6 +471,18 @@ namespace LCKorean.Patches
             {
                 node.headerText = "튤립 뱀";
             }
+            else if (node.headerText == "Barber")
+            {
+                node.headerText = "이발사";
+            }
+            else if (node.headerText == "Vain Shroud")
+            {
+                node.headerText = "은폐 수풀";
+            }
+            else if (node.headerText == "Kidnapper Fox")
+            {
+                node.headerText = "납치 여우";
+            }
 
 
             if (node.headerText == "Landmine")

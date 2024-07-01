@@ -26,17 +26,32 @@ namespace LCKorean.Patches
     [HarmonyPatch(typeof(Terminal))]
     internal class TerminalPatch
     {
+        public static bool vehicleChecked;
+
         [HarmonyPostfix]
         [HarmonyPatch("Start")]
-        private static void Start_Postfix(ref TerminalNodesList ___terminalNodes, ref List<TerminalNode> ___enemyFiles,
+        private static void Start_Postfix(Terminal __instance, ref TerminalNodesList ___terminalNodes, ref List<TerminalNode> ___enemyFiles,
             ref TMP_InputField ___screenText, ref string ___currentText)
         {
+            Plugin.mls.LogInfo("클라이언트 버전: " + GameNetworkManager.Instance.gameVersionNum);
             TranslateKeyword(___terminalNodes, ___enemyFiles);
+            TranslateNode(__instance);
             foreach (UnlockableItem unlockableItem in StartOfRound.Instance.unlockablesList.unlockables)
             {
                 TranslateUnlockable(unlockableItem.shopSelectionNode);
             }
-            TranslateNode(___terminalNodes);
+
+        }
+
+        static void TranslateVehicle(Terminal instance)
+        {
+            foreach (BuyableVehicle buyableVehicle in instance.buyableVehicles)
+            {
+                if (buyableVehicle.vehicleDisplayName == "Cruiser")
+                {
+                    buyableVehicle.vehicleDisplayName = "크루저";
+                }
+            }
         }
 
         [HarmonyPostfix]
@@ -55,8 +70,21 @@ namespace LCKorean.Patches
 
         [HarmonyPostfix]
         [HarmonyPatch("Update")]
-        private static void Update_Postfix(ref TMP_InputField ___screenText, ref string ___currentText, ref int ___numberOfItemsInDropship)
+        private static void Update_Postfix(Terminal __instance, ref TMP_InputField ___screenText, ref string ___currentText, ref int ___numberOfItemsInDropship)
         {
+            if (!vehicleChecked)
+            {
+                if (GameNetworkManager.Instance.gameVersionNum >= 55)
+                {
+                    Plugin.mls.LogInfo("클라이언트 버전이 55 이상입니다");
+                    TranslateVehicle(__instance);
+                    vehicleChecked = true;
+                }else
+                {
+                    Plugin.mls.LogInfo("클라이언트 버전이 55 이하입니다");
+                    vehicleChecked = true;
+                }
+            }
             if (Plugin.fullyKoreanMoons)
             {
                 ___screenText.text = ___screenText.text.Replace("Type \"Help\" for a list of commands.", "명령 목록을 보려면 \"도움말\"을 입력하세요.");
@@ -280,7 +308,6 @@ namespace LCKorean.Patches
                     }
                     else
                     {
-                        Plugin.mls.LogInfo(__instance.moonsCatalogueList[num2].currentWeather.ToString());
                         if (__instance.moonsCatalogueList[num2].currentWeather.ToString().Contains("Rainy"))
                         {
                             text = "(우천)";
@@ -497,9 +524,9 @@ namespace LCKorean.Patches
             return modifiedDisplayText;
         }
 
-        static void TranslateNode(TerminalNodesList terminalNodes)
+        static void TranslateNode(Terminal instance)
         {
-            foreach (TerminalNode node in terminalNodes.specialNodes)
+            foreach (TerminalNode node in instance.terminalNodes.specialNodes)
             {
                 switch (node.name)
                 {
@@ -535,6 +562,16 @@ namespace LCKorean.Patches
                         break;
                     case "ParserError3":
                         node.displayText = "[이 작업은 이 개체와 맞지 않습니다.]\n\n";
+                        break;
+
+                    case "CannotAfford":
+                        node.displayText = "자금이 충분하지 않습니다!\n당신의 소지금은 [playerCredits]이지만 이 아이템의 총 가격은 [totalCost]입니다.\n\n";
+                        break;
+                    case "CantBuyVehicleYet":
+                        node.displayText = "수송선이 현재 물품을 배송하고 있습니다. 차량을 구매하려면 수송선이 비어 있어야 합니다.";
+                        break;
+                    case "BusyDeliveringVehicle":
+                        node.displayText = "수송선이 컴퍼니 크루저를 수송 중입니다. 차량이 도착할 때까지 아이템을 구매할 수 없습니다.\n";
                         break;
                 }
 
@@ -598,6 +635,15 @@ namespace LCKorean.Patches
                         break;
                     case "You selected the Challenge Moon save file. You can't route to another moon during the challenge.":
                         node.displayText = "챌린지 위성 저장 파일을 선택했습니다. 챌린지 도중에는 다른 위성으로 이동할 수 없습니다.";
+                        break;
+                    case "For the safety of your crew, the Company only allows one Cruiser to be in operation at any given time, but a Cruiser has been detected.\n\n":
+                        node.displayText = "팀원의 안전을 위해 회사는 한 번에 한 대의 크루저만 운행할 수 있도록 허용하고 있지만, 현재 구역에서 크루저가 감지되었습니다.\n\n";
+                        break;
+                    case "The delivery pod is currently filled with items en route; you cannot purchase a vehicle until it is empty.":
+                        node.displayText = "수송선이 현재 물품을 배송하고 있습니다. 차량을 구매하려면 수송선이 비어 있어야 합니다.";
+                        break;
+                    case "The delivery pod is busy transporting your Company Cruiser. You cannot purchase items until it arrives.\n":
+                        node.displayText = "수송선이 컴퍼니 크루저를 수송 중입니다. 차량이 도착할 때까지 아이템을 구매할 수 없습니다.\n";
                         break;
                 }
             }
@@ -725,13 +771,24 @@ namespace LCKorean.Patches
                         node.displayText = "튤립 뱀\n\n시구르드의 위험도: 1%\n\n학명: Draco tulipa\n튤립 뱀 또는 튤립 도마뱀은 날아다니는 도마뱀의 일종으로, 긴 팔과 날개로 쉽게 구별할 수 있으며, 같은 속의 다른 종(Draco)보다 크기가 두 배나 크며 비정상적으로 밝은 색상과 패턴을 자랑합니다. 튤립 뱀이라는 이름은 목 아래와 머리 뒤의 덮개가 큰 꽃잎을 닮았기 때문에 지어졌습니다. (다른 특이한 특징으로는 한 쌍의 눈과 깊게 갈라진 꼬리가 있습니다).\n\n튤립 뱀의 행동은 완고하고 겁이 없습니다. 실제로 튤립 뱀은 포식자를 피해 도망치는 일이 거의 없습니다. 하지만 아이러니하게도 많은 생물학자들은 튤립 뱀의 꽃무늬가 위협을 표시하기보다는 위장술에 더 도움이 된다는 이론을 세우기도 했습니다. 또한 새와 비슷한 정교한 구애 의식에서도 꽃은 중요한 역할을 합니다. \n\n독특하게도 튤립뱀은 짝짓기를 할 때 무겁고 큰 물체를 공중으로 들어올리는 모습을 종종 관찰할 수 있는데, 잠재적 짝에게 깊은 인상을 주기 위해 자신의 두 배 이상 큰 바위나 식물을 들어 올릴 수 있습니다. 수컷은 보호심과 질투심이 강하고 광분한 나머지 마음에 드는 물체를 두고 줄다리기 싸움을 벌일 수 있으며, 여기에는 다른 생물도 포함될 수 있습니다.\n\n";
                         node.creatureName = "튤립 뱀";
                         break;
+                    case "ClaySurgeonFile":
+                        node.displayText = "이발사\n\n이발사에 관한 꿈을 꿨어\n어느 날 그가 가발을 만들어 줬어\n왜냐면 가위가 너무 커서\n\n";
+                        node.creatureName = "이발사";
+                        break;
+                    case "VainShroudFile":
+                        node.displayText = "은폐 수풀\n\n시구르드의 위험도: 이건 생명체가 아ㄴl야.\n\n학명: Phlebodium ruber\n흔히 \"Vains\"라고도 불리는 은폐 수풀은 미나리아재비과의 뿌리줄기 양치식물의 일종입니다. 이상적인 조건에서 은폐 수풀의 잎은 평균 6피트 11인치, 너비는 30~50센티미터에 이르지만 높이는 8피트까지 자랄 수 있습니다. 뿌리는 비정상적으로 크고 약간 야아아아아아아악간 가시가 많습니다. \n\n공격적인 번식력과 놀라운 크기로 인해 공간을 많이 차지하여 시야를 방해하고 제거하기도 어렵습니다. 건강한 식물을 밀어내기도 하며 영양가도 거의 없고, 불이 매우 잘 붙습니다. 은폐 수풀과 납치 여우 사이에는 강한 상관관계가 관찰되었으며, 이러한 이유로 은폐 수풀이 많은 수로 번식하게 되면 위험하다는 결론이 도출되었습니다. 이러한 점과 여러 생태계와 농업에 미치는 해로운 영향 때문에 은폐 수풀은 2147년부터 ITDA에 의해 유해 잡초로 분류되었습니다.\n\n\n\n은폐 수풀의 원산지는 알려지지 않았으며, 2143년 식물 연구자 알렉스 커트가 CoRoT-7b에서 처음 발견한 후 불과 몇 주 후에 같은 행성계 반대편에서 발견되었습니다. 은폐 수풀은 섭취 시 가벼운 환각 작용을 하기 때문에 처음에 여러 행성으로 퍼졌다는 설이 있지만, 그 역사는 베일에 싸여 있습니다.\n\n<b>일어나... 회ㅅㅏ가 수송선에 씨앗을 넣었고, 그들은 ㅇ우리가 이 시뻘건 풀떼기들을 싫어한다는 것을 알고 있기 때문에 우리에게 제초제를 팔고 있어</b> 아 볼드체 ㅈㅅ\n\n";
+                        node.creatureName = "은폐 수풀";
+                        break;
+                    case "BushWolfFile":
+                        node.displayText = "납치 여우\n\n시구르드의 위험도: 80% GOOD JOB he gets an A+ in creep school\n\n학명: Vulpes raptor\n개과에 속하는 대형 포유류인 납치 여우는 독특한 생물학적 특징을 가지고 있습니다. 그 중 두 가지는 수평 턱과 독특한 두개골 모양으로 인한 강력한 치악력과 몸 길이의 두 배까지 닿을 수 있는 가늘고 긴 개구리처럼 생긴 혀입니다. 그들은 고독한 사냥꾼이며 평생의 짝입니다.\n\n납치 여우는 매우 길고 덥수룩한 목과 꼬리를 가지고 있으며 붉은색을 띠고 있어 은폐 수풀과 잘 어우러진다고 여겨지며, 숨어서 먹이를 기다리는 모습을 자주 볼 수 있습니다. 납치 여우와 은폐 수풀은 두 침입종 사이의 가장 악명 높고 독특한 상호주의적 관계 중 하나를 형성하고 있습니다. 이 두 종은 대형 우주선을 타고 행성계 곳곳으로 퍼져나가고 있습니다. 일부 자연 보호 구역을 제외하고, ITDA는 생태계에 미치는 영향 때문에 납치 여우와 은폐 수풀에 대한 제거 명령을 발령했습니다. \n\n납치 여우는 공격적이면서도 소심하고 영역이 뚜렷한 행동 때문에 이름이 붙여졌으며, 주로 눈에 띄지 않는 곳에서 먹잇감을 잡아먹는 것을 선호합니다. 보통은 몸을 낮추고 사냥감이 나타나기를 기다립니다. 하지만 불안해지면 길고 끈적한 혀를 이용해 먼 거리에서 먹이를 낚아채 필요한 만큼 멀리 끌고 갈 수 있습니다. 주변에 은폐 수풀이 있다면 무기를 소지하고 다른 사람과 멀리 떨어지지 않는 것이 좋습니다. 혀는 매우 부드럽고 연약하며, 혀를 쉽게 공격할 수 있으므로 공격을 멈추게 하기 쉽습니다. 납치 여우로 인한 연간 인명 피해는 적은 편이며, 대부분의 피해자는 보호자가 없는 어린이나 혼자 하이킹을 하는 성인입니다.\n\n\n";
+                        node.creatureName = "납치 여우";
+                        break;
                 }
             }
             foreach (TerminalKeyword keyword in terminalNodes.allKeywords)
             {
                 if (Plugin.translateModdedContent)
                 {
-                    Plugin.mls.LogInfo(keyword.word);
                     switch (keyword.word)
                     {
                         case "asteroid13":
@@ -856,6 +913,7 @@ namespace LCKorean.Patches
                         {
                             switch (noun.result.name)
                             {
+                                //아이템 구매
                                 case "buyProFlashlight1":
                                     noun.result.displayText = "프로 손전등을 주문하려고 합니다. 수량: [variableAmount]. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
 
@@ -912,7 +970,18 @@ namespace LCKorean.Patches
                                     noun.result.displayText = "잽건을 주문하려고 합니다. 수량: [variableAmount]. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
                                     noun.result.terminalOptions[0].result.displayText = "[variableAmount]개의 잽건을 주문했습니다. 당신의 현재 소지금은 [playerCredits]입니다.\n\n우리의 계약자는 작업 중에도 빠른 무료 배송 혜택을 누릴 수 있습니다! 구매한 모든 상품은 1시간마다 대략적인 위치에 도착합니다.\n\n\n";
                                     break;
+                                case "buyWeedkiller":
+                                    noun.result.displayText = "제초제를 주문하려고 합니다. 수량: [variableAmount]. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
+                                    noun.result.terminalOptions[0].result.displayText = "[variableAmount]개의 제초제를 주문했습니다. 당신의 현재 소지금은 [playerCredits]입니다.\n\n우리의 계약자는 작업 중에도 빠른 무료 배송 혜택을 누릴 수 있습니다! 구매한 모든 상품은 1시간마다 대략적인 위치에 도착합니다.\n\n\n";
+                                    break;
+                                    
+                                    //컴퍼니 크루저, 트럭 구매
+                                case "buyCruiser":
+                                    noun.result.displayText = "컴퍼니 크루저를 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
+                                    noun.result.terminalOptions[0].result.displayText = "컴퍼니 크루저를 주문했습니다. 당신의 현재 소지금은 [playerCredits]입니다.\n\n당사는 이 제품의 품질을 매우 확신하며, 보증이 제공됩니다! 크루저를 분실하거나 파손한 경우, 한 번 무료로 교체할 수 있습니다. 차량을 운반하는 동안에는 아이템을 구매할 수 없습니다.\n\n";
+                                    break;
 
+                                    //가구 구매
                                 case "CozyLightsBuy1":
                                     noun.result.creatureName = "아늑한 조명";
                                     noun.result.displayText = "아늑한 조명을 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요." + "\n\n";
@@ -1069,6 +1138,13 @@ namespace LCKorean.Patches
                                     break;
                                 case "RadarBoosterInfo":
                                     noun.result.displayText = "\n레이더 부스터는 다양한 용도로 사용할 수 있습니다!\n\n레이더 부스터의 이름 앞에 \"SWITCH\" 명령어를 입력하여 메인 모니터에서 레이더 부스터를 확인합니다. 활성화되어 있어야만 합니다.\n\n레이더 부스터의 이름 앞에 \"PING\" 명령어를 입력하여 장치에서 특수한 소리를 재생합니다.\n\n";
+                                    break;
+                                case "WeedKillerInfo":
+                                    noun.result.displayText = "성가신 잡초를 처리하세요! 잡초의 뿌리를 바라보고 방아쇠를 반복해서 누르기만 하면 됩니다!";
+                                    break;
+
+                                case "CruiserInfo":
+                                    noun.result.displayText = "컴퍼니 크루저는 필요한 만큼 많은 물품, 심지어 동료 직원까지 운반할 수 있는 배달 트럭입니다! 컴퍼니 크루저를 구매하시면 무상 보증이 제공됩니다. 당사는 내구성과 유용성에 대한 자신감으로 가득하기 때문이죠!\n\n지침서가 함께 제공되므로 사용법을 꼭 읽어보시길 바랍니다.";
                                     break;
 
                                 case "LoudHornInfo":
@@ -1227,7 +1303,7 @@ namespace LCKorean.Patches
                                 noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace("Your new balance is ", "당신의 현재 소지금은 ");
                                 noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace(".\n\nGood luck.", "입니다.\n\n행운을 빕니다.");
                                 noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace(".\n\nPlease enjoy your flight.", "입니다.\n\n편안한 비행 되세요.");
-                                noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace("Please enjoy your flight.", "편안한 비행 되세요.");
+                                //noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace("Please enjoy your flight.", "편안한 비행 되세요.");
                             }
                         }
                         break;
@@ -1275,7 +1351,13 @@ namespace LCKorean.Patches
                         {
                             keyword.word = "상점";
                         }
-                        keyword.specialKeywordResult.displayText = "회사 상점에 오신 것을 환영합니다. \n아이템 이름 앞에 BUY와 INFO를 입력해보세요. \n숫자를 입력하여 도구를 여러 개 주문할 수 있습니다.\n____________________________\n\n[buyableItemsList]\n\n함선 강화:\n* 시끄러운 경적    //    가격: $100\n* 신호 해석기    //    가격: $255\n* 순간이동기    //    가격: $375\n* 역방향 순간이동기    //    가격: $425\n\n함선 장식 목록은 할당량별로 순환됩니다. 다음 주에 꼭 다시 확인해보세요:\n------------------------------\n[unlockablesSelectionList]\n\n";
+                        if (GameNetworkManager.Instance.gameVersionNum >= 55)
+                        {
+                            keyword.specialKeywordResult.displayText = "회사 상점에 오신 것을 환영합니다. \n아이템 이름 앞에 BUY와 INFO를 입력해보세요. \n숫자를 입력하여 도구를 여러 개 주문할 수 있습니다.\n____________________________\n\n[buyableItemsList]\n[buyableVehiclesList]\n\n함선 강화:\n* 시끄러운 경적    //    가격: $100\n* 신호 해석기    //    가격: $255\n* 순간이동기    //    가격: $375\n* 역방향 순간이동기    //    가격: $425\n\n함선 장식 목록은 할당량별로 순환됩니다. 다음 주에 꼭 다시 확인해보세요:\n------------------------------\n[unlockablesSelectionList]\n\n";
+                        }else
+                        {
+                            keyword.specialKeywordResult.displayText = "회사 상점에 오신 것을 환영합니다. \n아이템 이름 앞에 BUY와 INFO를 입력해보세요. \n숫자를 입력하여 도구를 여러 개 주문할 수 있습니다.\n____________________________\n\n[buyableItemsList]\n\n함선 강화:\n* 시끄러운 경적    //    가격: $100\n* 신호 해석기    //    가격: $255\n* 순간이동기    //    가격: $375\n* 역방향 순간이동기    //    가격: $425\n\n함선 장식 목록은 할당량별로 순환됩니다. 다음 주에 꼭 다시 확인해보세요:\n------------------------------\n[unlockablesSelectionList]\n\n";
+                        }
                         break;
                     case "other":
                         if (Plugin.fullyKoreanMoons)
@@ -1354,6 +1436,15 @@ namespace LCKorean.Patches
                     case "stun":
                         keyword.word = "기절";
                         break;
+
+
+                    case "cruiser":
+                        keyword.word = "크루저";
+                        break;
+                    case "weed killer":
+                        keyword.word = "제초제";
+                        break;
+
                     case "vow":
                         keyword.word = "보우";
                         break;
@@ -1466,6 +1557,15 @@ namespace LCKorean.Patches
                         break;
                     case "jester":
                         keyword.word = "광대";
+                        break;
+                    case "barber":
+                        keyword.word = "이발사";
+                        break;
+                    case "vain":
+                        keyword.word = "은폐";
+                        break;
+                    case "kidnapper":
+                        keyword.word = "납치";
                         break;
 
 

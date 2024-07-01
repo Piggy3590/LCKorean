@@ -47,6 +47,39 @@ namespace LCKorean.Patches
             ___hoverTip = ___hoverTip.Replace("Switch water", "샤워기 전환하기");
 
             ___hoverTip = ___hoverTip.Replace("Lift glass", "덮개 여닫기");
+
+            ___hoverTip = ___hoverTip.Replace("Push", "밀기");
+
+            ___hoverTip = ___hoverTip.Replace("Eject", "비상 탈출");
+            ___holdTip = ___holdTip.Replace("Eject", "비상 탈출");
+
+            ___hoverTip = ___hoverTip.Replace("Tune radio", "라디오 조정하기");
+            ___hoverTip = ___hoverTip.Replace("Toggle radio", "라디오 전원 전환하기");
+
+            ___hoverTip = ___hoverTip.Replace("Pull up", "문 올리기");
+            ___hoverTip = ___hoverTip.Replace("Pull down", "문 내리기");
+            ___hoverTip = ___hoverTip.Replace("Place item", "아이템 배치하기");
+
+            ___hoverTip = ___hoverTip.Replace("Remove key", "열쇠 제거하기");
+            ___hoverTip = ___hoverTip.Replace("Try ignition", "시동 걸기");
+
+            ___holdTip = ___holdTip.Replace("Trying ignition", "시동 거는 중");
+
+            ___hoverTip = ___hoverTip.Replace("Drive", "전진");
+            ___hoverTip = ___hoverTip.Replace("Reverse", "후진");
+            ___hoverTip = ___hoverTip.Replace("Park", "주차");
+
+            ___hoverTip = ___hoverTip.Replace("Sit down", "앉기");
+            ___hoverTip = ___hoverTip.Replace("Honk", "경적 울리기");
+            ___holdTip = ___holdTip.Replace("Honking", "경적 울리는 중");
+
+            ___hoverTip = ___hoverTip.Replace("Switch headlights", "전조등 전환하기");
+            ___hoverTip = ___hoverTip.Replace("Toggle cabin window", "트렁크 창문 전환하기");
+            ___hoverTip = ___hoverTip.Replace("Toggle wipers", "와이퍼 전환하기");
+            
+            ___hoverTip = ___hoverTip.Replace("Open/shut hood", "후드 열기/닫기");
+            ___holdTip = ___holdTip.Replace("Open/shut hood", "후드 열기/닫기");
+
             ___hoverTip = ___hoverTip.Replace("Beam up", "작동하기");
             ___hoverTip = ___hoverTip.Replace("Beam up", "작동하기");
 

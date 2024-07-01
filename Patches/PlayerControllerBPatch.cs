@@ -48,8 +48,11 @@ namespace LCKorean.Patches
             foreach (DeadBodyInfo info in deadBodyInfo)
             {
                 ScanNodeProperties componentInChildren = info.gameObject.GetComponentInChildren<ScanNodeProperties>();
-                componentInChildren.headerText = componentInChildren.headerText.Replace("Body of ", "");
-                componentInChildren.headerText = componentInChildren.headerText + "의 시체";
+                if (!componentInChildren.headerText.Contains("의 시체"))
+                {
+                    componentInChildren.headerText = componentInChildren.headerText.Replace("Body of ", "");
+                    componentInChildren.headerText = componentInChildren.headerText + "의 시체";
+                }
                 componentInChildren.subText = componentInChildren.subText.Replace("Cause of death: ", "사인:");
                 componentInChildren.subText = componentInChildren.subText.Replace("Unknown", "알 수 없음");
                 componentInChildren.subText = componentInChildren.subText.Replace("Bludgeoning", "구타");

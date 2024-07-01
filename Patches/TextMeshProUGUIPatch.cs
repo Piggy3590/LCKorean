@@ -52,6 +52,7 @@ namespace LCKorean.Patches
             {
                 __instance.text = __instance.text.Replace("Welcome back!", "돌아오신 것을 환영합니다!");
                 __instance.text = __instance.text.Replace("This update includes a new moon, a new creature, and a bunny suit, as well as many adjustments.", "이번 업데이트에는 새로운 위성, 생명체, 토끼 슈트와 많은 조정 사항이 포함되어 있습니다.");
+                __instance.text = __instance.text.Replace("This update includes the Company Cruiser truck and a couple new creatures.", "이번 업데이트에는 회사 크루저 트럭과 몇 가지 새로운 생명체가 포함되어 있습니다.");
                 __instance.text = __instance.text.Replace("Others must update their game to play with you on this version.", "이 버전에서 당신과 함께 플레이하려면 다른 사람들도 게임을 업데이트해야 합니다.");
                 __instance.text = __instance.text.Replace("Good luck!", "행운을 빕니다!");
             }
@@ -173,7 +174,7 @@ namespace LCKorean.Patches
                 case "Display mode:":
                     __instance.text = "디스플레이 모드:";
                     break;
-                case "프레임 제한:":
+                case "Frame rate cap:":
                     __instance.text = "프레임 제한:";
                     break;
 
@@ -201,8 +202,12 @@ namespace LCKorean.Patches
                     break;
 
                 case "Version 50 is here!":
-                    __instance.text = "버전 50이 나왔습니다!";
+                    __instance.text = "버전 50이 출시되었습니다!";
                     break;
+                case "Version 55 is here!":
+                    __instance.text = "버전 55가 출시되었습니다!";
+                    break;
+
                 case "Credits":
                     __instance.text = "크레딧";
                     break;

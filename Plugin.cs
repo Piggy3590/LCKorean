@@ -21,7 +21,7 @@ namespace LCKorean
     {
         private const string modGUID = "Piggy.LCKorean";
         private const string modName = "LCKorean";
-        private const string modVersion = "1.1.3";
+        private const string modVersion = "1.2.3";
 
         private readonly Harmony harmony = new Harmony(modGUID);
 

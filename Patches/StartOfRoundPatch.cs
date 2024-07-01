@@ -816,7 +816,7 @@ namespace LCKorean.Patches
                         item.itemName = "탄약";
                         break;
                     case "Spray paint":
-                        item.itemName = "페인트 스프레이";
+                        item.itemName = "스프레이 페인트";
                         item.toolTips[0] = "스프레이 뿌리기 : [RMB]";
                         item.toolTips[1] = "캔 흔들기 : [Q]";
                         break;
@@ -848,6 +848,10 @@ namespace LCKorean.Patches
                         break;
                     case "Easter egg":
                         item.itemName = "부활절 달걀";
+                        break;
+                    case "Weed killer":
+                        item.itemName = "제초제";
+                        item.toolTips[0] = "뿌리기 : [RMB]";
                         break;
                 }
             }
