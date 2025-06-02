@@ -30,11 +30,11 @@ namespace LCKorean.Patches
             string text;
             if (___safetyOn)
             {
-                text = "안전 모드 해제: [Q]";
+                text = "안전 모드 해제하기: [Q]";
             }
             else
             {
-                text = "안전 모드 설정: [Q]";
+                text = "안전 모드 설정하기: [Q]";
             }
             if (__instance.IsOwner)
             {

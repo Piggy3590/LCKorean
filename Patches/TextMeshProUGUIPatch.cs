@@ -53,8 +53,27 @@ namespace LCKorean.Patches
                 __instance.text = __instance.text.Replace("Welcome back!", "돌아오신 것을 환영합니다!");
                 __instance.text = __instance.text.Replace("This update includes a new moon, a new creature, and a bunny suit, as well as many adjustments.", "이번 업데이트에는 새로운 위성, 생명체, 토끼 슈트와 많은 조정 사항이 포함되어 있습니다.");
                 __instance.text = __instance.text.Replace("This update includes the Company Cruiser truck and a couple new creatures.", "이번 업데이트에는 회사 크루저 트럭과 몇 가지 새로운 생명체가 포함되어 있습니다.");
+                __instance.text = __instance.text.Replace("This update introduces the mineshaft, a new creature, and new scrap to collect.", "이번 업데이트에서는 폐광, 새로운 생명체, 그리고 수집할 수 있는 새로운 폐품이 추가되었습니다.");
                 __instance.text = __instance.text.Replace("Others must update their game to play with you on this version.", "이 버전에서 당신과 함께 플레이하려면 다른 사람들도 게임을 업데이트해야 합니다.");
                 __instance.text = __instance.text.Replace("Good luck!", "행운을 빕니다!");
+                __instance.text = __instance.text.Replace("Have fun!", "즐거운 시간 되세요!");
+
+                __instance.text = __instance.text.Replace("Thanks to PuffoThePufferfish and Blueray901165 for helping shape this game. They were the closest with it through the entire process, helping me test and improve it every step of the way.",
+                    "이 게임을 만드는 데 도움을 준 PuffoThePufferfish와 Blueray901165에게 감사드립니다. 이 두 사람은 게임을 만드는 모든 과정에서 가장 가까이에 있었고, 게임을 테스트하고 개선하는 데 도움을 주었습니다.");
+                __instance.text = __instance.text.Replace("Thanks to my patrons who have generously supported me throughout this game's long and sometimes-rocky development:",
+                    "이 게임의 길고 때로는 험난했던 개발 기간 동안 아낌없는 성원을 보내주신 후원자 여러분께 감사드립니다:");
+                __instance.text = __instance.text.Replace("Thanks to Zenonclaw for modelling the shovel and the old elevator, which was scrapped long ago but still used for its parts.",
+                    "삽과 오래 전에 폐기되었지만 일부분 사용되고 있는 엘리베이터를 모델링해준 Zenonclaw에게 감사드립니다.");
+                __instance.text = __instance.text.Replace("Thanks to ZedFox for one of the boombox tracks (the good one) and the disco ball music.",
+                    "붐박스 트랙 중 하나(좋은 거)와 디스코 볼 음악을 제공한 ZedFox에게 감사드립니다.");
+                __instance.text = __instance.text.Replace("Thanks to youreashotgun for the snare flea TV channel.",
+                    "올무 벼룩 TV 채널을 보내주신 youreashotgun에게 감사드립니다.");
+                __instance.text = __instance.text.Replace("And thanks to Noah, Seth, Null, Sam, Zenonclaw, ZedFox, and Joseph for helping playtest throughout early development.",
+                    "그리고 초기 개발 기간 동안 플레이 테스트를 도와준 Noah, Seth, Null, Sam, Zenonclaw, ZedFox와 Joseph에게도 감사의 인사를 전합니다.");
+                __instance.text = __instance.text.Replace("Thanks to psyberartist for \"copperplate\" licensed under CC BY 2.0 Deed:",
+                    "CC BY 2.0 저작자표시허락을 받은 \"copperplate\"에 대해 psyberartist에게 감사드립니다:");
+                __instance.text = __instance.text.Replace("Sound effects from Freesound.org, licensed under CC-BY (Attribution). Thank you:",
+                    "CC-BY(저작자표시)에 따라 라이선스가 부여된 Freesound.org의 효과음의 저자에게도 감사의 말씀을 드립니다:");
             }
             else if (SceneManager.GetActiveScene().name == "InitSceneLaunchOptions")
             {
@@ -206,6 +225,9 @@ namespace LCKorean.Patches
                     break;
                 case "Version 55 is here!":
                     __instance.text = "버전 55가 출시되었습니다!";
+                    break;
+                case "Version 60 is here!":
+                    __instance.text = "버전 60이 출시되었습니다!";
                     break;
 
                 case "Credits":
@@ -474,6 +496,17 @@ namespace LCKorean.Patches
                 case "DOOR HYDRAULICS:":
                     __instance.text = "문 유압 장치:";
                     break;
+
+                case "EMERGENCY WEATHER ALERT":
+                    __instance.text = "<size=50>긴급 기상 경보";
+                    break;
+                case "METEOR SHOWERS DETECTED. UP TO 20-30 PER HOUR. TAKE SHELTER IMMEDIATELY.":
+                    __instance.text = "유성우가 감지되었습니다. 시간당 최대 20-30개까지 발생할 수 있습니다. 즉시 대피하십시오.";
+                    break;
+                case "YOUR AUTOPILOT SATELLITE\nISSUED A\nWEATHER WARNING":
+                    __instance.text = "<size=35>자동항법위성이\n기상 경보를\n발령했습니다";
+                    __instance.lineSpacing = 32;
+                    break;
             }
             __instance.text.Replace(" collected!", " 수집함!");
             __instance.text.Replace("Value: ", "가치: ");
@@ -482,7 +515,7 @@ namespace LCKorean.Patches
             {
                 __instance.text = "      BG IG, 시스템 행동 연합\r\n      Copyright (C) 2084-2108, Halden Electronics Inc.\r\n\r\nCPU 종류       :     BORSON 300 CPU at 2500 MHz\r\n메모리 테스트  :      4521586K OK\r\n\r\n부트 분배기 애플리케이션 v0.04\r\nCopyright (C) 2107 Distributioner\r\n    Sting X 롬 감지\r\n    웹 LNV 확장기 감지\r\n    심박수 감지 OK\r\n\r\n\r\nUTGF 장치 수신 중...\r\n\r\n신체    ID     신경     장치 클래스\r\n________________________________________\r\n\r\n2      52   Jo152       H515\r\n2      52   Sa5155      H515\r\n2      52   Bo75        H515\r\n2      52   Eri510      H515\r\n1      36   Ell567      H515\r\n1      36   Jos912      H515\r\n0\r\n";
             }
-            else if (__instance.text.Contains("This is the weekly challenge moon. You have one day to make as much profit as possible."))
+            else if (__instance.text.Contains("You have one day to make as much profit as possible."))
             {
                 __instance.text = "주간 챌린지 달입니다. 하루 안에 가능한 한 많은 수익을 얻으세요. 원하는 만큼 다시 시도할 수 있습니다.";
             }

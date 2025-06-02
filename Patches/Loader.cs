@@ -94,6 +94,11 @@ namespace LCKorean.Patches
                 __instance.font = Plugin.fontEdunline;
                 return;
             }
+            if (fontName.Contains("Bangers-Regular SDF"))
+            {
+                __instance.font = Plugin.fontAds;
+                return;
+            }
             //PatchFontAwake(__instance.font);
         }
 

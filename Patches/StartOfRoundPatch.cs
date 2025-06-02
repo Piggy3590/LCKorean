@@ -130,7 +130,7 @@ namespace LCKorean.Patches
             ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("85 Rend", "85 렌드");
             ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("7 Dine", "7 다인");
             ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("8 Titan", "8 타이탄");
-            ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("68 Artifice", "68 아티피스");
+            ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("68 Artifice", "68 아터피스");
 
             ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("5 Embrion", "5 엠브리언");
             ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("44 Liquidation", "44 리퀴데이션");
@@ -152,7 +152,7 @@ namespace LCKorean.Patches
                 }
             }
         }
-
+        /*
         static void ConvertImage()
         {
             foreach (Texture2D texture in TextureReplacer.Textures)
@@ -276,6 +276,7 @@ namespace LCKorean.Patches
             RenderTexture.ReleaseTemporary(temporary);
             return texture2D;
         }
+        */
 
         static void TranslatePlanet()
         {
@@ -853,6 +854,41 @@ namespace LCKorean.Patches
                         item.itemName = "제초제";
                         item.toolTips[0] = "뿌리기 : [RMB]";
                         break;
+                    case "Belt bag":
+                        item.itemName = "벨트 배낭";
+                        item.toolTips[0] = "배낭 확인하기 : [RMB]";
+                        item.toolTips[1] = "도구 보관하기 : [Q]";
+                        break;
+                    case "Soccer ball":
+                        item.itemName = "축구공";
+                        break;
+                    case "Control pad":
+                        item.itemName = "조작 패드";
+                        break;
+                    case "Garbage lid":
+                        item.itemName = "쓰레기통 뚜껑";
+                        break;
+                    case "Plastic cup":
+                        item.itemName = "플라스틱 컵";
+                        break;
+                    case "Toilet paper":
+                        item.itemName = "화장실 휴지";
+                        break;
+                    case "Toy train":
+                        item.itemName = "장난감 기차";
+                        break;
+                    case "Zed Dog":
+                        item.itemName = "제드 도그";
+                        break;
+                    case "Clock":
+                        item.itemName = "시계";
+                        break;
+                    case "Body":
+                        item.itemName = "시체";
+                        break;
+                    case "Egg":
+                        item.itemName = "알";
+                        break;
                 }
             }
         }
@@ -897,9 +933,6 @@ namespace LCKorean.Patches
                         break;
                     case "Clamp":
                         item.itemName = "조임틀";
-                        break;
-                    case "Clock":
-                        item.itemName = "시계";
                         break;
                     case "Fancy Painting":
                         item.itemName = "멋진 그림";
@@ -1340,6 +1373,11 @@ namespace LCKorean.Patches
                         break;
                     case "Tape Player Log 4":
                         item.itemName = "테이프 플레이어 일지 1";
+                        break;
+
+
+                    case "Shopping Cart":
+                        item.itemName = "쇼핑 카트";
                         break;
                 }
             }

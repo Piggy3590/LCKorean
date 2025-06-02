@@ -44,6 +44,10 @@ namespace LCKorean.Patches
             {
                 ___triggerScript.disabledHoverTip = "[함선이 완전히 이착륙할 때까지 기다리세요]";
             }
+            if (___triggerScript.disabledHoverTip == "[Ship in motion]")
+            {
+                ___triggerScript.disabledHoverTip = "[함선이 이동하고 있습니다]";
+            }
         }
     }
 }

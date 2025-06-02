@@ -67,6 +67,11 @@ namespace LCKorean.Patches
                 componentInChildren.subText = componentInChildren.subText.Replace("Drowning", "익사");
                 componentInChildren.subText = componentInChildren.subText.Replace("Abandoned", "실종");
                 componentInChildren.subText = componentInChildren.subText.Replace("Electrocution", "감전사");
+                componentInChildren.subText = componentInChildren.subText.Replace("Burning", "불탐");
+                componentInChildren.subText = componentInChildren.subText.Replace("Stabbing", "찔림");
+                componentInChildren.subText = componentInChildren.subText.Replace("Fan", "환풍기");
+                componentInChildren.subText = componentInChildren.subText.Replace("Inertia", "관성");
+                componentInChildren.subText = componentInChildren.subText.Replace("Snipped", "절단됨");
             }
         }
     }

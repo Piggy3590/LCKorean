@@ -83,6 +83,15 @@ namespace LCKorean.Patches
             ___hoverTip = ___hoverTip.Replace("Beam up", "작동하기");
             ___hoverTip = ___hoverTip.Replace("Beam up", "작동하기");
 
+            ___hoverTip = ___hoverTip.Replace("Set straps", "끈 묶기");
+            ___hoverTip = ___hoverTip.Replace("Pull drawer", "서랍 당기기");
+            ___hoverTip = ___hoverTip.Replace("Use bin", "쓰레기통 사용하기");
+            ___hoverTip = ___hoverTip.Replace("Use hood", "후드 사용하기");
+            ___hoverTip = ___hoverTip.Replace("Use cabinet", "서랍장 사용하기");
+            ___hoverTip = ___hoverTip.Replace("Use drawer", "옷장 사용하기");
+            ___hoverTip = ___hoverTip.Replace("Open trunk", "트렁크 열기");
+
+
             if (___hoverTip == "Charge item : [LMB]")
             {
                 ___hoverTip = "아이템 충전하기 : [LMB]";
@@ -171,9 +180,9 @@ namespace LCKorean.Patches
             ___hoverTip = ___hoverTip.Replace("Ring bell", "종 울리기");
             ___hoverTip = ___hoverTip.Replace("Pull switch", "스위치 당기기");
             ___hoverTip = ___hoverTip.Replace("Flip switch", "스위치 전환하기");
-            ___hoverTip = ___hoverTip.Replace("Pull valve", "밸브 돌리기");
-            ___holdTip = ___holdTip.Replace("[Pulling valve]", "[밸브 돌리는 중]");
-            ___disabledHoverTip = ___disabledHoverTip.Replace("[Cannot pull valve]", "[밸브를 돌릴 수 없음]");
+            ___hoverTip = ___hoverTip.Replace("Pull valve", "밸브 잠그기");
+            ___holdTip = ___holdTip.Replace("[Pulling valve]", "[밸브 잠그는 중]");
+            ___disabledHoverTip = ___disabledHoverTip.Replace("[Cannot pull valve]", "[밸브를 잠글 수 없음]");
         }
 
         static void TranslateHudTip(string ___hoverTip, string ___disabledHoverTip, string ___holdTip)

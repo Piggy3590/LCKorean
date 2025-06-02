@@ -32,7 +32,7 @@ namespace LCKorean.Patches
         {
             if (StartOfRound.Instance.isChallengeFile)
             {
-                StartOfRound.Instance.deadlineMonitorText.text = "가능한 한\n많은 수익을\n얻으세요";
+                StartOfRound.Instance.deadlineMonitorText.text = "가능한  한\n많은  수익을\n얻으세요";
                 StartOfRound.Instance.profitQuotaMonitorText.text = "환영합니다!\n이곳은:\n" + GameNetworkManager.Instance.GetNameForWeekNumber();
             }else
             {

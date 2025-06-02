@@ -13,6 +13,7 @@ using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using Texture_Replacer;
 using UnityEngine.Video;
+using System.Collections;
 
 namespace LCKorean
 {
@@ -21,7 +22,7 @@ namespace LCKorean
     {
         private const string modGUID = "Piggy.LCKorean";
         private const string modName = "LCKorean";
-        private const string modVersion = "1.2.3";
+        private const string modVersion = "1.3.16";
 
         private readonly Harmony harmony = new Harmony(modGUID);
 
@@ -37,6 +38,7 @@ namespace LCKorean
         public static TMP_FontAsset font3270_b;
         public static TMP_FontAsset font3270_DialogueText;
         public static TMP_FontAsset fontEdunline;
+        public static TMP_FontAsset fontAds;
 
         public static Texture2D artificeHint;
         public static Texture2D endgameAllPlayersDead;
@@ -102,23 +104,21 @@ namespace LCKorean
             {
                 Instance = this;
             }
-            Plugin.PluginDirectory = base.Info.Location;
+            PluginDirectory = base.Info.Location;
 
             LoadAssets();
             TextureReplacer.Setup();
 
-            patchFont = (bool)base.Config.Bind<bool>("폰트", "폰트 변경", true, "기본값은 true입니다.\nFontPatcher 등 외부 폰트 모드를 사용하려면 이 값을 true로 설정하세요. 이 값을 false로 설정한다면 바닐라 폰트로 적용되며, 한글이 깨져보일 수도 있습니다.").Value;
+            patchFont = (bool)base.Config.Bind<bool>("폰트", "폰트 변경", true, "기본값은 true입니다.\nFontPatcher 등 외부 폰트 모드를 사용하려면 이 값을 false로 설정하세요. false로 설정하면 본 모드에서 폰트를 변경하지 않습니다.").Value;
 
-            fullyKoreanMoons = (bool)base.Config.Bind<bool>("접근성", "터미널 카탈로그 한글 입력", false, "기본값은 false입니다.\n위성 카탈로그 \"MOONS\"나 상점 카탈로그 \"STORE\"같은 키워드를 \"위성\" 및 \"상점\"으로 변경합니다.\n(help => 도움말, moons => 위성, store => 상점, bestiary => 도감, other => 기타, eject => 사출, sigurd는 그대로입니다)").Value;
+            fullyKoreanMoons = (bool)base.Config.Bind<bool>("접근성", "터미널 카탈로그 한글 입력", false, "기본값은 false입니다.\n위성 카탈로그 \"MOONS\"나 상점 카탈로그 \"STORE\"같은 키워드를 \"위성\", \"상점\"으로 변경합니다.\n(help => 도움말, moons => 위성, store => 상점, bestiary => 도감, other => 기타, eject => 사출, sigurd는 그대로입니다.)").Value;
             confirmString = (string)base.Config.Bind<string>("접근성", "확정 키워드", "confirm", "기본값은 confirm입니다.\n컨펌 노드 (Confirm)를 설정합니다. *초성, 띄어쓰기와 한 글자는 인식하지 못합니다!*").Value;
-            denyString = (string)base.Config.Bind<string>("접근성", "취소 키워드", "deny", "기본값은 deny입니다.\n컨펌 취소 노드 (Deny)를 설정합니다. *초성, 띄어쓰기와 한 글자는 인식하지 못합니다!*").Value;
+            denyString = (string)base.Config.Bind<string>("접근성", "취소 키워드", "deny", "기본값은 deny입니다.\n디나이 노드 (Deny)를 설정합니다. *초성, 띄어쓰기와 한 글자는 인식하지 못합니다!*").Value;
 
             translateModdedContent = (bool)base.Config.Bind<bool>("번역", "모드 번역", true, "기본값은 true입니다.\n다른 모드의 여러 컨텐츠(아이템, 행성)를 한글로 번역합니다.\n\n지원 모드:\nImmersiveScrap(XuXiaolan), ").Value;
-            translatePlanet = (bool)base.Config.Bind<bool>("번역", "행성 내부 이름 번역", false, "기본값은 false입니다.\n코드에서 사용되는 행성의 내부 이름을 한글화합니다. 게임 플레이에서 달라지는 부분은 없지만, true로 하면 모드 인테리어의 구성을 변경할 때 행성 명을 한글로 입력해야 합니다. false로 두면 그대로 영어로 입력하시면 됩니다.").Value;
             thumperTranslation = (bool)base.Config.Bind<bool>("번역", "Thumper 번역", false, "기본값은 false입니다.\ntrue로 설정하면 \"Thumper\"를 썸퍼로 번역합니다. false로 설정하면 덤퍼로 설정됩니다.").Value;
             toKG = (bool)base.Config.Bind<bool>("번역", "KG 변환", true, "기본값은 true입니다.\ntrue로 설정하면 무게 수치를 kg으로 변환합니다.").Value;
-            
-            
+                        
             deathText = (string)base.Config.Bind<string>("번역", "사망 텍스트", "[생명 신호: 오프라인]", "기본값은 《[생명 신호: 오프라인]》 입니다.\n사망 시 화면에 출력되는 텍스트를 수정합니다.").Value;
             quotaReached = (string)base.Config.Bind<string>("번역", "할당량 달성 텍스트", "할당량을 달성했습니다!", "기본값은 《할당량을 달성했습니다!》 입니다.\n할당량 달성 시 화면에 출력되는 텍스트를 수정합니다.").Value;
             firedText = (string)base.Config.Bind<string>("번역", "해고 텍스트", "해고당했습니다.", "기본값은 《해고당했습니다.》 입니다.\n해고 시 출력되는 텍스트를 수정합니다.").Value;
@@ -134,65 +134,98 @@ namespace LCKorean
             
             midnightWarning = (string)base.Config.Bind<string>("파일럿 컴퓨터 대사 번역", "자정 경고", "경고!!! 함선이 자정에 이륙합니다. 빠르게 복귀하세요.", "기본값은\n《경고!!! 함선이 자정에 이륙합니다. 빠르게 복귀하세요.》\n입니다.\n자정 경고 시 화면에 출력되는 텍스트를 수정합니다.").Value;
 
-
+            translatePlanet = (bool)base.Config.Bind<bool>("개발자 기능", "행성 내부명(이름 아님!) 번역", false, "기본값은 false입니다.\n이 설정이 어떤 역할을 하는지 잘 모른다면 항상 비활성화 상태로 설정하세요! 타 모드와의 구성이 꼬여버릴 수 있습니다.\n코드에서 사용되는 행성의 내부 이름을 한글화합니다. 플레이에서 달라지는 부분은 없지만 true로 하면 모드 내부 맵의 구성을 변경할 때 행성 이름을 한글로 입력해야 합니다. false면 행성 이름을 영어로 입력하시면 됩니다.").Value;
+            
             //artificePronounce = (bool)base.Config.Bind<bool>("번역", "아 \"티\" 피스", false, "기본값은 false입니다.\ntrue로 설정하면 Artifice를 아\"터\"피스 대신 아\"티\"피스로 번역합니다.").Value;
 
             mls = BepInEx.Logging.Logger.CreateLogSource(modGUID);
             mls.LogInfo("LC Korean is loaded");
 
             Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
+            /*
+            harmony.PatchAll(typeof(Plugin));
+            harmony.PatchAll(typeof(CoroutineManager));
+            harmony.PatchAll(typeof(EntranceTeleportPatch));
+            harmony.PatchAll(typeof(GameNetworkManagerPatch));
+            harmony.PatchAll(typeof(GrabbableObjectPatch));
+            harmony.PatchAll(typeof(HUDManagerPatch));
+            harmony.PatchAll(typeof(IngamePlayerSettingsPatch));
+            harmony.PatchAll(typeof(InteractTriggerPatch));
+            harmony.PatchAll(typeof(FontLoader));
+            harmony.PatchAll(typeof(ManualCameraRendererPatch));
+            harmony.PatchAll(typeof(MenuManagerPatch));
+            harmony.PatchAll(typeof(PlayerControllerBPatch));
+            harmony.PatchAll(typeof(PreInitSceneScriptPatch));
+            harmony.PatchAll(typeof(QuickMenuManagerPatch));
+            harmony.PatchAll(typeof(RoundManagerPatch));
+            harmony.PatchAll(typeof(SaveFileUISlotPatch));
+            harmony.PatchAll(typeof(ShipBuildModeManagerPatch));
+            harmony.PatchAll(typeof(ShipTeleporterPatch));
+            harmony.PatchAll(typeof(ShotgunItemPatch));
+            harmony.PatchAll(typeof(StartMatchLeverPatch));
+            harmony.PatchAll(typeof(StartOfRoundPatch));
+            harmony.PatchAll(typeof(StunGrenadeItemPatch));
+            harmony.PatchAll(typeof(TerminalPatch));
+            harmony.PatchAll(typeof(TextMeshProUGUIPatch));
+            harmony.PatchAll(typeof(TimeOfDayPatch));
+            harmony.PatchAll(typeof(TMP_DropdownPatch));
+            harmony.PatchAll(typeof(TVScriptPatch));
+            harmony.PatchAll(typeof(UnlockableSuitPatch));
+            harmony.PatchAll(typeof(VehicleControllerPatch));
+            */
         }
 
         private void LoadAssets()
         {
             try
             {
-                Plugin.Bundle = AssetBundle.LoadFromFile(Path.Combine(Path.GetDirectoryName(Plugin.PluginDirectory), "lckorean"));
+                Bundle = AssetBundle.LoadFromFile(Path.Combine(Path.GetDirectoryName(PluginDirectory), "lckorean"));
             }
             catch (Exception ex)
             {
-                Plugin.mls.LogError("Couldn't load asset bundle: " + ex.Message);
+                mls.LogError("Couldn't load asset bundle: " + ex.Message);
                 return;
             }
             try
             {
-                font3270_HUDIngame = Plugin.Bundle.LoadAsset<TMP_FontAsset>("3270-HUDIngame.asset");
-                font3270_HUDIngame_Variant = Plugin.Bundle.LoadAsset<TMP_FontAsset>("3270-HUDIngame - Variant.asset");
-                font3270_HUDIngameB = Plugin.Bundle.LoadAsset<TMP_FontAsset>("3270-HUDIngameB.asset");
-                font3270_Regular_SDF = Plugin.Bundle.LoadAsset<TMP_FontAsset>("3270-Regular SDF.asset");
-                font3270_b = Plugin.Bundle.LoadAsset<TMP_FontAsset>("b.asset");
-                font3270_DialogueText = Plugin.Bundle.LoadAsset<TMP_FontAsset>("DialogueText.asset");
+                font3270_HUDIngame = Bundle.LoadAsset<TMP_FontAsset>("3270-HUDIngame.asset");
+                font3270_HUDIngame_Variant = Bundle.LoadAsset<TMP_FontAsset>("3270-HUDIngame - Variant.asset");
+                font3270_HUDIngameB = Bundle.LoadAsset<TMP_FontAsset>("3270-HUDIngameB.asset");
+                font3270_Regular_SDF = Bundle.LoadAsset<TMP_FontAsset>("3270-Regular SDF.asset");
+                font3270_b = Bundle.LoadAsset<TMP_FontAsset>("b.asset");
+                font3270_DialogueText = Bundle.LoadAsset<TMP_FontAsset>("DialogueText.asset");
 
-                fontEdunline = Plugin.Bundle.LoadAsset<TMP_FontAsset>("edunline SDF.asset");
+                fontEdunline = Bundle.LoadAsset<TMP_FontAsset>("edunline SDF.asset");
+                fontAds = Bundle.LoadAsset<TMP_FontAsset>("HakgyoansimMalgeunnalB SDF.asset");
 
-                stopSignTex = Plugin.Bundle.LoadAsset<Texture2D>("StopSignTex.png");
-                yieldSignTex = Plugin.Bundle.LoadAsset<Texture2D>("YieldSignTex.png");
-                StickyNoteTex = Plugin.Bundle.LoadAsset<Texture2D>("StickyNoteTex.png");
+                stopSignTex = Bundle.LoadAsset<Texture2D>("StopSignTex.png");
+                yieldSignTex = Bundle.LoadAsset<Texture2D>("YieldSignTex.png");
+                StickyNoteTex = Bundle.LoadAsset<Texture2D>("StickyNoteTex.png");
 
-                artificeHint = Plugin.Bundle.LoadAsset<Texture2D>("artificeHint.png");
-                endgameAllPlayersDead = Plugin.Bundle.LoadAsset<Texture2D>("endgameAllPlayersDead.png");
-                endgameStatsBoxes = Plugin.Bundle.LoadAsset<Texture2D>("endgameStatsBoxes.png");
-                endgameStatsDeceased = Plugin.Bundle.LoadAsset<Texture2D>("endgameStatsDeceased.png");
-                endgameStatsMissing = Plugin.Bundle.LoadAsset<Texture2D>("endgameStatsMissing.png");
-                flashbangBottleTexture = Plugin.Bundle.LoadAsset<Texture2D>("FlashbangBottleTexture.png");
+                artificeHint = Bundle.LoadAsset<Texture2D>("artificeHint.png");
+                endgameAllPlayersDead = Bundle.LoadAsset<Texture2D>("endgameAllPlayersDead.png");
+                endgameStatsBoxes = Bundle.LoadAsset<Texture2D>("endgameStatsBoxes.png");
+                endgameStatsDeceased = Bundle.LoadAsset<Texture2D>("endgameStatsDeceased.png");
+                endgameStatsMissing = Bundle.LoadAsset<Texture2D>("endgameStatsMissing.png");
+                flashbangBottleTexture = Bundle.LoadAsset<Texture2D>("FlashbangBottleTexture.png");
 
-                manual1 = Plugin.Bundle.LoadAsset<Texture2D>("manual1.png");
-                manual2v2 = Plugin.Bundle.LoadAsset<Texture2D>("manual2v2.png");
-                manual3v2 = Plugin.Bundle.LoadAsset<Texture2D>("manual3v2.png");
-                manual4v2 = Plugin.Bundle.LoadAsset<Texture2D>("manual4v2.png");
+                manual1 = Bundle.LoadAsset<Texture2D>("manual1.png");
+                manual2v2 = Bundle.LoadAsset<Texture2D>("manual2v2.png");
+                manual3v2 = Bundle.LoadAsset<Texture2D>("manual3v2.png");
+                manual4v2 = Bundle.LoadAsset<Texture2D>("manual4v2.png");
 
-                playerLevelStickers = Plugin.Bundle.LoadAsset<Texture2D>("PlayerLevelStickers.png");
-                playerLevelStickers1 = Plugin.Bundle.LoadAsset<Texture2D>("PlayerLevelStickers 1.png");
-                posters = Plugin.Bundle.LoadAsset<Texture2D>("posters.png");
-                TipsPoster2 = Plugin.Bundle.LoadAsset<Texture2D>("TipsPoster2.png");
-                powerBoxTextures = Plugin.Bundle.LoadAsset<Texture2D>("powerBoxTextures.png");
+                playerLevelStickers = Bundle.LoadAsset<Texture2D>("PlayerLevelStickers.png");
+                playerLevelStickers1 = Bundle.LoadAsset<Texture2D>("PlayerLevelStickers 1.png");
+                posters = Bundle.LoadAsset<Texture2D>("posters.png");
+                TipsPoster2 = Bundle.LoadAsset<Texture2D>("TipsPoster2.png");
+                powerBoxTextures = Bundle.LoadAsset<Texture2D>("powerBoxTextures.png");
 
-                RedUIPanelGlitchBWarningRadiation = Plugin.Bundle.LoadAsset<Texture2D>("RedUIPanelGlitchBWarningRadiation.png");
-                RedUIPanelGlitchBWarningRadiationB = Plugin.Bundle.LoadAsset<Texture2D>("RedUIPanelGlitchBWarningRadiationB.png");
-                RedUIPanelGlitchBWarningRadiationC = Plugin.Bundle.LoadAsset<Texture2D>("RedUIPanelGlitchBWarningRadiationC.png");
-                RedUIPanelGlitchBWarningRadiationD = Plugin.Bundle.LoadAsset<Texture2D>("RedUIPanelGlitchBWarningRadiationD.png");
+                RedUIPanelGlitchBWarningRadiation = Bundle.LoadAsset<Texture2D>("RedUIPanelGlitchBWarningRadiation.png");
+                RedUIPanelGlitchBWarningRadiationB = Bundle.LoadAsset<Texture2D>("RedUIPanelGlitchBWarningRadiationB.png");
+                RedUIPanelGlitchBWarningRadiationC = Bundle.LoadAsset<Texture2D>("RedUIPanelGlitchBWarningRadiationC.png");
+                RedUIPanelGlitchBWarningRadiationD = Bundle.LoadAsset<Texture2D>("RedUIPanelGlitchBWarningRadiationD.png");
 
-                snareKorean = Plugin.Bundle.LoadAsset<VideoClip>("SnareFleaTipChannel2.m4v");
+                snareKorean = Bundle.LoadAsset<VideoClip>("SnareFleaTipChannel2.m4v");
 
                 base.Logger.LogInfo("Successfully loaded assets!");
             }
@@ -201,5 +234,42 @@ namespace LCKorean
                 base.Logger.LogError("Couldn't load assets: " + ex2.Message);
             }
         }
+
+        private void ReplaceImageFile()
+    {
+        // 현재 실행 중인 어셈블리의 경로 가져오기
+        string assemblyLocation = Assembly.GetExecutingAssembly().Location;
+        string modDirectory = Path.GetDirectoryName(assemblyLocation);
+
+        // 덮어쓸 이미지 파일의 경로 (DLL 파일이 있는 디렉터리와 같은 이름)
+        string imageName = "example.png"; // 실제 이미지 파일 이름으로 변경
+        string modImagePath = Path.Combine(modDirectory, imageName);
+
+        if (!File.Exists(modImagePath))
+        {
+            Logger.LogError($"이미지 파일이 {modImagePath}에 없습니다.");
+            return;
+        }
+
+        // 게임 내 이미지 파일 경로 (경로는 게임에 따라 달라질 수 있음)
+        string gameImagePath = Path.Combine("게임_이미지_파일_경로", imageName); // 실제 게임 내 경로로 변경
+
+        if (!File.Exists(gameImagePath))
+        {
+            Logger.LogError($"게임 내 이미지 파일이 {gameImagePath}에 없습니다.");
+            return;
+        }
+
+        try
+        {
+            // 이미지 파일 덮어쓰기
+            File.Copy(modImagePath, gameImagePath, overwrite: true);
+            Logger.LogInfo($"이미지 파일 {imageName}이 {gameImagePath}에 성공적으로 덮어쓰기되었습니다.");
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError($"이미지 파일 덮어쓰기 중 오류 발생: {ex.Message}");
+        }
+    }
     }
 }

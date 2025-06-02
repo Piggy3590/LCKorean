@@ -2,28 +2,16 @@
 using DunGen;
 using GameNetcodeStuff;
 using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+using System.Collections;
 using TMPro;
-using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Audio;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.HID;
+using UnityEngine.SceneManagement;
 
 namespace LCKorean.Patches
 {
     [HarmonyPatch(typeof(PreInitSceneScript))]
     internal class PreInitSceneScriptPatch
     {
-        
         [HarmonyPostfix]
         [HarmonyPatch("PressContinueButton")]
         private static void PressContinueButton_Postfix(ref int ___currentLaunchSettingPanel, ref GameObject[] ___LaunchSettingsPanels,
@@ -34,7 +22,7 @@ namespace LCKorean.Patches
                 ___headerText.text = "실행 모드";
             }
         }
-        
+
         [HarmonyPostfix]
         [HarmonyPatch("SkipToFinalSetting")]
         private static void SkipToFinalSetting_Postfix(ref TextMeshProUGUI ___headerText)
