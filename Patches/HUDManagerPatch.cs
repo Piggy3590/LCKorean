@@ -3,6 +3,7 @@ using DunGen;
 using GameNetcodeStuff;
 using HarmonyLib;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -24,6 +25,9 @@ namespace LCKorean.Patches
     [HarmonyPatch(typeof(HUDManager))]
     internal class HUDManagerPatch
     {
+        static readonly FieldInfo forceChangeTextCoroutineField = AccessTools.Field(typeof(HUDManager), "forceChangeTextCoroutine");
+        static readonly MethodInfo forceChangeTextMethod = AccessTools.Method(typeof(HUDManager), "ForceChangeText");
+
 
         [HarmonyPostfix]
         [HarmonyPatch("Start")]
@@ -141,35 +145,22 @@ namespace LCKorean.Patches
         {
             foreach (DialogueSegment dialogue in dialogueArray)
             {
-                if (dialogue.speakerText == "PILOT COMPUTER")
+                dialogue.speakerText = TranslationManager.GetStringTranslation("Dialogue", dialogue.speakerText);
+
+                if (dialogue.bodyText == "AM. A vote has been cast")
                 {
-                    dialogue.speakerText = "파일럿 컴퓨터";
+                    dialogue.bodyText = TranslationManager.GetStringTranslation("Dialogue", "ReturnAM")
+                        .Replace("{time}", HUDManager.Instance.SetClock(TimeOfDay.Instance.shipLeaveAutomaticallyTime, (float)TimeOfDay.Instance.numberOfHours, false));
                 }
-
-                switch (dialogue.bodyText)
+                else if (dialogue.bodyText == "PM. A vote has been cast")
                 {
-                    case "Warning! No response from crew, which has not returned. Emergency code activated.":
-                        dialogue.bodyText = Plugin.allDead1;
-                        break;
-                    case "The autopilot will now attempt to fly to the closest safe spaceport. Your items have been lost.":
-                        dialogue.bodyText = Plugin.allDead2;
-                        break;
-
-                    case "Alert! The autopilot is leaving due to dangerous conditions.":
-                        dialogue.bodyText = Plugin.autoTakeoff1;
-                        break;
-                    case "The Company must minimize risk of damage to proprietary hardware. Goodbye!":
-                        dialogue.bodyText = Plugin.autoTakeoff2;
-                        break;
-
-                    case "WARNING!!! The autopilot ship will leave at midnight. Please return quickly.":
-                        dialogue.bodyText = Plugin.midnightWarning;
-                        break;
+                    dialogue.bodyText = TranslationManager.GetStringTranslation("Dialogue", "ReturnPM")
+                        .Replace("{time}", HUDManager.Instance.SetClock(TimeOfDay.Instance.shipLeaveAutomaticallyTime, (float)TimeOfDay.Instance.numberOfHours, false));
                 }
-
-                dialogue.bodyText = dialogue.bodyText.Replace("WARNING! Please return by ", "경고! ");
-                dialogue.bodyText = dialogue.bodyText.Replace("AM. A vote has been cast, and the autopilot ship will leave early.", "오전 까지 돌아오세요. 함선이 일찍 출발하기로 투표가 완료되었습니다.");
-                dialogue.bodyText = dialogue.bodyText.Replace("PM. A vote has been cast, and the autopilot ship will leave early.", "오후 까지 돌아오세요. 함선이 일찍 출발하기로 투표가 완료되었습니다.");
+                else
+                {
+                    dialogue.bodyText = TranslationManager.GetStringTranslation("Dialogue", dialogue.bodyText);
+                }
             }
         }
 
@@ -180,57 +171,57 @@ namespace LCKorean.Patches
             switch (___tipsPanelHeader.text)
             {
                 case "To read the manual:":
-                    ___tipsPanelHeader.text = "지침서 읽기";
-                    ___tipsPanelBody.text = "Z를 눌러 자세히 봅니다. Q와 E를 눌러 페이지를 넘깁니다.";
+                    ___tipsPanelHeader.text = TranslationManager.GetArrayTranslation("Tip", 0, "ReadManual");
+                    ___tipsPanelBody.text = TranslationManager.GetArrayTranslation("Tip", 1, "ReadManual");
                     break;
                 case "TIP:":
-                    ___tipsPanelHeader.text = "팁:";
+                    ___tipsPanelHeader.text = TranslationManager.GetArrayTranslation("Tip", 0, "TipTerminal");
                     if (___tipsPanelBody.text == "Use the ship computer terminal to access secure doors.")
                     {
-                        ___tipsPanelBody.text = "함선 내 컴퓨터 터미널을 사용하여 보안 문에 접근하세요.";
+                        ___tipsPanelBody.text = TranslationManager.GetArrayTranslation("Tip", 1, "TipTerminal");
                     }else
                     {
-                        ___tipsPanelBody.text = "잠긴 문을 효율적으로 지나가려면 함선 터미널에서 <u>자물쇠 따개</u>를 주문하세요.";
+                        ___tipsPanelBody.text = TranslationManager.GetArrayTranslation("Tip", 1, "TipLockedDoor");
                     }
                     break;
                 case "Welcome!":
-                    ___tipsPanelHeader.text = "환영합니다!";
-                    ___tipsPanelBody.text = "우클릭을 눌러 함선 내부의 물체를 스캔하고 정보를 확인할 수 있습니다.";
+                    ___tipsPanelHeader.text = TranslationManager.GetArrayTranslation("Tip", 0, "Welcome");
+                    ___tipsPanelBody.text = TranslationManager.GetArrayTranslation("Tip", 1, "Welcome");
                     break;
                 case "Got scrap!":
-                    ___tipsPanelHeader.text = "폐품을 얻었습니다!";
-                    ___tipsPanelBody.text = "판매하려면 터미널을 이용해 함선을 회사 건물로 이동시키세요.";
+                    ___tipsPanelHeader.text = TranslationManager.GetArrayTranslation("Tip", 0, "GotScrap");
+                    ___tipsPanelBody.text = TranslationManager.GetArrayTranslation("Tip", 1, "GotScrap");
                     break;
                 case "Items missed!":
-                    ___tipsPanelHeader.text = "아이템을 놓쳤습니다!";
-                    ___tipsPanelBody.text = "수송선이 구매하신 상품과 함께 돌아갔습니다. 비용은 환불되지 않습니다.";
+                    ___tipsPanelHeader.text = TranslationManager.GetArrayTranslation("Tip", 0, "ItemMissed");
+                    ___tipsPanelBody.text = TranslationManager.GetArrayTranslation("Tip", 1, "ItemMissed");
                     break;
                 case "Item stored!":
-                    ___tipsPanelHeader.text = "아이템을 보관했습니다!";
-                    ___tipsPanelBody.text = "보관된 물품은 터미널에서 'STORAGE' 명령을 사용하여 확인할 수 있습니다.";
+                    ___tipsPanelHeader.text = TranslationManager.GetArrayTranslation("Tip", 0, "ItemStored");
+                    ___tipsPanelBody.text = TranslationManager.GetArrayTranslation("Tip", 1, "ItemStored");
                     break;
                 case "HALT!":
-                    ___tipsPanelHeader.text = "기다리세요!";
-                    ___tipsPanelBody.text = "할당량을 충족시키기 위한 날이 0일 남았습니다. 터미널을 이용하여 회사로 이동한 후 아이템을 판매하세요.";
+                    ___tipsPanelHeader.text = TranslationManager.GetArrayTranslation("Tip", 0, "DeadlineWarning");
+                    ___tipsPanelBody.text = TranslationManager.GetArrayTranslation("Tip", 1, "DeadlineWarning");
                     break;
                 case "Weather alert!":
-                    ___tipsPanelHeader.text = "날씨 경고!";
-                    ___tipsPanelBody.text = "당신은 현재 일식이 일어난 위성에 착륙했습니다. 주의하세요!";
+                    ___tipsPanelHeader.text = TranslationManager.GetArrayTranslation("Tip", 0, "EclipseWarning");
+                    ___tipsPanelBody.text = TranslationManager.GetArrayTranslation("Tip", 1, "EclipseWarning");
                     break;
                 case "???":
-                    ___tipsPanelBody.text = "입구가 막힌 것 같습니다.";
+                    ___tipsPanelBody.text = TranslationManager.GetArrayTranslation("Tip", 1, "MissingEntrance");
                     break;
                 case "ALERT!":
-                    ___tipsPanelHeader.text = "경고!";
-                    ___tipsPanelBody.text = "당장 모든 금속성 아이템을 떨어뜨리세요! 정전기가 감지되었습니다. 당신은 몇 초 뒤에 사망할 것입니다.";
+                    ___tipsPanelHeader.text = TranslationManager.GetArrayTranslation("Tip", 0, "LightningWarning");
+                    ___tipsPanelBody.text = TranslationManager.GetArrayTranslation("Tip", 1, "LightningWarning");
                     break;
                 case "Welcome back!":
-                    ___tipsPanelHeader.text = "돌아오신 것을 환영합니다!";
-                    ___tipsPanelBody.text = "이전에 구입한 도구에 대한 보상을 받았습니다. 아이템을 받으려면 다시 구매하세요.";
+                    ___tipsPanelHeader.text = TranslationManager.GetArrayTranslation("Tip", 0, "WelcomeBack");
+                    ___tipsPanelBody.text = TranslationManager.GetArrayTranslation("Tip", 1, "WelcomeBack");
                     break;
                 case "Tip":
-                    ___tipsPanelHeader.text = "팁";
-                    ___tipsPanelBody.text = "함선의 물체를 재배치하려면 B를 누르세요. 취소하려면 E를 누르세요.";
+                    ___tipsPanelHeader.text = TranslationManager.GetArrayTranslation("Tip", 0, "TipShipObject");
+                    ___tipsPanelBody.text = TranslationManager.GetArrayTranslation("Tip", 1, "TipShipObject");
                     break;
             }
         }
@@ -252,51 +243,6 @@ namespace LCKorean.Patches
         {
             ___moneyRewardsTotalText.text = ___moneyRewardsTotalText.text.Replace("TOTAL", "합계");
         }
-        [HarmonyPostfix, HarmonyPatch("ChangeControlTip")]
-        private static void ChangeControlTip_Postfix(int toolTipNumber, string changeTo, bool clearAllOther, ref TextMeshProUGUI[] ___controlTipLines)
-        {
-            foreach (TextMeshProUGUI text in ___controlTipLines)
-            {
-                text.text = text.text.Replace("Pull pin", "핀 뽑기");
-                text.text = text.text.Replace("Use grenade", "수류탄 사용하기");
-                text.text = text.text.Replace("Toss egg", "달걀 던지기");
-                text.text = text.text.Replace("Turn safety off", "안전 모드 해제");
-                text.text = text.text.Replace("Turn safety on", "안전 모드 설정");
-                text.text = text.text.Replace("Quit terminal", "터미널 나가기");
-            }
-        }
-        /*
-        [HarmonyPrefix, HarmonyPatch("ChangeControlTip")]
-        private static void ChangeControlTip_Prefix(int toolTipNumber, string changeTo, bool clearAllOther = false)
-        {
-            Plugin.mls.LogInfo("Changing Tooltips");
-            changeTo = changeTo.Replace("Pull pin", "핀 뽑기");
-            changeTo = changeTo.Replace("Use grenade", "수류탄 사용하기");
-            changeTo = changeTo.Replace("Toss egg", "달걀 던지기");
-            changeTo = changeTo.Replace("Turn safety off", "안전 모드 해제");
-            changeTo = changeTo.Replace("Turn safety on", "안전 모드 설정");
-            changeTo = changeTo.Replace("Quit terminal", "터미널 나가기");
-        }
-        */
-
-        [HarmonyPrefix, HarmonyPatch("ChangeControlTipMultiple")]
-        private static void ChangeControlTipMultiple_Prefix(string[] allLines, bool holdingItem, Item itemProperties, ref TextMeshProUGUI[] ___controlTipLines)
-        {
-            if (allLines != null)
-            {
-                for (int i = 0; i < allLines.Length; i++)
-                {
-                    string thisLine = allLines[i];
-                    thisLine = thisLine.Replace("Pull pin", "핀 뽑기");
-                    thisLine = thisLine.Replace("Use grenade", "수류탄 사용하기");
-                    thisLine = thisLine.Replace("Toss egg", "달걀 던지기");
-                    thisLine = thisLine.Replace("Turn safety off", "안전 모드 해제");
-                    thisLine = thisLine.Replace("Turn safety on", "안전 모드 설정");
-                    thisLine = thisLine.Replace("Quit terminal", "터미널 나가기");
-                    allLines[i] = thisLine;
-                }
-            }
-        }
 
         [HarmonyPostfix, HarmonyPatch("DisplayDaysLeft")]
         private static void DisplayDaysLeft_Postfix(ref TextMeshProUGUI ___profitQuotaDaysLeftText, ref TextMeshProUGUI ___profitQuotaDaysLeftText2)
@@ -307,8 +253,44 @@ namespace LCKorean.Patches
             ___profitQuotaDaysLeftText2.text = ___profitQuotaDaysLeftText2.text.Replace(" Days Left", "일 남았습니다");
         }
 
+        [HarmonyPostfix, HarmonyPatch("ChangeControlTip")]
+        private static void ChangeControlTip_Postfix(HUDManager __instance, ref TextMeshProUGUI[] ___controlTipLines, int toolTipNumber, string changeTo, bool clearAllOther = false)
+        {
+            string actionKey = changeTo.Split(':')[0].Trim();
+            string translatedString = actionKey;
+
+            translatedString = changeTo.Replace(
+                actionKey,
+                TranslationManager.GetStringTranslation("ControlTip", actionKey, true)
+            );
+
+            ___controlTipLines[toolTipNumber].text = translatedString;
+
+            Plugin.mls.LogInfo($"key-{actionKey}, line-{___controlTipLines[toolTipNumber].text}");
+
+
+            Coroutine coroutine = (Coroutine)forceChangeTextCoroutineField.GetValue(__instance);
+
+            if (coroutine != null)
+            {
+                __instance.StopCoroutine(coroutine);
+            }
+
+            IEnumerator enumerator = (IEnumerator)forceChangeTextMethod.Invoke(
+                __instance,
+                new object[]
+                {
+            ___controlTipLines[toolTipNumber],
+            translatedString
+                });
+
+            Coroutine newCoroutine = __instance.StartCoroutine(enumerator);
+
+            forceChangeTextCoroutineField.SetValue(__instance, newCoroutine);
+        }
+
         [HarmonyPostfix, HarmonyPatch("ChangeControlTipMultiple")]
-        private static void ChangeControlTipMultiple_Postfix(string[] allLines, bool holdingItem, Item itemProperties, ref TextMeshProUGUI[] ___controlTipLines)
+        private static void ChangeControlTipMultiple_Postfix(ref TextMeshProUGUI[] ___controlTipLines, string[] allLines, bool holdingItem, Item itemProperties)
         {
             if (holdingItem && allLines != null)
             {
@@ -317,9 +299,28 @@ namespace LCKorean.Patches
                     ___controlTipLines[0].text = "맨이터 떨어뜨리기 : [G]";
                     ___controlTipLines[1].text = ___controlTipLines[1].text.Replace("Rock", "흔들기");
                     ___controlTipLines[1].text = ___controlTipLines[1].text.Replace("Hold", "길게 누르기");
-                }else
+                }
+                else
                 {
-                    ___controlTipLines[0].text = itemProperties.itemName + " 떨어뜨리기 : [G]";
+                    ___controlTipLines[0].text = TranslationManager.GetStringTranslation("Item", itemProperties.itemName) + " 떨어뜨리기 : [G]";
+
+                    int maxLines = Mathf.Min(allLines.Length, ___controlTipLines.Length);
+
+                    for (int i = 0; i < maxLines; i++)
+                    {
+                        if (allLines.Length > i && !string.IsNullOrEmpty(allLines[i]))
+                        {
+                            string originalLine = allLines[i];
+                            string actionKey = originalLine.Split(':')[0].Trim();
+
+                            Plugin.mls.LogInfo($"{i}, {actionKey}-");
+
+                            ___controlTipLines[i + 1].text = ___controlTipLines[i + 1].text.Replace(
+                                actionKey,
+                                TranslationManager.GetStringTranslation("ControlTip", actionKey, true)
+                            );
+                        }
+                    }
                 }
             }
         }

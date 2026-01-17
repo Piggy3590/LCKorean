@@ -25,6 +25,7 @@ namespace LCKorean.Patches
     [HarmonyPatch(typeof(InteractTrigger))]
     internal class InteractTriggerPatch
     {
+        /*
         [HarmonyPostfix, HarmonyPatch("Update")]
         private static void Update_Postfix(ref string ___hoverTip, ref string ___disabledHoverTip, ref string ___holdTip)
         {
@@ -84,6 +85,7 @@ namespace LCKorean.Patches
             ___hoverTip = ___hoverTip.Replace("Beam up", "작동하기");
 
             ___hoverTip = ___hoverTip.Replace("Set straps", "끈 묶기");
+            ___hoverTip = ___hoverTip.Replace("Use fridge", "냉장고 사용하기");
             ___hoverTip = ___hoverTip.Replace("Pull drawer", "서랍 당기기");
             ___hoverTip = ___hoverTip.Replace("Use bin", "쓰레기통 사용하기");
             ___hoverTip = ___hoverTip.Replace("Use hood", "후드 사용하기");
@@ -209,5 +211,6 @@ namespace LCKorean.Patches
                 ___holdTip = ___holdTip.Replace("Picking lock", "자물쇠 따는 중");
             }
         }
+        */
     }
 }

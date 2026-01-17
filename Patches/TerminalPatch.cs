@@ -636,7 +636,7 @@ namespace LCKorean.Patches
                         node.displayText = "챌린지 위성 저장 파일을 선택했습니다. 챌린지 도중에는 다른 위성으로 이동할 수 없습니다.";
                         break;
                     case "For the safety of your crew, the Company only allows one Cruiser to be in operation at any given time, but a Cruiser has been detected.\n\n":
-                        node.displayText = "팀원의 안전을 위해 회사는 한 번에 한 대의 크루저만 운행할 수 있도록 허용하고 있지만, 현재 구역에서 크루저가 감지되었습니다.\n\n";
+                        node.displayText = "현재 구역에서 크루저가 감지되었습니다. 팀원의 안전을 위해 회사는 한 번에 한 대의 크루저만 운용할 수 있도록 허용하고 있습니다.\n\n";
                         break;
                     case "The delivery pod is currently filled with items en route; you cannot purchase a vehicle until it is empty.":
                         node.displayText = "수송선이 현재 물품을 배송하고 있습니다. 차량을 구매하려면 수송선이 비어 있어야 합니다.";
@@ -650,6 +650,9 @@ namespace LCKorean.Patches
 
         static void TranslateUnlockable(UnlockableItem unlockableItem)
         {
+            if (unlockableItem.shopSelectionNode == null)
+                return;
+
             TerminalNode terminalNodes = unlockableItem.shopSelectionNode;
             switch (unlockableItem.unlockableName)
             {
@@ -670,92 +673,92 @@ namespace LCKorean.Patches
                     break;
                 case "Teleporter":
                     unlockableItem.unlockableName = "순간이동기";
-                    terminalNodes.displayText = "순간이동기\n\n";
+                    terminalNodes.displayText = "순간이동기를 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요.\n\n";
                     terminalNodes.creatureName = "순간이동기";
                     break;
                 case "Television":
                     unlockableItem.unlockableName = "텔레비전";
-                    terminalNodes.displayText = "텔레비전\n\n";
+                    terminalNodes.displayText = "텔레비전을 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요.\n\n";
                     terminalNodes.creatureName = "텔레비전";
                     break;
                 case "Toilet":
                     unlockableItem.unlockableName = "변기";
-                    terminalNodes.displayText = "변기\n\n";
+                    terminalNodes.displayText = "변기를 주문하려고 합니다. \n아이템의 총 가격: [totalCost].\n\n" + Plugin.confirmString.ToUpper() + " 또는 " + Plugin.denyString.ToUpper() + "을(를) 입력하세요.\n\n";
                     terminalNodes.creatureName = "변기";
                     break;
                 case "Shower":
                     unlockableItem.unlockableName = "샤워 부스";
-                    terminalNodes.displayText = "샤워 부스\n\n";
+                    terminalNodes.displayText = "샤워 부스를 주문하려고 합니다. \\n아이템의 총 가격: [totalCost].\\n\\n\" + Plugin.confirmString.ToUpper() + \" 또는 \" + Plugin.denyString.ToUpper() + \"을(를) 입력하세요.\\n\\n\n\n";
                     terminalNodes.creatureName = "샤워 부스";
                     break;
                 case "Record player":
                     unlockableItem.unlockableName = "레코드 플레이어";
-                    terminalNodes.displayText = "레코드 플레이어\n\n";
+                    terminalNodes.displayText = "레코드 플레이어를 주문하려고 합니다. \\n아이템의 총 가격: [totalCost].\\n\\n\" + Plugin.confirmString.ToUpper() + \" 또는 \" + Plugin.denyString.ToUpper() + \"을(를) 입력하세요.\\n\\n\n\n";
                     terminalNodes.creatureName = "레코드";
                     break;
                 case "Table":
                     unlockableItem.unlockableName = "테이블";
-                    terminalNodes.displayText = "테이블\n\n";
+                    terminalNodes.displayText = "테이블을 주문하려고 합니다. \\n아이템의 총 가격: [totalCost].\\n\\n\" + Plugin.confirmString.ToUpper() + \" 또는 \" + Plugin.denyString.ToUpper() + \"을(를) 입력하세요.\\n\\n\n\n";
                     terminalNodes.creatureName = "테이블";
                     break;
                 case "Romantic table":
                     unlockableItem.unlockableName = "로맨틱한 테이블";
-                    terminalNodes.displayText = "로맨틱한 테이블\n\n";
+                    terminalNodes.displayText = "로맨틱한 테이블을 주문하려고 합니다. \\n아이템의 총 가격: [totalCost].\\n\\n\" + Plugin.confirmString.ToUpper() + \" 또는 \" + Plugin.denyString.ToUpper() + \"을(를) 입력하세요.\\n\\n\n\n";
                     terminalNodes.creatureName = "로맨틱한 테이블";
                     break;
                 case "Sofa chair":
                     unlockableItem.unlockableName = "소파 의자";
-                    terminalNodes.displayText = "소파 의자\n\n";
+                    terminalNodes.displayText = "소파 의자를 주문하려고 합니다. \\n아이템의 총 가격: [totalCost].\\n\\n\" + Plugin.confirmString.ToUpper() + \" 또는 \" + Plugin.denyString.ToUpper() + \"을(를) 입력하세요.\\n\\n\n\n";
                     terminalNodes.creatureName = "소파 의자";
                     break;
                 case "Microwave":
                     unlockableItem.unlockableName = "전자레인지";
-                    terminalNodes.displayText = "전자레인지\n\n";
+                    terminalNodes.displayText = "전자레인지를 주문하려고 합니다. \\n아이템의 총 가격: [totalCost].\\n\\n\" + Plugin.confirmString.ToUpper() + \" 또는 \" + Plugin.denyString.ToUpper() + \"을(를) 입력하세요.\\n\\n\n\n";
                     terminalNodes.creatureName = "전자레인지";
                     break;
                 case "Fridge":
                     unlockableItem.unlockableName = "냉장고";
-                    terminalNodes.displayText = "냉장고\n\n";
+                    terminalNodes.displayText = "냉장고를 주문하려고 합니다. \\n아이템의 총 가격: [totalCost].\\n\\n\" + Plugin.confirmString.ToUpper() + \" 또는 \" + Plugin.denyString.ToUpper() + \"을(를) 입력하세요.\\n\\n\n\n";
                     terminalNodes.creatureName = "냉장고";
                     break;
                 case "Signal translator":
                     unlockableItem.unlockableName = "신호 해석기";
-                    terminalNodes.displayText = "신호 해석기\n\n";
+                    terminalNodes.displayText = "신호 해석기를 주문하려고 합니다. \\n아이템의 총 가격: [totalCost].\\n\\n\" + Plugin.confirmString.ToUpper() + \" 또는 \" + Plugin.denyString.ToUpper() + \"을(를) 입력하세요.\\n\\n\n\n";
                     terminalNodes.creatureName = "신호 해석기";
                     break;
                 case "Loud horn":
                     unlockableItem.unlockableName = "시끄러운 경적";
-                    terminalNodes.displayText = "시끄러운 경적\n\n";
+                    terminalNodes.displayText = "시끄러운 경적을 주문하려고 합니다. \\n아이템의 총 가격: [totalCost].\\n\\n\" + Plugin.confirmString.ToUpper() + \" 또는 \" + Plugin.denyString.ToUpper() + \"을(를) 입력하세요.\\n\\n\n\n";
                     terminalNodes.creatureName = "시끄러운 경적";
                     break;
                 case "Inverse Teleporter":
                     unlockableItem.unlockableName = "역방향 순간이동기";
-                    terminalNodes.displayText = "역방향 순간이동기\n\n";
+                    terminalNodes.displayText = "역방향 순간이동기를 주문하려고 합니다. \\n아이템의 총 가격: [totalCost].\\n\\n\" + Plugin.confirmString.ToUpper() + \" 또는 \" + Plugin.denyString.ToUpper() + \"을(를) 입력하세요.\\n\\n\n\n";
                     terminalNodes.creatureName = "역방향 순간이동기";
                     break;
                 case "JackOLantern":
                     unlockableItem.unlockableName = "잭오랜턴";
-                    terminalNodes.displayText = "잭오랜턴\n\n";
+                    terminalNodes.displayText = "잭오랜턴을 주문하려고 합니다. \\n아이템의 총 가격: [totalCost].\\n\\n\" + Plugin.confirmString.ToUpper() + \" 또는 \" + Plugin.denyString.ToUpper() + \"을(를) 입력하세요.\\n\\n\n\n";
                     terminalNodes.creatureName = "잭오랜턴";
                     break;
                 case "Welcome mat":
                     unlockableItem.unlockableName = "웰컴 매트";
-                    terminalNodes.displayText = "웰컴 매트\n\n";
+                    terminalNodes.displayText = "웰컴 매트를 주문하려고 합니다. \\n아이템의 총 가격: [totalCost].\\n\\n\" + Plugin.confirmString.ToUpper() + \" 또는 \" + Plugin.denyString.ToUpper() + \"을(를) 입력하세요.\\n\\n\n\n";
                     terminalNodes.creatureName = "웰컴 매트";
                     break;
                 case "Goldfish":
                     unlockableItem.unlockableName = "금붕어";
-                    terminalNodes.displayText = "금붕어\n\n";
+                    terminalNodes.displayText = "금붕어 어항을 주문하려고 합니다. \\n아이템의 총 가격: [totalCost].\\n\\n\" + Plugin.confirmString.ToUpper() + \" 또는 \" + Plugin.denyString.ToUpper() + \"을(를) 입력하세요.\\n\\n\n\n";
                     terminalNodes.creatureName = "금붕어";
                     break;
                 case "Plushie pajama man":
                     unlockableItem.unlockableName = "인형 파자마 맨";
-                    terminalNodes.displayText = "인형 파자마 맨\n\n";
+                    terminalNodes.displayText = "인형 파자마 맨을 주문하려고 합니다. \\n아이템의 총 가격: [totalCost].\\n\\n\" + Plugin.confirmString.ToUpper() + \" 또는 \" + Plugin.denyString.ToUpper() + \"을(를) 입력하세요.\\n\\n\n\n";
                     terminalNodes.creatureName = "인형 파자마 맨";
                     break;
                 case "Disco Ball":
                     unlockableItem.unlockableName = "디스코 볼";
-                    terminalNodes.displayText = "디스코 볼\n\n";
+                    terminalNodes.displayText = "디스코 볼을 주문하려고 합니다. \\n아이템의 총 가격: [totalCost].\\n\\n\" + Plugin.confirmString.ToUpper() + \" 또는 \" + Plugin.denyString.ToUpper() + \"을(를) 입력하세요.\\n\\n\n\n";
                     terminalNodes.creatureName = "디스코 볼";
                     break;
             }
@@ -817,7 +820,7 @@ namespace LCKorean.Patches
                         node.creatureName = "육지 레비아탄";
                         break;
                     case "JesterFile":
-                        node.displayText = "광대\n\n시거드의 위험도: 90% 저 녀석이 날뛰기 전에 튀어!! 저 녀석에게서 숨을 곳은 없어. 그냥 밖으로 도망가.\n\n학명: 미친 놈\n망할 과학적 기록 따윈 없어! 행운을 빌어, 너도 우리만큼이나 잘 알잖아. 우린 저걸 광대라고 불러\n\n";
+                        node.displayText = "광대\n\n시거드의 위험도: 90% 저 녀석이 날뛰기 전에 당장 밖 으로 나가!! 저 녀석에게서 숨을 곳은 없어. 그냥 밖으로 튀어. 내가 보기엔 모두가 바깥에 있으면 상자로 되돌아가는 것 같아\n\n학명: 미친 놈\n망할 과학적 기록 따윈 없어! 행운을 빌어, 너도 우리만큼이나 잘 알잖아. 우린 저걸 광대라고 불러\n\n";
                         node.creatureName = "광대";
                         break;
                     case "PufferFile":
@@ -944,7 +947,7 @@ namespace LCKorean.Patches
                                 case "LogFile1Keyword":
                                     noun.noun.word = "첫번째";
                                     noun.result.creatureName = "첫번째 일지 - 8월 22일";
-                                    noun.result.displayText = "날짜: 1968년 8월 22일\r\n안녕. 난 지금 제 정신을 유지하기 위해 이 일지를 쓰고 있어. 이 낡아빠진 컴퓨터로는 가장 기본적인 일도 할 수가 없어서 데스몬드에게 일지 기능을 추가해달라 했거든. 지금까지 내가 아는 건 뭐든지 도감에 메모를 적고 있어. 내 동생이 일기를 쓰라고해서 할 수 있는 데까지는 하고있어! 이 일지는 깨끗하게 삭제하지 않는 한 아마도 몇 년 동안 남아 있을 테고 역사적 기록이 될 수 있으니, 전문적인 방식으로 이 글을 쓰고 있는거야. 데스몬드가 말한대로ㅀ\n\n나중에 당신이 이 글을 읽고 있다면 아마 나랑 다 른 크루 출신이겠지. 여긴 이직률이 어마어마한데, 아마 이 직업이 워낙 개판이고 다들 빠르게 죽어나가서 그런 것 같아! 경험이 좀 쌓이면 어느정도 도움을 줄 수 있을 것 같아. 일지 종료.\n\n아, 우리 이름은 시거드(나), 리처드, 데스몬드, 제스야.";
+                                    noun.result.displayText = "날짜: 1968년 8월 22일\n\n안녕. 난 지금 제 정신을 유지하기 위해 이 일지를 쓰고 있어. 이 낡아빠진 컴퓨터로는 가장 기본적인 일도 할 수가 없어서 데스몬드에게 일지 기능을 추가해달라 했거든. 지금까지 내가 아는 건 뭐든지 도감에 메모를 적고 있어. 내 동생이 일기를 쓰라고해서 할 수 있는 데까지는 하고있어! 이 일지는 깨끗하게 삭제하지 않는 한 아마도 몇 년 동안 남아 있을 테고 역사적 기록이 될 수 있으니, 전문적인 방식으로 이 글을 쓰고 있는거야. 데스몬드가 말한대로ㅀ\n\n나중에 당신이 이 글을 읽고 있다면 아마 나랑 다 른 크루 출신이겠지. 여긴 이직률이 어마어마한데, 아마 이 직업이 워낙 개판이고 다들 빠르게 죽어나가서 그런 것 같아! 경험이 좀 쌓이면 어느정도 도움을 줄 수 있을 것 같아. 일지 종료.\n\n아, 우리 이름은 시거드(나), 리처드, 데스몬드, 제스야.";
                                     break;
                                 case "LogFile2Keyword":
                                     noun.noun.word = "냄새";
@@ -999,7 +1002,7 @@ namespace LCKorean.Patches
                                 case "LogFile12Keyword":
                                     noun.noun.word = "진짜";
                                     noun.result.creatureName = "진짜 직업 - 10월 1일";
-                                    noun.result.displayText = "날짜 : 1968년 10월 1일\\n과자와 레모네이드 팩이 또 동났다. 데스몬드는 기절 수류탄이 \"더 효과적\"이라고 생각하고 있어. 내 물건 주문을 다음 날로 미루면 난 조종 레버에 응가 싸놓고 기절 수류탄에 대해 어떻게 생각하는지 물어볼 거야. 데스몬드 이거 읽지 마\\n\\n\\n내가 마법사가 아니라는 건 알지만 오늘도 컴퓨터 담당인 것 같아. 내가 보우에 나갈 때마다 죽은 것처럼 창백해진다고 해서 스크린 업무를 시켰어. 내가 약해졌다고 생각하나 봐. 어쨌든 루카스는 겁이 많아. 걔가 미치지 않게 잘 지켜봐. 난 밤에도 내 집 뒷마당인 것 처럼 산책할 수 있어!! 그냥 강 건너편 언덕에서 리치를 봐서 그래. 그게 3일 전이야. 난 무섭지 않아. 그냥 밖이 추울 뿐이야. 사실 그냥 걔네는 내가 매일 스크린 업무를 하길 바라는 것 같은데 그냥 다들 핑계를 대고 있는 것 같아\\n\\n아빠가 그립다. 나는 아빠가 타이탄에 머물지 않기를 바란다. 사람들은 2년 뒤엔 예전 같을 거라고 말했다. 제스는 곧 전쟁이 일어날 거라고 했고 모두가 그걸 기다리고 있다고 말했다. 우리가 물건을 팔러 갈 때마다 회사 건물이 안에 용광로가 있는 것처럼 요란하게 흔들린다. 그들은 그만두는 것을 너무 두려워한다. 우리는 할당량을 맞추기 위해 잠도 거의 못 자고, 상황은 매번 더 힘들어진다. 마치 바늘 구멍을 통과하려고 쥐어짜내지는 기분이다. 다시 돌아갈 수 있었으면 좋겠다. 그냥 매일 용돈만 받더라도 아빠 밑에서 일하는 게 더 나았다. 나는 아빠가 폭포를 보기 위해 우리를 마을 밖으로 데려가서 우리가 오래된 나무 계단을 걸어 올라갔던 때가 좋았다. 난 그냥 진짜 직업을 원했을 뿐인데\\n\\n";
+                                    noun.result.displayText = "날짜 : 1968년 10월 1일\n과자와 레모네이드 팩이 또 동났다. 데스몬드는 기절 수류탄이 \"더 효과적\"이라고 생각하고 있어. 내 물건 주문을 다음 날로 미루면 난 조종 레버에 응가 싸놓고 기절 수류탄에 대해 어떻게 생각하는지 물어볼 거야. 데스몬드 이거 읽지 마\\n\\n\\n내가 마법사가 아니라는 건 알지만 오늘도 컴퓨터 담당인 것 같아. 내가 보우에 나갈 때마다 죽은 것처럼 창백해진다고 해서 스크린 업무를 시켰어. 내가 약해졌다고 생각하나 봐. 어쨌든 루카스는 겁이 많아. 걔가 미치지 않게 잘 지켜봐. 난 밤에도 내 집 뒷마당인 것 처럼 산책할 수 있어!! 그냥 강 건너편 언덕에서 리치를 봐서 그래. 그게 3일 전이야. 난 무섭지 않아. 그냥 밖이 추울 뿐이야. 사실 그냥 걔네는 내가 매일 스크린 업무를 하길 바라는 것 같은데 그냥 다들 핑계를 대고 있는 것 같아\\n\\n아빠가 그립다. 나는 아빠가 타이탄에 머물지 않기를 바란다. 사람들은 2년 뒤엔 예전 같을 거라고 말했다. 제스는 곧 전쟁이 일어날 거라고 했고 모두가 그걸 기다리고 있다고 말했다. 우리가 물건을 팔러 갈 때마다 회사 건물이 안에 용광로가 있는 것처럼 요란하게 흔들린다. 그들은 그만두는 것을 너무 두려워한다. 우리는 할당량을 맞추기 위해 잠도 거의 못 자고, 상황은 매번 더 힘들어진다. 마치 바늘 구멍을 통과하려고 쥐어짜내지는 기분이다. 다시 돌아갈 수 있었으면 좋겠다. 그냥 매일 용돈만 받더라도 아빠 밑에서 일하는 게 더 나았다. 나는 아빠가 폭포를 보기 위해 우리를 마을 밖으로 데려가서 우리가 오래된 나무 계단을 걸어 올라갔던 때가 좋았다. 난 그냥 진짜 직업을 원했을 뿐인데\n\n";
                                     break;
                                 case "LogFile13Keyword":
                                     noun.noun.word = "데스몬드";
@@ -1008,8 +1011,13 @@ namespace LCKorean.Patches
                                     break;
                                 case "LogFile14Keyword":
                                     noun.noun.word = "팀의";
-                                    noun.result.creatureName = "팀의 시너지 - 10월 10일";
-                                    noun.result.displayText = "1968년 10월 10일\n\n\n글 쓸 기분이 아니었다. 시간도 없었고. 하지만 어젯밤, 맹세코 아빠 목소리를 들었다. 충전기 아래에 있는 그 통풍구에서 말이야. 내가 미친 건 아닌 것 같아. 그래, 그래, 다들 그렇게 말하지! 나도 알아! 그래도 미치지 않으려고 이 일지를 쓰는 거잖아, 그치? 그러니까 써볼게. 아빠가 자기 지금 어디 있는 거냐고 물었어. 숨을 제대로 못 쉬는 것처럼 깊게 숨을 쉬더니, 마치 엔진 안으로 끌려가는 것 같았어. 겁먹은 것처럼 들렸어. 그리고 목이 마르다고 했어.\n\n그런 아빠 목소리는 처음이었다. 아마 내가 잠을 제ㄷㅐ로 못 자서 그럴 수도. 젠장 이제 어케 하지. 그냥 그걸 열어서 들여다봐야 하나.\n\n아마 내가 기분이 안 좋아서 그런 걸지도 몰라. 우리가 훔쳤던 그 아기 새를 팔아버려서. 그 날 보우에서 항상 우리를 째려보던 날개 없는 거대한 놈한테서 훔친 거. 그 녀석은 엄청 빨랐고, 우리는 바로 도망쳐야 했어. 루카스 그 멍청이는 그 이후로 이까지 덜덜 떨고 있잖아. 다시는 그런 짓 안 할 거야. 걔네가 나한테 그 아기 새를 책상 위에 올려두게 했거든. 그땐 그냥 해야 하나 싶었는데, 이제 와서 왜 나한테 시킨 건지 알겠어... 걔네가 나보다 더 죄책감 느껴서 그런 거야. 겁쟁이들. 그래서 내가 데스몬드 면전에다 말했어. \"니가 알아서 해.\" 라고.\n\n라고 하니 멍청한 표정으로 \"뭔 죄책감?\" 이러더라. 아기 새 알 팔아버린 거 말이야!그리고, 믿ㄱl지도 않게 \"그게 아침에 먹는 계란이랑 뭐가 달라?\" 라고 했어. 그래서 내가 말했지. 걔가 깨고 나와서 우리를 봤다고, 그걸 내가 어떻게 먹어! 그건 살아 있었다고! 라고 하니, 걔가 한 말 좀 들어봐. \"그게 폐품을 나를 수 있나?우리가 할당량을 채울 수 있게 해주나?우리 팀의 효율성과 생산성을 높이고 시너지를 향상시켜 줄 수 있나?어쩌고 저쩌고 어쩌고저쩌고어쩌고저쩌고어ㅉ까어ㅉ꺼ㅗ어저고 ㅓㄱ쇼ㅕㅇㅇㄴ\" 그 뚱뚱한 입술이 회사 전화기 음성처럼 푸드덕거리며 움직이는데, 말 같지도 않은 소리를 계속 늘어놓는 거야. 그러더니 결국 만족스럽게 깊은 숨을 쉬더니, 마치 이긴 것처럼 돌아가서 일하더라. 죽여버릴거야 진짜!! 데스몬드, 왜 널 책상 위에 올려두지 않았을까, 리치한테 했던 것처럼. 그럼 너도 팀의 시너지가 뭔지 알겠지.\n\n나는 그 통풍구 안에 포도주스를 조금 부었어. 나 진짜 바보 같지. 왜 했는지도 모르겠어. 많이 넣은 것도 아니고. 그냥... 해도 괜찮을 것 같았어.\n";
+                                    noun.result.creatureName = "팀의 시너지 - 10월 13일";
+                                    noun.result.displayText = "1968년 10월 10일\n\n글 쓸 기분이 아니었다. 시간도 없었고. 하지만 어젯밤, 맹세코 아빠 목소리를 들었다. 충전기 아래에 있는 그 통풍구에서 말이다. 내가 미친 건 아닌 것 같다. 그래, 그래, 다들 그렇게 말하잖아! 나도 알아! 그래도 미치지 않으려고 이 일지를 쓰는 거잖아, 그치? 그러니까 써볼게. 아빠가 자기 지금 어디 있는 거냐고 물었어. 숨을 제대로 못 쉬는 것처럼 깊게 숨을 쉬더니, 마치 엔진 안으로 끌려가는 것 같았어. 겁먹은 것처럼 들렸어. 그리고 목이 마르다고 했어\n\n그런 아빠 목소리는 처음이었다. 아마 내가 잠을 제ㄷㅐ로 못 자서 그럴 수도. 젠장 이제 어케 하지. 그냥 그걸 열어서 들여다봐야 하나.\n\n아마 내가 기분이 안 좋아서 그런 걸지도 몰라. 우리가 훔쳤던 그 아기 새를 팔아버려서. 그 날 보우에서 항상 우리를 째려보던 날개 없는 거대한 놈한테서 훔친 거. 그 녀석은 엄청 빨랐고, 우리는 바로 도망쳐야 했어. 루카스 그 멍청이는 그 이후로 이까지 덜덜 떨고 있잖아. 다시는 그런 짓 안 할 거야. 걔네가 나<한테 그 아기 새를 책상 위에 올려두게 했거든. 그땐 그냥 해야 하나 싶었는데, 이제 와서 왜 나한테 시킨 건지 알겠어... 걔네가 나보다 더 죄책감 느껴서 그런 거야. 겁쟁이들. 그래서 내가 데스몬드 면전에다 말했어. \"니가 알아서 해.\" 라고.\n\n라고 하니 멍청한 표정으로 \"뭔 죄책감?\" 이러더라. 아기 새 알 팔아버린 거 말이야!그리고, 믿ㄱl지도 않게 \"그게 아침에 먹는 계란이랑 뭐가 달라?\" 라고 했어. 그래서 내가 말했지. 걔가 깨고 나와서 우리를 봤다고, 그걸 내가 어떻게 먹어! 그건 살아 있었다고! 라고 하니, 걔가 한 말 좀 들어봐. \"그게 폐품을 나를 수 있나?우리가 할당량을 채울 수 있게 해주나?우리 팀의 효율성과 생산성을 높이고 시너지를 향상시켜 줄 수 있나?어쩌고 저쩌고 어쩌고저쩌고어쩌고저쩌고어ㅉ까어ㅉ꺼ㅗ어저고 ㅓㄱ쇼ㅕㅇㅇㄴ어쩌구저쩌구어쩌구저쩌고어쩌고저쩌고어쩌고저쩌고어쩌고저쩌곧노져어ㅑㅗㅜㅐㅇ자ㅓ럳ㅇ어쩌구 저쩌구 어쩌고 저쩌고 어쩌고 저쩌고 ㅇ어 쩌ㅓㅓㄱ어ㅉㅓ고ㅈ ㅓㄱ죽적저ㅗ야ㅏㅓㅇ ㄹ어너ㅐㄴㅇㄹ\" 그 뚱뚱한 입술이 회사 전화기 음성처럼 푸드덕거리며 움직이는데, 말 같지도 않은 소리를 계속 늘어놓는 거야. 그러더니 결국 만족스럽게 깊은 숨을 쉬더니, 마치 이긴 것처럼 돌아가서 일하더라. 너 죽여버릴거야 진짜!! 데스몬드, 왜 널 책상 위에 올려두지 않았을까, 너가 리치한테 했던 거 다 알아. 그럼 너도 팀 시너지가 뭔지 알겠지.\n\n그 통풍구 안에 포도주스를 조금 부었어. 나 진짜 바보 같지. 왜 했는지도 모르겠어. 많이 넣은 것도 아니고. 그냥... 해도 괜찮을 것 같았어.\n\n";
+                                    break;
+                                case "LogFile15Keyword":
+                                    noun.noun.word = "사직서";
+                                    noun.result.creatureName = "사직서 - 10월 13일";
+                                    noun.result.displayText = "날짜: 1968년 10월 13일\n여긴 데스몬드. 시거드는 글을 쓸 수 없는 상태다. 하지만 난 기록을 남길 필요를 느낀다. 우리 중 누구도 오늘 밤은 잠을 자지 못할 것이다. 그 사건 이후로 그는 거의 혼수 상태다. 며칠 전 그는 충전기 아래의 공기 흡입구에서 아버지의 목소리를 들었다고 말했다. 그 사건 전에 말해줬다면 좋았겠지만, 최소한 스스로는 그 말을 진심으로 믿고 있는 듯하다. 지금 상태의 그는 자신에게도, 남에게도 위험한 존재가 되었기 때문에 지금의 우리 팀은 세 명이다. 이는 우리가 감당할 수 없는 큰 타격이다.\n\n제스와 루카스의 증언은 이렇다. 긁히는 듯한 소리가 났고, 소리의 근원이 공기 환기구임을 알아냈다. 둘은 이를 함선 내부 정비나 오일 교환이 필요한 신호로 생각했다. 루카스는 확인을 위해 도구를 가지러 갔다. 하지만 그가 돌아오기 전, 환기구가 붉은 액체를 뿜어냈다. 분명히 뼛조각과 머리카락으로 보이는 것들이 섞여 있었고, 막힌 변기처럼 바닥 전체로 퍼졌다. 환기구를 완전히 비우고, 함선을 청소하고, 그 냄새를 제거하는 것은, 특히 그 사이에 시거드가 우릴 막으려는 건 누구도 바라지 않은 시련이었다. 지금은 오히려 표백제 냄새가 코를 찌르는 게 안도감처럼 느껴진다.\n\n왜? 왜 이런 일이 일어난 걸까? 시거드가 말하는 “아버지가 함선 안에 있었다”는 설명을 진지하게 받아들일 수 없다. 그는 언제나 상상력이 풍부했고, 지금 상태는 말할 것도 없다. 난 이게 우리 이전 팀—혹은 그 전 팀—이 벌금을 피하려다 벌어진 은폐 시도일 뿐이라고 생각할 뿐이다. 희생자의 유해는 내버려졌고, 우린 그가 누군지도 영영 모를 것이다.\n\n하지만 이젠 그건 중요하지 않다. 난 매뉴얼의 모든 지침을 따랐고, 상황을 어떻게든 유지하려 애썼다. 효율을 극대화하고, 사기를 유지해왔다. 하지만 이젠 나조차 어떻게 해야할지 모르겠다. 마치 이 일 자체가 날 무너뜨리기 위해 설계된 것처럼 느껴진다. 나는 옳은 일을 해왔고, 할 수 있는 모든 걸 했다. 그런데도 상황을 정상으로 되돌리려면 기적을 일으켜야 할 수준이다. 이제 남은 방법은 내가 할 수 없는 일뿐이다. 그래서 아마 해야만 할 것 같다.\n\n내가 직접 사직서를 제출할 것이다. 우리가 누굴 위해 일하고 있었는지 직접 확인할 시간이다. 그래, 시거드. 이건 우리의 진짜 일이 아니야. 우리의 일은 이제 막 시작된 거야. 돌아갈 길은 없어. 앞으로 나아가야만 해.\n\n";
                                     break;
                             }
                         }
@@ -1433,7 +1441,7 @@ namespace LCKorean.Patches
                                         noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace("Routing autopilot to 48 Desolation", "48 디솔레이션으로 이동합니다.");
                                         noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace("Routing autopilot to 154 Etern", "154 이턴으로 이동합니다.");
                                         noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace("Routing autopilot to 25 Fission-C", "25 피션-C로 이동합니다.");
-                                        noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace("Routing autopilot to 36 Gloom", "36 글룸로 이동합니다.");
+                                        noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace("Routing autopilot to 36 Gloom", "36 글룸으로 이동합니다.");
                                         noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace("Routing autopilot to 147 Gratar", "147 그라타로 이동합니다.");
                                         noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace("Routing autopilot to 46 Infernis", "46 인퍼니스로 이동합니다.");
                                         noun.result.terminalOptions[1].result.displayText = noun.result.terminalOptions[1].result.displayText.Replace("Routing autopilot to 84 Junic", "84 주닉으로 이동합니다.");

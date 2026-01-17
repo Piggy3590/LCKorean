@@ -20,6 +20,7 @@ using UnityEngine.InputSystem.HID;
 using UnityEngine.InputSystem.XR;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
+using static IngamePlayerSettings;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace LCKorean.Patches
@@ -31,19 +32,6 @@ namespace LCKorean.Patches
         [HarmonyPatch("Start")]
         private static void Start_Postfix()
         {
-            try
-            {
-                TranslateItem();
-                if (Plugin.translateModdedContent)
-                {
-                    TranslateModdedItem();
-                }
-            }
-            catch (Exception e)
-            {
-                Plugin.mls.LogError("아이템 이름을 번역하는 과정에서 오류가 발생했습니다!\n" + e);
-            }
-
             try
             {
                 TranslateDialogue();
@@ -81,6 +69,47 @@ namespace LCKorean.Patches
             if (HUDManager.Instance.loadingText.text == "LOADING WORLD...")
             {
                 HUDManager.Instance.loadingText.text = "세계 불러오는 중...";
+            }
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch("SetDiscordStatusDetails")]
+        private static void SetDiscordStatusDetails_Postfix()
+        {
+            if (DiscordController.Instance == null)
+            {
+                return;
+            }
+            if (GameNetworkManager.Instance.disableSteam)
+            {
+                return;
+            }
+            DiscordController.Instance.status_Details = DiscordController.Instance.status_Details.Replace("Getting fired", "해고당하는 중");
+            DiscordController.Instance.status_Details = DiscordController.Instance.status_Details.Replace("In orbit (Waiting for crew)", "공전 중 (팀원 기다리는 중)");
+            if (StartOfRound.Instance.inShipPhase)
+            {
+                DiscordController.Instance.status_Details = StartOfRound.Instance.currentLevel.PlanetName + "을(를) 공전하는 중";
+                DiscordController.Instance.status_Details = StartOfRound.Instance.currentLevel.PlanetName.Replace("Gordion", "고르디온");
+                DiscordController.Instance.status_Details = StartOfRound.Instance.currentLevel.PlanetName.Replace("Experimentation", "익스페리멘테이션");
+                DiscordController.Instance.status_Details = StartOfRound.Instance.currentLevel.PlanetName.Replace("Assuarance", "어슈어런스");
+                DiscordController.Instance.status_Details = StartOfRound.Instance.currentLevel.PlanetName.Replace("Vow", "보우");
+                DiscordController.Instance.status_Details = StartOfRound.Instance.currentLevel.PlanetName.Replace("Offense", "오펜스");
+                DiscordController.Instance.status_Details = StartOfRound.Instance.currentLevel.PlanetName.Replace("March", "머치");
+                DiscordController.Instance.status_Details = StartOfRound.Instance.currentLevel.PlanetName.Replace("Adamance", "애더먼스");
+                DiscordController.Instance.status_Details = StartOfRound.Instance.currentLevel.PlanetName.Replace("Rend", "렌드");
+                DiscordController.Instance.status_Details = StartOfRound.Instance.currentLevel.PlanetName.Replace("Dine", "다인");
+                DiscordController.Instance.status_Details = StartOfRound.Instance.currentLevel.PlanetName.Replace("Titan", "타이탄");
+                DiscordController.Instance.status_Details = StartOfRound.Instance.currentLevel.PlanetName.Replace("Embrion", "엠브리온");
+                DiscordController.Instance.status_Details = StartOfRound.Instance.currentLevel.PlanetName.Replace("Artifice", "아터피스");
+            }
+
+            DiscordController.Instance.status_smallText = DiscordController.Instance.status_smallText.Replace("Deceased", "사망함");
+            DiscordController.Instance.status_smallText = DiscordController.Instance.status_smallText.Replace("In orbit", "공전 중");
+
+            if (RoundManager.Instance != null && StartOfRound.Instance.inShipPhase)
+            {
+                float num = (float)StartOfRound.Instance.GetValueOfAllScrap(true, false) / (float)TimeOfDay.Instance.profitQuota * 100f;
+                DiscordController.Instance.status_State = string.Format("할당량의 {0}% 달성 | {1}일 남음", (int)num, TimeOfDay.Instance.daysUntilDeadline);
             }
         }
 
@@ -609,290 +638,6 @@ namespace LCKorean.Patches
                 }
             }
         }
-
-        static void TranslateItem()
-        {
-            Plugin.mls.LogInfo("Translating Items");
-            foreach (Item item in StartOfRound.Instance.allItemsList.itemsList)
-            {
-                switch (item.itemName)
-                {
-                    case "Boombox":
-                        item.itemName = "붐박스";
-                        item.toolTips[0] = "음악 전환하기 : [RMB]";
-                        break;
-                    case "Flashlight":
-                        item.itemName = "손전등";
-                        item.toolTips[0] = "전등 전환하기 : [RMB]";
-                        break;
-                    case "Jetpack":
-                        item.itemName = "제트팩";
-                        item.toolTips[0] = "제트팩 사용하기 : [RMB]";
-                        break;
-                    case "Key":
-                        item.itemName = "열쇠";
-                        item.toolTips[0] = "열쇠 사용하기 : [RMB]";
-                        break;
-                    case "Lockpicker":
-                        item.itemName = "자물쇠 따개";
-                        item.toolTips[0] = "문에 설치하기 : [RMB]";
-                        break;
-                    case "Apparatus":
-                        item.itemName = "장치";
-                        break;
-                    case "Pro-flashlight":
-                        item.itemName = "프로 손전등";
-                        item.toolTips[0] = "전등 전환하기 : [RMB]";
-                        break;
-                    case "Shovel":
-                        item.itemName = "철제 삽";
-                        item.toolTips[0] = "삽 휘두르기: [RMB]";
-                        break;
-                    case "Stun grenade":
-                        item.itemName = "기절 수류탄";
-                        item.toolTips[0] = "수류탄 사용하기 : [RMB]";
-                        break;
-                    case "Extension ladder":
-                        item.itemName = "연장형 사다리";
-                        item.toolTips[0] = "사다리 꺼내기 : [RMB]";
-                        break;
-                    case "TZP-Inhalant":
-                        item.itemName = "TZP-흡입제";
-                        item.toolTips[0] = "TZP 흡입하기 : [RMB]";
-                        break;
-                    case "Walkie-talkie":
-                        item.itemName = "무전기";
-                        item.toolTips[0] = "전원 버튼 : [Q]";
-                        item.toolTips[1] = "목소리 송신하기 : [RMB]";
-                        break;
-                    case "Zap gun":
-                        item.itemName = "잽건";
-                        item.toolTips[0] = "위협 감지하기 : [RMB]";
-                        break;
-                    case "Magic 7 ball":
-                        item.itemName = "마법의 7번 공";
-                        break;
-                    case "Airhorn":
-                        item.itemName = "에어혼";
-                        item.toolTips[0] = "에어혼 사용하기 : [RMB]";
-                        break;
-                    case "Bell":
-                        item.itemName = "종";
-                        break;
-                    case "Big bolt":
-                        item.itemName = "큰 나사";
-                        break;
-                    case "Bottles":
-                        item.itemName = "병 묶음";
-                        break;
-                    case "Brush":
-                        item.itemName = "빗";
-                        break;
-                    case "Candy":
-                        item.itemName = "사탕";
-                        break;
-                    case "Cash register":
-                        item.itemName = "금전 등록기";
-                        item.toolTips[0] = "금전 등록기 사용하기 : [RMB]";
-                        break;
-                    case "Chemical jug":
-                        item.itemName = "화학 용기";
-                        break;
-                    case "Clown horn":
-                        item.itemName = "광대 나팔";
-                        item.toolTips[0] = "광대 나팔 사용하기 : [RMB]";
-                        break;
-                    case "Large axle":
-                        item.itemName = "대형 축";
-                        break;
-                    case "Teeth":
-                        item.itemName = "틀니";
-                        break;
-                    case "Dust pan":
-                        item.itemName = "쓰레받기";
-                        break;
-                    case "Egg beater":
-                        item.itemName = "달걀 거품기";
-                        break;
-                    case "V-type engine":
-                        item.itemName = "V형 엔진";
-                        break;
-                    case "Golden cup":
-                        item.itemName = "황금 컵";
-                        break;
-                    case "Fancy lamp":
-                        item.itemName = "멋진 램프";
-                        break;
-                    case "Painting":
-                        item.itemName = "그림";
-                        break;
-                    case "Plastic fish":
-                        item.itemName = "플라스틱 물고기";
-                        break;
-                    case "Laser pointer":
-                        item.itemName = "레이저 포인터";
-                        item.toolTips[0] = "레이저 전환하기 : [RMB]";
-                        break;
-                    case "Gold bar":
-                        item.itemName = "금 주괴";
-                        break;
-                    case "Hairdryer":
-                        item.itemName = "헤어 드라이기";
-                        item.toolTips[0] = "헤어 드라이기 사용하기 : [RMB]";
-                        break;
-                    case "Magnifying glass":
-                        item.itemName = "돋보기";
-                        break;
-                    case "Metal sheet":
-                        item.itemName = "금속 판";
-                        break;
-                    case "Cookie mold pan":
-                        item.itemName = "쿠키 틀";
-                        break;
-                    case "Mug":
-                        item.itemName = "머그잔";
-                        break;
-                    case "Perfume bottle":
-                        item.itemName = "향수 병";
-                        break;
-                    case "Old phone":
-                        item.itemName = "구식 전화기";
-                        break;
-                    case "Jar of pickles":
-                        item.itemName = "피클 병";
-                        break;
-                    case "Pill bottle":
-                        item.itemName = "약 병";
-                        break;
-                    case "Remote":
-                        item.itemName = "리모컨";
-                        item.toolTips[0] = "리모컨 사용하기 : [RMB]";
-                        break;
-                    case "Ring":
-                        item.itemName = "반지";
-                        break;
-                    case "Toy robot":
-                        item.itemName = "장난감 로봇";
-                        break;
-                    case "Rubber Ducky":
-                        item.itemName = "고무 오리";
-                        break;
-                    case "Red soda":
-                        item.itemName = "빨간색 소다";
-                        break;
-                    case "Steering wheel":
-                        item.itemName = "운전대";
-                        break;
-                    case "Stop sign":
-                        item.itemName = "정지 표지판";
-                        item.toolTips[0] = "표지판 사용하기 : [RMB]";
-                        break;
-                    case "Tea kettle":
-                        item.itemName = "찻주전자";
-                        break;
-                    case "Toothpaste":
-                        item.itemName = "치약";
-                        break;
-                    case "Toy cube":
-                        item.itemName = "장난감 큐브";
-                        break;
-                    case "Hive":
-                        item.itemName = "벌집";
-                        break;
-                    case "Radar-booster":
-                        item.itemName = "레이더 부스터";
-                        item.toolTips[0] = "부스터 켜기 : [RMB]";
-                        break;
-                    case "Yield sign":
-                        item.itemName = "양보 표지판";
-                        item.toolTips[0] = "표지판 사용하기 : [RMB]";
-                        break;
-                    case "Shotgun":
-                        item.itemName = "산탄총";
-                        item.toolTips[0] = "격발 : [RMB]";
-                        item.toolTips[1] = "재장전 : [E]";
-                        item.toolTips[2] = "안전 모드 해제 : [Q]";
-                        break;
-                    case "Ammo":
-                        item.itemName = "탄약";
-                        break;
-                    case "Spray paint":
-                        item.itemName = "스프레이 페인트";
-                        item.toolTips[0] = "스프레이 뿌리기 : [RMB]";
-                        item.toolTips[1] = "캔 흔들기 : [Q]";
-                        break;
-                    case "Homemade flashbang":
-                        item.itemName = "사제 섬광탄";
-                        item.toolTips[0] = "사제 섬광탄 사용하기 : [RMB]";
-                        break;
-                    case "Gift":
-                        item.itemName = "선물";
-                        item.toolTips[0] = "선물 열기 : [RMB]";
-                        break;
-                    case "Flask":
-                        item.itemName = "플라스크";
-                        break;
-                    case "Tragedy":
-                        item.itemName = "비극";
-                        item.toolTips[0] = "가면 쓰기 : [RMB]";
-                        break;
-                    case "Comedy":
-                        item.itemName = "희극";
-                        item.toolTips[0] = "가면 쓰기 : [RMB]";
-                        break;
-                    case "Whoopie cushion":
-                        item.itemName = "방귀 쿠션";
-                        break;
-                    case "Kitchen knife":
-                        item.itemName = "식칼";
-                        item.toolTips[0] = "찌르기 : [RMB]";
-                        break;
-                    case "Easter egg":
-                        item.itemName = "부활절 달걀";
-                        break;
-                    case "Weed killer":
-                        item.itemName = "제초제";
-                        item.toolTips[0] = "뿌리기 : [RMB]";
-                        break;
-                    case "Belt bag":
-                        item.itemName = "벨트 배낭";
-                        item.toolTips[0] = "배낭 확인하기 : [RMB]";
-                        item.toolTips[1] = "도구 보관하기 : [Q]";
-                        break;
-                    case "Soccer ball":
-                        item.itemName = "축구공";
-                        break;
-                    case "Control pad":
-                        item.itemName = "조작 패드";
-                        break;
-                    case "Garbage lid":
-                        item.itemName = "쓰레기통 뚜껑";
-                        break;
-                    case "Plastic cup":
-                        item.itemName = "플라스틱 컵";
-                        break;
-                    case "Toilet paper":
-                        item.itemName = "화장실 휴지";
-                        break;
-                    case "Toy train":
-                        item.itemName = "장난감 기차";
-                        break;
-                    case "Zed Dog":
-                        item.itemName = "제드 도그";
-                        break;
-                    case "Clock":
-                        item.itemName = "시계";
-                        break;
-                    case "Body":
-                        item.itemName = "시체";
-                        break;
-                    case "Egg":
-                        item.itemName = "알";
-                        break;
-                }
-            }
-        }
-
 
         static void TranslateModdedItem()
         {

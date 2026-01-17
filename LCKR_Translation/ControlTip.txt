@@ -1,0 +1,46 @@
+Toggle music = "음악 전환하기",
+Toggle light = "전등 전환하기",
+Use jetpack = "제트팩 사용하기",
+Use key = "열쇠 사용하기",
+Place on door = "문에 설치하기",
+
+Fire = "격발",
+Reload = "재장전",
+
+Take TZP = "TZP 흡입하기",
+Pop up ladder = "사다리 꺼내기",
+Use grenade = "수류탄 사용하기",
+Swing shovel = "삽 휘두르기",
+Swing sign = "표지판 휘두르기",
+Turn on booster = "부스터 켜기",
+
+Shake can = "캔 흔들기",
+Use DIY-Flashbang = "사제 섬광탄 사용하기",
+Open gift = "선물 열기",
+Wear mask = "가면 쓰기",
+Stab = "찌르기",
+Spray = "뿌리기",
+Check bag = "배낭 확인하기",
+Store tool = "도구 보관하기",
+
+Use cash register = "금전 등록기 사용하기",
+
+Power button = "전원 버튼",
+Send voice = "목소리 송신하기",
+Use airhorn = "에어혼 사용하기",
+Use horn = "나팔 사용하기",
+
+Scan for threat = "위협 스캔하기",
+
+Toggle laser = "레이저 전환하기",
+Use hairdryer = "헤어 드라이기 사용하기",
+
+Use remote = "리모컨 사용하기",
+
+Pull pin = "핀 뽑기",
+Use grenade = "수류탄 사용하기",
+Throw grenade = "수류탄 투척하기",
+Toss egg = "달걀 던지기",
+Turn safety off = "안전 모드 해제하기",
+Turn safety on = "안전 모드 설정하기",
+Quit terminal = "단말기 나가기"

@@ -214,7 +214,7 @@ namespace LCKorean.Patches
                     __instance.text = "순위 불러오는 중...";
                     break;
                 case "Loading...":
-                    __instance.text = "로딩 중...";
+                    __instance.text = "불러오는 중...";
                     break;
                 case "Join":
                     __instance.text = "참가";
@@ -501,11 +501,897 @@ namespace LCKorean.Patches
                     __instance.text = "<size=50>긴급 기상 경보";
                     break;
                 case "METEOR SHOWERS DETECTED. UP TO 20-30 PER HOUR. TAKE SHELTER IMMEDIATELY.":
-                    __instance.text = "유성우가 감지되었습니다. 시간당 최대 20-30개까지 발생할 수 있습니다. 즉시 대피하십시오.";
+                    __instance.text = "유성우가 감지되었습니다. 시간당 최대 20-30개까지 수 있습니다. 즉시 대피하십시오.";
                     break;
                 case "YOUR AUTOPILOT SATELLITE\nISSUED A\nWEATHER WARNING":
                     __instance.text = "<size=35>자동항법위성이\n기상 경보를\n발령했습니다";
                     __instance.lineSpacing = 32;
+                    break;
+
+                //Imperium
+                case "Imperium Control Center":
+                    __instance.text = "Imperium 제어 센터";
+                    break;
+                case "Emporium Control Center":
+                    __instance.text = "Emporium 제어 센터";
+                    break;
+                case "Quota and Credits":
+                    __instance.text = "할당량 및 자금";
+                    break;
+                case "Group Credits":
+                    __instance.text = "자금";
+                    break;
+                case "Profit Quota":
+                    __instance.text = "수익 할당량";
+                    break;
+                case "Quota Deadline (Days)":
+                    __instance.text = "할당량 마감일 (일 기준)";
+                    break;
+                case "Disable Quota":
+                    __instance.text = "할당량 비활성화";
+                    break;
+                case "Fulfill Quota":
+                    __instance.text = "할당량 채우기";
+                    break;
+                case "Reset Quota":
+                    __instance.text = "할당량 초기화";
+                    break;
+
+                case "Game Settings":
+                    __instance.text = "게임 설정";
+                    break;
+                case "Unlock Shop":
+                    __instance.text = "가구 모두 표시";
+                    break;
+
+                case "Player Settings":
+                    __instance.text = "플레이어 설정";
+                    break;
+                case "Infinite Sprint":
+                    __instance.text = "무한 달리기";
+                    break;
+                case "Invisibility":
+                    __instance.text = "투명화";
+                    break;
+                case "Untargetable":
+                    __instance.text = "적 감지 불가";
+                    break;
+                case "Pickup Overwrite":
+                    __instance.text = "투명화";
+                    break;
+                case "Enable Flying":
+                    __instance.text = "비행 활성화";
+                    break;
+                case "God Mode":
+                    __instance.text = "무적 모드";
+                    break;
+                case "Muted":
+                    __instance.text = "음소거";
+                    break;
+                case "Infinite Battery":
+                    __instance.text = "무한 배터리";
+                    break;
+                case "Disable OOB":
+                    __instance.text = "맵 탈출 허용";
+                    break;
+                case "Permadrunk":
+                    __instance.text = "TZP 항시 적용";
+                    break;
+
+                case "Night Vision":
+                    __instance.text = "야간 투시";
+                    break;
+                case "Field Of View":
+                    __instance.text = "시야각";
+                    break;
+                case "Movement Speed":
+                    __instance.text = "이동 속도";
+                    break;
+                case "Jump Force":
+                    __instance.text = "점프력";
+                    break;
+                case "Flying Speed":
+                    __instance.text = "비행 속도";
+                    break;
+
+                case "Animation Skipping":
+                    __instance.text = "애니메이션 건너뛰기";
+                    break;
+                case "Player Spawn":
+                    __instance.text = "플레이어 스폰";
+                    break;
+                case "Interact Hold":
+                    __instance.text = "길게 누르는 상호작용";
+                    break;
+                case "Interact":
+                    __instance.text = "상호작용";
+                    break;
+                case "Disable Locking":
+                    __instance.text = "시야 잠금 해제";
+                    break;
+
+
+                case "Object Explorer":
+                    __instance.text = "물체 탐색기";
+                    break;
+                case "Players":
+                    __instance.text = "플레이어";
+                    break;
+                case "Entities":
+                    __instance.text = "생명체";
+                    break;
+                case "Cruisers":
+                    __instance.text = "크루저";
+                    break;
+                case "Map Hazards":
+                    __instance.text = "맵 함정";
+                    break;
+                case "Items":
+                    __instance.text = "아이템";
+                    break;
+                case "Vents":
+                    __instance.text = "환풍구";
+                    break;
+                case "Other":
+                    __instance.text = "기타";
+                    break;
+                case "Outdoor Objects":
+                    __instance.text = "실외 물체";
+                    break;
+
+                case "Visualization":
+                    __instance.text = "시각화";
+                    break;
+                case "Overlays":
+                    __instance.text = "오버레이";
+                    break;
+                case "AI Nodes Indoor":
+                    __instance.text = "실내 AI 노드";
+                    break;
+                case "AI Nodes Outdoor":
+                    __instance.text = "실외 AI 노드";
+                    break;
+                case "Spawn Denial":
+                    __instance.text = "스폰 차단 지점";
+                    break;
+                case "Bee Spawns":
+                    __instance.text = "벌 생성 지점";
+                    break;
+                case "Entity Spawns":
+                    __instance.text = "생명체 생성 지점";
+                    break;
+                case "Scrap Spawns":
+                    __instance.text = "폐품 생성 지점";
+                    break;
+                case "Hazard Spawns":
+                    __instance.text = "함정 생성 지점";
+                    break;
+                //case "Vents":
+                    //__instance.text = "환풍구";
+                    //break;
+                case "NavMesh Surface":
+                    __instance.text = "NavMesh 표면";
+                    break;
+
+                case "Colliders":
+                    __instance.text = "충돌";
+                    break;
+                case "Entites":
+                    __instance.text = "생명체";
+                    break;
+                case "Employees":
+                    __instance.text = "직원";
+                    break;
+                case "Scrap & Props":
+                    __instance.text = "폐품 및 물건";
+                    break;
+                case "Foliage":
+                    __instance.text = "초목";
+                    break;
+                case "Tile Borders":
+                    __instance.text = "타일 경계";
+                    break;
+                case "Interact Triggers":
+                    __instance.text = "상호작용 트리거";
+                    break;
+                case "Room":
+                    __instance.text = "방";
+                    break;
+                case "Physics Object":
+                    __instance.text = "물리 객체";
+                    break;
+                case "Triggers":
+                    __instance.text = "트리거";
+                    break;
+                case "Room Light":
+                    __instance.text = "방 조명";
+                    break;
+                case "Anomaly":
+                    __instance.text = "이상 현상";
+                    break;
+                case "Railing":
+                    __instance.text = "난간";
+                    break;
+                case "PlacementBlocker":
+                    __instance.text = "배치 차단기";
+                    break;
+                case "Terrain":
+                    __instance.text = "지형";
+                    break;
+                case "Ship Objects":
+                    __instance.text = "함선 물체";
+                    break;
+                case "Misc Level Geo":
+                    __instance.text = "기타 레벨 지형";
+                    break;
+                case "Scan Nodes":
+                    __instance.text = "스캔 노드";
+                    break;
+                case "Vain Shrouds":
+                    __instance.text = "은폐 수풀";
+                    break;
+                case "Line Of Sight":
+                    __instance.text = "시야 선";
+                    break;
+
+                case "Gizmos":
+                    __instance.text = "기즈모";
+                    break;
+                case "Spawn Timers":
+                    __instance.text = "생성 타이머";
+                    break;
+                case "Vent Timers":
+                    __instance.text = "환풍구 타이머";
+                    break;
+                case "Noise Indicators":
+                    __instance.text = "소음 표시기";
+                    break;
+                case "Shotguns":
+                    __instance.text = "산탄총";
+                    break;
+                case "Shovels":
+                    __instance.text = "철제 삽";
+                    break;
+                case "Knives":
+                    __instance.text = "식칼";
+                    break;
+                case "Landmines":
+                    __instance.text = "지뢰";
+                    break;
+                case "Spike Traps":
+                    __instance.text = "가시 함정";
+                    break;
+
+                case "Settings":
+                    __instance.text = "설정";
+                    break;
+                case "General":
+                    __instance.text = "일반";
+                    break;
+                case "Smooth Animations":
+                    __instance.text = "부드러운 애니메이션";
+                    break;
+                case "Screen-Space Overlays":
+                    __instance.text = "화면 공간 오버레이";
+                    break;
+                case "Always-On-Top":
+                    __instance.text = "항상 위에 표시";
+                    break;
+                case "Auto Scale":
+                    __instance.text = "자동 크기 조정";
+                    break;
+                case "Hide Inactive":
+                    __instance.text = "비활성화 숨기기";
+                    break;
+                case "Overlay Scale":
+                    __instance.text = "오버레이 크기";
+                    break;
+                case "Reset":
+                    __instance.text = "초기화";
+                    break;
+
+                case "Teleportation":
+                    __instance.text = "순간이동";
+                    break;
+                case "Main Entrance":
+                    __instance.text = "정문";
+                    break;
+                case "Ship":
+                    __instance.text = "함선";
+                    break;
+                case "To Freecam":
+                    __instance.text = "프리캠 위치";
+                    break;
+                case "Apparatus":
+                    __instance.text = "장치";
+                    break;
+                case "To Coordinates (X/Y/Z)":
+                    __instance.text = "좌표 (X/Y/Z)";
+                    break;
+                case "Interactive":
+                    __instance.text = "상호작용";
+                    break;
+                case "Fire Exits":
+                    __instance.text = "비상구";
+                    break;
+
+                case "Waypoints":
+                    __instance.text = "웨이포인트";
+                    break;
+                case "Enable Beacons":
+                    __instance.text = "비컨 활성화";
+                    break;
+                case "Enable Overlay":
+                    __instance.text = "오버레이 활성화";
+                    break;
+                case "Waypoint Name...":
+                    __instance.text = "웨이포인트 이름...";
+                    break;
+                case "Add":
+                    __instance.text = "추가";
+                    break;
+
+                case "Ship Control":
+                    __instance.text = "함선 제어";
+                    break;
+                case "Instant Takeoff":
+                    __instance.text = "즉시 이륙";
+                    break;
+                case "Instant Landing":
+                    __instance.text = "즉시 착륙";
+                    break;
+                case "Override Doors":
+                    __instance.text = "문 재정의";
+                    break;
+                case "Prevent Leave":
+                    __instance.text = "자동 출발 끄기";
+                    break;
+                case "Mute Speaker":
+                    __instance.text = "스피커 음소거";
+                    break;
+                case "Disable Abandoned":
+                    __instance.text = "버려진 직원 구출";
+                    break;
+                case "Destinations":
+                    __instance.text = "목적지";
+                    break;
+
+
+                case "41 Experimentation":
+                    __instance.text = "41 익스페리멘테이션";
+                    break;
+                case "220 Assurance":
+                    __instance.text = "220 어슈어런스";
+                    break;
+                case "56 Vow":
+                    __instance.text = "56 보우";
+                    break;
+                case "21 Offense":
+                    __instance.text = "21 오펜스";
+                    break;
+                case "61 March":
+                    __instance.text = "61 머치";
+                    break;
+                case "20 Adamance":
+                    __instance.text = "20 애더먼스";
+                    break;
+                case "85 Rend":
+                    __instance.text = "85 렌드";
+                    break;
+                case "7 Dine":
+                    __instance.text = "7 다인";
+                    break;
+                case "8 Titan":
+                    __instance.text = "8 타이탄";
+                    break;
+                case "68 Artifice":
+                    __instance.text = "68 아터피스";
+                    break;
+                case "44 Liquidation":
+                    __instance.text = "44 리퀴데이션";
+                    break;
+                case "5 Embrion":
+                    __instance.text = "5 엠브리언";
+                    break;
+
+                case "Moon Control":
+                    __instance.text = "위성 제어";
+                    break;
+                case "Entity Spawning":
+                    __instance.text = "생명체 생성";
+                    break;
+                case "Min Indoor Spawns":
+                    __instance.text = "최소 실내 생성";
+                    break;
+                case "Min Outdoor Spawns":
+                    __instance.text = "최소 실외 생성";
+                    break;
+                case "Max Indoor Power":
+                    __instance.text = "최대 실내 파워";
+                    break;
+                case "Indoor Deviation":
+                    __instance.text = "실내 편차";
+                    break;
+                case "Min Outdoor Power":
+                    __instance.text = "최대 실외 파워";
+                    break;
+                case "Outdoor Deviation":
+                    __instance.text = "실외 편차";
+                    break;
+                case "Max Daytime Power":
+                    __instance.text = "최대 주간 적 파워";
+                    break;
+                case "Daytime Deviation":
+                    __instance.text = "주간 적 편차";
+                    break;
+
+
+                case "Pause Indoor Spawning":
+                    __instance.text = "실내 적 생성 멈추기";
+                    break;
+                case "Pause Outdoor Spawning":
+                    __instance.text = "실외 적 생성 멈추기";
+                    break;
+                case "Pause Daytime Spawning":
+                    __instance.text = "주간 적 생성 멈추기";
+                    break;
+
+
+                case "Generation":
+                    __instance.text = "맵 생성";
+                    break;
+                case "Level Seed":
+                    __instance.text = "레벨 시드";
+                    break;
+                case "Map Size Multiplier":
+                    __instance.text = "맵 크기 배수";
+                    break;
+                case "Dungeon Flow":
+                    __instance.text = "던전 플로우";
+                    break;
+
+
+                case "Map Obstacles":
+                    __instance.text = "맵 장애물";
+                    break;
+                case "Open Doors":
+                    __instance.text = "문 열기";
+                    break;
+                case "Close Doors":
+                    __instance.text = "문 닫기";
+                    break;
+                case "Lock Doors":
+                    __instance.text = "문 잠그기";
+                    break;
+                case "Unlock Doors":
+                    __instance.text = "문 잠금 해제";
+                    break;
+                case "Open Security":
+                    __instance.text = "보안 문 열기";
+                    break;
+                case "Close Security":
+                    __instance.text = "보안 문 닫기";
+                    break;
+                case "Turn On Breakers":
+                    __instance.text = "분전반 켜기";
+                    break;
+                case "Turn Off Breakers":
+                    __instance.text = "분전반 끄기";
+                    break;
+                case "Disable Turrets":
+                    __instance.text = "포탑 비활성화";
+                    break;
+                case "Enable Turrets":
+                    __instance.text = "포탑 활성화";
+                    break;
+                case "Disable Landmines":
+                    __instance.text = "지뢰 비활성화";
+                    break;
+                case "Enable Landmines":
+                    __instance.text = "지뢰 활성화";
+                    break;
+
+                case "Time Settings":
+                    __instance.text = "시간 설정";
+                    break;
+                case "Pause Time":
+                    __instance.text = "시간 멈추기";
+                    break;
+                case "Realtime Clock":
+                    __instance.text = "시계 실시간 표시";
+                    break;
+                case "Permanent Clock":
+                    __instance.text = "시계 항상 표시";
+                    break;
+
+                case "Time Scale":
+                    __instance.text = "시간 속도";
+                    break;
+                case "Weather Forecaster":
+                    __instance.text = "기상 표시";
+                    break;
+                case "None":
+                    __instance.text = "없음";
+                    break;
+                case "DustClouds":
+                    __instance.text = "DustClouds";
+                    break;
+                case "Rainy":
+                    __instance.text = "우천";
+                    break;
+                case "Stormy":
+                    __instance.text = "뇌우";
+                    break;
+                case "Foggy":
+                    __instance.text = "안개";
+                    break;
+                case "Flooded":
+                    __instance.text = "홍수";
+                    break;
+                case "Eclipsed":
+                    __instance.text = "일식";
+                    break;
+
+                case "Cruiser Control":
+                    __instance.text = "크루저 제어";
+                    break;
+                case "Indestructible":
+                    __instance.text = "무적";
+                    break;
+                case "Infinite Turbo":
+                    __instance.text = "무한 부스터";
+                    break;
+                case "Instant Ignition":
+                    __instance.text = "즉시 시동";
+                    break;
+
+                case "Push Force":
+                    __instance.text = "차량 밀기 강도";
+                    break;
+                case "Acceleration":
+                    __instance.text = "가속력";
+                    break;
+
+                case "Objects":
+                    __instance.text = "물체";
+                    break;
+                case "Shotgun":
+                    __instance.text = "산탄총";
+                    break;
+                case "Infinite Ammo":
+                    __instance.text = "무한 탄약";
+                    break;
+                case "Full Auto":
+                    __instance.text = "연사";
+                    break;
+                case "Shovel":
+                    __instance.text = "철제 삽";
+                    break;
+                case "Speedy":
+                    __instance.text = "속도 증가";
+                    break;
+                case "Jester":
+                    __instance.text = "광대";
+                    break;
+                case "Pop Jesters":
+                    __instance.text = "광대 폭주";
+                    break;
+                case "Pop Jesters (C)":
+                    __instance.text = "광대 폭주 (C)";
+                    break;
+                case "Reset Jesters":
+                    __instance.text = "광대 초기화";
+                    break;
+
+                case "Rendering":
+                    __instance.text = "렌더링";
+                    break;
+                case "Resolution":
+                    __instance.text = "해상도";
+                    break;
+                case "Lighting":
+                    __instance.text = "빛";
+                    break;
+                case "Sunlight":
+                    __instance.text = "태양광";
+                    break;
+                case "Space Sun":
+                    __instance.text = "우주 태양";
+                    break;
+                case "Indirect Light":
+                    __instance.text = "간접광";
+                    break;
+                case "Volumetrics":
+                    __instance.text = "볼류메트릭";
+                    break;
+                case "Global Volume":
+                    __instance.text = "전역 볼륨";
+                    break;
+                case "Volumetric Fog":
+                    __instance.text = "볼류메트릭 포그";
+                    break;
+                case "Ground Fog":
+                    __instance.text = "바닥 안개";
+                    break;
+                case "Stormy Volume":
+                    __instance.text = "뇌우 볼륨";
+                    break;
+                case "Skybox Volume":
+                    __instance.text = "스카이박스 볼륨";
+                    break;
+                case "Frame Settings":
+                    __instance.text = "프레임 설정";
+                    break;
+                case "Decal Layers":
+                    __instance.text = "데칼 레이어";
+                    break;
+                case "Ray Tracing":
+                    __instance.text = "레이 트레이싱";
+                    break;
+                case "Volumetric Clouds":
+                    __instance.text = "볼류메트릭 구름";
+                    break;
+                case "Subsurface S.":
+                    __instance.text = "서브서피스 스캐터링";
+                    break;
+                case "Volume Reproj.":
+                    __instance.text = "볼륨 투영";
+                    break;
+                case "Transp. Prepass":
+                    __instance.text = "투명 표면 프리패스";
+                    break;
+                case "Transp. Postpass":
+                    __instance.text = "투명 표면 포스트패스";
+                    break;
+                case "Post Processing":
+                    __instance.text = "포스트 프로세싱";
+                    break;
+                case "CEL Shading":
+                    __instance.text = "셀 셰이딩";
+                    break;
+                case "Player Overlays":
+                    __instance.text = "플레이어 오버레이";
+                    break;
+                case "Stars Overlay":
+                    __instance.text = "별 오버레이";
+                    break;
+                case "HUD Visor":
+                    __instance.text = "HUD 바이저";
+                    break;
+                case "Player HUD":
+                    __instance.text = "플레이어 HUD";
+                    break;
+                case "Player Filter":
+                    __instance.text = "플레이어 필터";
+                    break;
+                case "Fear":
+                    __instance.text = "공포";
+                    break;
+                case "Flashbang":
+                    __instance.text = "섬광탄";
+                    break;
+                case "Underwater":
+                    __instance.text = "수중";
+                    break;
+                case "Drunkness":
+                    __instance.text = "TZP 복용";
+                    break;
+                case "Scan Sphere":
+                    __instance.text = "스캔 구";
+                    break;
+
+
+                case "Save File Editor":
+                    __instance.text = "저장 파일 편집기";
+                    break;
+                case "General Save File":
+                    __instance.text = "일반 저장 파일";
+                    break;
+
+                case "Event Log":
+                    __instance.text = "이벤트 로그";
+                    break;
+
+                case "Level Information":
+                    __instance.text = "레벨 정보";
+                    break;
+                case "Current Seed":
+                    __instance.text = "현재 시드";
+                    break;
+                case "Scrap Amount":
+                    __instance.text = "폐품 개수";
+                    break;
+                case "Weather":
+                    __instance.text = "날씨";
+                    break;
+                case "Map Objects":
+                    __instance.text = "맵 물체";
+                    break;
+                case "Turrets":
+                    __instance.text = "포탑";
+                    break;
+                case "Steamleaks":
+                    __instance.text = "증기 누출";
+                    break;
+                case "Doors":
+                    __instance.text = "문";
+                    break;
+                case "Security Doors":
+                    __instance.text = "보안 문";
+                    break;
+                case "Max Outdoor Power":
+                    __instance.text = "최대 실외 파워";
+                    break;
+
+
+                case "Challenge Moon":
+                    __instance.text = "챌린지 위성";
+                    break;
+                case "Starting Credits":
+                    __instance.text = "시작 크레딧";
+                    break;
+                case "Indoor Power Increase":
+                    __instance.text = "실내 파워 상승도";
+                    break;
+                case "Outdoor Power Increase":
+                    __instance.text = "실외 파워 상승도";
+                    break;
+                case "Scrap Spawn Increase":
+                    __instance.text = "폐품 파워 상승도";
+                    break;
+                case "Weather #1 Multiplier":
+                    __instance.text = "날씨 #1 배수";
+                    break;
+                case "Weather #2 Multiplier":
+                    __instance.text = "날씨 #2 배수";
+                    break;
+                case "Spawning":
+                    __instance.text = "생성";
+                    break;
+                case "Indoor Entity":
+                    __instance.text = "실내 생명체";
+                    break;
+                case "Outdoor Entity":
+                    __instance.text = "실외 생명체";
+                    break;
+                case "Scrap":
+                    __instance.text = "폐품";
+                    break;
+                case "Map Object":
+                    __instance.text = "맵 물체";
+                    break;
+                case "Map Hazard":
+                    __instance.text = "맵 함정";
+                    break;
+
+                case "Imperium Preferences":
+                    __instance.text = "Imperium 개인 설정";
+                    break;
+                case "General Logging":
+                    __instance.text = "일반 로깅";
+                    break;
+                case "Oracle Logging":
+                    __instance.text = "Oracle 로깅";
+                    break;
+                case "Left Handed Mode":
+                    __instance.text = "왼손 모드";
+                    break;
+                case "Custom Welcome":
+                    __instance.text = "커스텀 환영문";
+                    break;
+                case "Enable Tooltips":
+                    __instance.text = "툴팁 활성화";
+                    break;
+                case "Enable Sounds":
+                    __instance.text = "소리 활성화";
+                    break;
+                case "UE Mouse Fix":
+                    __instance.text = "UE 마우스 수정";
+                    break;
+
+                case "Quickload":
+                    __instance.text = "빠른 시작";
+                    break;
+                case "Skip Splash":
+                    __instance.text = "스플래시 건너뛰기";
+                    break;
+                case "Auto Load Save":
+                    __instance.text = "자동 파일 로드";
+                    break;
+                case "Auto Launch":
+                    __instance.text = "자동 실행 모드";
+                    break;
+                case "Clean Save":
+                    __instance.text = "저장 파일 비우기";
+                    break;
+                case "Launch Mode":
+                    __instance.text = "실행 모드";
+                    break;
+                case "Online":
+                    __instance.text = "온라인";
+                    break;
+                case "Save File Number":
+                    __instance.text = "저장 파일";
+                    break;
+
+                case "Notification":
+                    __instance.text = "알림";
+                    break;
+                case "Spawn Reports":
+                    __instance.text = "생성 보고";
+                    break;
+                case "Oracle Updates":
+                    __instance.text = "Oracle 업데이트";
+                    break;
+                case "Confirmations":
+                    __instance.text = "확인";
+                    break;
+                case "Access Control":
+                    __instance.text = "제어 접근";
+                    break;
+                case "Hosting":
+                    __instance.text = "호스팅";
+                    break;
+                case "Allow Imperium on clients":
+                    __instance.text = "클라이언트가 Imperium를 사용하도록 허용";
+                    break;
+
+                case "Appearance":
+                    __instance.text = "외관";
+                    break;
+
+                case "Factory Reset":
+                    __instance.text = "공장 초기화";
+                    break;
+                case "Reset UI":
+                    __instance.text = "UI 초기화";
+                    break;
+
+                case "Enable Minimap":
+                    __instance.text = "미니맵 활성화";
+                    break;
+                case "Enable Compass":
+                    __instance.text = "나침반 활성화";
+                    break;
+                case "Rotation Lock":
+                    __instance.text = "회전 잠금";
+                    break;
+                case "Unlock View":
+                    __instance.text = "시점 잠금 해제";
+                    break;
+                case "Auto Clipping":
+                    __instance.text = "자동 클리핑";
+                    break;
+
+                case "Target":
+                    __instance.text = "목표물";
+                    break;
+
+                case "Layers":
+                    __instance.text = "레이어";
+                    break;
+
+                case "Indoor":
+                    __instance.text = "실내";
+                    break;
+                case "Outdoor":
+                    __instance.text = "실외";
+                    break;
+                case "Daytime":
+                    __instance.text = "주간 적";
+                    break;
+
+                case "Pos":
+                    __instance.text = "위치";
+                    break;
+                case "Rot":
+                    __instance.text = "회전";
+                    break;
+                case "Area":
+                    __instance.text = "지역";
+                    break;
+                case "Time":
+                    __instance.text = "시간";
                     break;
             }
             __instance.text.Replace(" collected!", " 수집함!");

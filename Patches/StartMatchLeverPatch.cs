@@ -23,6 +23,7 @@ namespace LCKorean.Patches
     [HarmonyPatch(typeof(StartMatchLever))]
     internal class StartMatchLeverPatch
     {
+        /*
         [HarmonyPrefix]
         [HarmonyPatch("Update")]
         private static void Update_Prefix(ref InteractTrigger ___triggerScript)
@@ -49,5 +50,6 @@ namespace LCKorean.Patches
                 ___triggerScript.disabledHoverTip = "[함선이 이동하고 있습니다]";
             }
         }
+        */
     }
 }

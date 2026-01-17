@@ -1,0 +1,10 @@
+PILOT COMPUTER = "파일럿 컴퓨터",
+
+Warning! No response from crew, which has not returned. Emergency code activated. = "경고! 모든 팀원이 응답하지 않으며 함선에 돌아오지 않았습니다. 긴급 코드가 활성화되었습니다.",
+The autopilot will now attempt to fly to the closest safe spaceport. Your items have been lost. = "가까운 기지로 이동합니다. 모든 폐품을 분실했습니다.",
+Alert! The autopilot is leaving due to dangerous conditions. = "경고! 위험한 상황으로 인해 함선이 이륙하고 있습니다.",
+The Company must minimize risk of damage to proprietary hardware. Goodbye! = "회사는 독점 하드웨어에 대한 손상 위험을 최소화해야 합니다. 안녕히 계세요!",
+WARNING!!! The autopilot ship will leave at midnight. Please return quickly. = "경고!!! 함선이 자정에 이륙합니다. 빠르게 복귀하세요.",
+
+ReturnAM = "경고! 오전 {time}까지 돌아오세요. 함선이 일찍 출발하기로 투표가 완료되었습니다.",
+ReturnPM = "경고! 오후 {time}까지 돌아오세요. 함선이 일찍 출발하기로 투표가 완료되었습니다."

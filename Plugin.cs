@@ -22,7 +22,8 @@ namespace LCKorean
     {
         private const string modGUID = "Piggy.LCKorean";
         private const string modName = "LCKorean";
-        private const string modVersion = "1.3.16";
+        private const string modVersion = "2.000";
+        private static string modVerType = "b";
 
         private readonly Harmony harmony = new Harmony(modGUID);
 
@@ -97,6 +98,7 @@ namespace LCKorean
         public static string midnightWarning;
 
         public static string PluginDirectory;
+        public static string TranslationFilePath;
 
         void Awake()
         {
@@ -105,9 +107,11 @@ namespace LCKorean
                 Instance = this;
             }
             PluginDirectory = base.Info.Location;
+            TranslationFilePath = base.Config.ConfigFilePath.Replace("Piggy.LCKorean.cfg", "") + "\\LCKR_Translation";
 
             LoadAssets();
             TextureReplacer.Setup();
+            TranslationManager.Setup();
 
             patchFont = (bool)base.Config.Bind<bool>("폰트", "폰트 변경", true, "기본값은 true입니다.\nFontPatcher 등 외부 폰트 모드를 사용하려면 이 값을 false로 설정하세요. false로 설정하면 본 모드에서 폰트를 변경하지 않습니다.").Value;
 
@@ -116,7 +120,7 @@ namespace LCKorean
             denyString = (string)base.Config.Bind<string>("접근성", "취소 키워드", "deny", "기본값은 deny입니다.\n디나이 노드 (Deny)를 설정합니다. *초성, 띄어쓰기와 한 글자는 인식하지 못합니다!*").Value;
 
             translateModdedContent = (bool)base.Config.Bind<bool>("번역", "모드 번역", true, "기본값은 true입니다.\n다른 모드의 여러 컨텐츠(아이템, 행성)를 한글로 번역합니다.\n\n지원 모드:\nImmersiveScrap(XuXiaolan), ").Value;
-            thumperTranslation = (bool)base.Config.Bind<bool>("번역", "Thumper 번역", false, "기본값은 false입니다.\ntrue로 설정하면 \"Thumper\"를 썸퍼로 번역합니다. false로 설정하면 덤퍼로 설정됩니다.").Value;
+            thumperTranslation = (bool)base.Config.Bind<bool>("번역", "Thumper 번역", true, "기본값은 true입니다.\ntrue로 설정하면 \"Thumper\"를 썸퍼로 번역합니다. false로 설정하면 덤퍼로 설정됩니다.").Value;
             toKG = (bool)base.Config.Bind<bool>("번역", "KG 변환", true, "기본값은 true입니다.\ntrue로 설정하면 무게 수치를 kg으로 변환합니다.").Value;
                         
             deathText = (string)base.Config.Bind<string>("번역", "사망 텍스트", "[생명 신호: 오프라인]", "기본값은 《[생명 신호: 오프라인]》 입니다.\n사망 시 화면에 출력되는 텍스트를 수정합니다.").Value;
@@ -140,6 +144,7 @@ namespace LCKorean
 
             mls = BepInEx.Logging.Logger.CreateLogSource(modGUID);
             mls.LogInfo("LC Korean is loaded");
+            mls.LogInfo("base.Config.ConfigFilePath: " + base.Config.ConfigFilePath);
 
             Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
             /*

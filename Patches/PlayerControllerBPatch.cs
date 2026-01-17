@@ -24,10 +24,20 @@ namespace LCKorean.Patches
     [HarmonyPatch(typeof(PlayerControllerB))]
     internal class PlayerControllerBPatch
     {
+        public static string cursorTip;
+
         [HarmonyPostfix]
         [HarmonyPatch("SetHoverTipAndCurrentInteractTrigger")]
         private static void SetHoverTipAndCurrentInteractTrigger_Postfix(ref TextMeshProUGUI ___cursorTip)
         {
+            string originalText = ___cursorTip.text;
+            if (originalText != cursorTip)
+            {
+                cursorTip = TranslationManager.GetStringTranslation("CursorTip", originalText, true);
+                 ___cursorTip.text = cursorTip;
+            }
+
+            /*
             ___cursorTip.text = ___cursorTip.text.Replace("Inventory full!", "인벤토리 가득 참!");
             ___cursorTip.text = ___cursorTip.text.Replace("(Cannot hold until ship has landed)", "(함선이 착륙하기 전까지 집을 수 없음)");
             ___cursorTip.text = ___cursorTip.text.Replace("[Hands full]", "[양 손 사용 중]");
@@ -38,6 +48,7 @@ namespace LCKorean.Patches
             ___cursorTip.text = ___cursorTip.text.Replace(" sec.", "초 남음.");
 
             ___cursorTip.text = ___cursorTip.text.Replace("Use door", "문 사용하기");
+            */
         }
 
         [HarmonyPostfix]

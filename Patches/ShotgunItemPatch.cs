@@ -24,6 +24,7 @@ namespace LCKorean.Patches
     [HarmonyPatch(typeof(ShotgunItem))]
     internal class ShotgunItemPatch
     {
+        /*
         [HarmonyPostfix, HarmonyPatch("SetSafetyControlTip")]
         private static void SetSafetyControlTip_Postfix(ShotgunItem __instance, ref bool ___safetyOn)
         {
@@ -41,5 +42,6 @@ namespace LCKorean.Patches
                 HUDManager.Instance.ChangeControlTip(3, text, false);
             }
         }
+        */
     }
 }
