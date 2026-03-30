@@ -1,5 +1,4 @@
 ﻿using BepInEx.Logging;
-using DunGen;
 using GameNetcodeStuff;
 using HarmonyLib;
 using System;
@@ -7,85 +6,225 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using TMPro;
-using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Audio;
-using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.HID;
-using UnityEngine.UI;
-using static UnityEngine.UI.Selectable;
 using System.Text.RegularExpressions;
+using System.Collections;
+using UnityEngine.Networking;
+using System.Threading.Tasks;
 
-namespace LCKorean.Patches
+namespace LCKR.Patches
 {
     public class TranslationManager : MonoBehaviour
     {
         public static string translationPath = "";
-        public static string translationPath_str = "LCKR_Translation";
+        public static string defTranslationPath = "";
 
-        public static Dictionary<string, string[]> tipTranslations = new Dictionary<string, string[]>();
-        public static Dictionary<string, string[]> scanNodeTranslations = new Dictionary<string, string[]>();
-        public static Dictionary<string, string> itemTranslations = new Dictionary<string, string>();
-        public static Dictionary<string, string> dialogueTranslations = new Dictionary<string, string>();
-        public static Dictionary<string, string> controlTipTranslations = new Dictionary<string, string>();
-        public static Dictionary<string, string> cursorTipTranslations = new Dictionary<string, string>();
+        private static bool isDownloadingFiles;
+
+        public static Dictionary<string, string[]> TipTranslations = new Dictionary<string, string[]>();
+        public static Dictionary<string, string[]> ScanNodeTranslations = new Dictionary<string, string[]>();
+        public static Dictionary<string, string[]> OtherHudTranslations = new Dictionary<string, string[]>();
+        public static Dictionary<string, string[]> PlanetsTranslations = new Dictionary<string, string[]>();
+        public static Dictionary<string, string[]> ItemTranslations = new Dictionary<string, string[]>();
+        public static Dictionary<string, string[]> DialogueTranslations = new Dictionary<string, string[]>();
+        public static Dictionary<string, string[]> ControlTipTranslations = new Dictionary<string, string[]>();
+        public static Dictionary<string, string[]> CursorTipTranslations = new Dictionary<string, string[]>();
+        public static Dictionary<string, string[]> PlayerLevelsTranslations = new Dictionary<string, string[]>();
+        public static Dictionary<string, string[]> IngameTranslations = new Dictionary<string, string[]>();
+        public static Dictionary<string, string[]> DeathReasonsTranslations = new Dictionary<string, string[]>();
+        public static Dictionary<string, string[]> UnlockableItemTranslations = new Dictionary<string, string[]>();
+        public static Dictionary<string, string[]> TerminalTranslations = new Dictionary<string, string[]>();
+        public static Dictionary<string, string[]> SigurdTranslations = new Dictionary<string, string[]>();
+
+        private static readonly string[] TranslationFiles =
+        {
+            "ControlTip.txt",
+            "CursorTip.txt",
+            "DeathReasons.txt",
+            "Dialogue.txt",
+            "HUD_Others.txt",
+            "Ingame.txt",
+            "Item.txt",
+            "Planets.txt",
+            "PlayerLevel.txt",
+            "ScanNode.txt",
+            "Sigurd.txt",
+            "Terminal.txt",
+            "Tip.txt",
+            "UnlockableItem.txt"
+        };
+
+        private static string[] translationFileLink =
+        {
+            "https://drive.google.com/uc?export=download&id=1d6BYFC8sIdamPGJx5RPLeGgqP8LCDFd3", //ControlTip
+            "https://drive.google.com/uc?export=download&id=1ZH59zRmXEV8wEgLSKt6dcjhQiMOo7sV2", //CursorTip
+            "https://drive.google.com/uc?export=download&id=147nKj6q_CAsjFjM496epWH4531CFpLxS", //DeathReasons
+            "https://drive.google.com/uc?export=download&id=1_EROnz5l15jWUxJoTQmxWNbTTJWZB3zi", //Dialogue
+            "https://drive.google.com/uc?export=download&id=1kVNZpQDf-sDwRtfBUbsXSJO-zsxWTOSq", //HUD_Others
+            "https://drive.google.com/uc?export=download&id=1x5P4_WBp0h7IJCWW4dF3DNcUgVlJcBrg", //Ingame
+            "https://drive.google.com/uc?export=download&id=1sMxKzaT4VI9ON5DcyULRKN3L-vo4YlUG", //Item
+            "https://drive.google.com/uc?export=download&id=1HbEWYrtkECHLSdOPQ4OFSdGe7a28BPeV", //Planets
+            "https://drive.google.com/uc?export=download&id=1s_NOPyG3KQeQcweS5xP8zVGS8Sgl13am", //PlayerLevel
+            "https://drive.google.com/uc?export=download&id=1hUjXj2CD4HEGUXsGmD9ctNt221xIKm7t", //ScanNode
+            "https://drive.google.com/uc?export=download&id=1J8a21DRbKktY2VyjQMSnkFh4W2N5aH5l", //Sigurd
+            "https://drive.google.com/uc?export=download&id=1IX3r6fh6Rw4yVovB07dT_sbldIjYDEUv", //Terminal
+            "https://drive.google.com/uc?export=download&id=1eE-IalX3ApXf7lNdSVZW00qJOVAyL_Rb", //Tip
+            "https://drive.google.com/uc?export=download&id=1F9NQ6r0yIgDz2UgGUPfs3Tfw4Izya1tf" //UnlockableItem
+        };
+
+        public static async void DownloadDefaultTranslation()
+        {
+            if (isDownloadingFiles)
+                return;
+
+            isDownloadingFiles = true;
+
+            try
+            {
+                for (int i = 0; i < translationFileLink.Length; i++)
+                {
+                    string url = translationFileLink[i];
+                    string fileName = TranslationFiles[i];
+
+                    await DownloadSingleFileAsync(fileName, url);
+                }
+            }
+            finally
+            {
+                isDownloadingFiles = false;
+                Plugin.mls.LogInfo($"모든 번역 파일을 다운로드했습니다.");
+            }
+        }
+
+        private static async Task DownloadSingleFileAsync(string fileName, string url)
+        {
+            using (UnityWebRequest request = UnityWebRequest.Get(url))
+            {
+                var op = request.SendWebRequest();
+
+                while (!op.isDone)
+                {
+                    await Task.Yield(); // 메인 스레드 유지
+                }
+
+                if (request.result != UnityWebRequest.Result.Success)
+                {
+                    Plugin.mls.LogError(
+                        $"번역 기본값 파일을 다운로드하는데 실패했습니다: {url}\n{request.error}"
+                    );
+                    return;
+                }
+
+                try
+                {
+                    File.WriteAllBytes(defTranslationPath + "\\" + fileName, request.downloadHandler.data);
+                    Plugin.mls.LogInfo($"번역 파일을 다운로드했습니다 - {fileName}");
+                }
+                catch (Exception e)
+                {
+                    Plugin.mls.LogError($"파일 저장 실패: {defTranslationPath}\n{e}");
+                }
+            }
+        }
 
         public static void Setup()
         {
             string pluginFolderPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            DownloadDefaultTranslation();
             //translationPath = Path.Combine(pluginFolderPath, translationPath_str);
+            TipTranslations = new Dictionary<string, string[]>();
+            ScanNodeTranslations = new Dictionary<string, string[]>();
+            OtherHudTranslations = new Dictionary<string, string[]>();
+            PlanetsTranslations = new Dictionary<string, string[]>();
+            ItemTranslations = new Dictionary<string, string[]>();
+            DialogueTranslations = new Dictionary<string, string[]>();
+            ControlTipTranslations = new Dictionary<string, string[]>();
+            CursorTipTranslations = new Dictionary<string, string[]>();
+            PlayerLevelsTranslations = new Dictionary<string, string[]>();
+            IngameTranslations = new Dictionary<string, string[]>();
+            DeathReasonsTranslations = new Dictionary<string, string[]>();
+            UnlockableItemTranslations = new Dictionary<string, string[]>();
+            TerminalTranslations = new Dictionary<string, string[]>();
+            SigurdTranslations = new Dictionary<string, string[]>();
+            
             translationPath = Plugin.TranslationFilePath;
-            LoadArrayDictionary(tipTranslations, "Tip.txt");
-            LoadDictionary(itemTranslations, "Item.txt");
-            LoadDictionary(dialogueTranslations, "Dialogue.txt");
-            LoadDictionary(controlTipTranslations, "ControlTip.txt");
-            LoadDictionary(cursorTipTranslations, "CursorTip.txt");
+            defTranslationPath = Plugin.DefTranslationFilePath;
+            LoadArrayDictionary(TipTranslations, "Tip.txt");
+            LoadArrayDictionary(ScanNodeTranslations, "ScanNode.txt");
+            LoadArrayDictionary(OtherHudTranslations, "HUD_Others.txt");
+            LoadArrayDictionary(PlanetsTranslations, "Planets.txt");
+            LoadArrayDictionary(ItemTranslations, "Item.txt");
+            LoadArrayDictionary(DialogueTranslations, "Dialogue.txt");
+            LoadArrayDictionary(ControlTipTranslations, "ControlTip.txt");
+            LoadArrayDictionary(CursorTipTranslations, "CursorTip.txt");
+            LoadArrayDictionary(PlayerLevelsTranslations, "PlayerLevel.txt");
+            LoadArrayDictionary(IngameTranslations, "Ingame.txt");
+            LoadArrayDictionary(DeathReasonsTranslations, "DeathReasons.txt");
+            LoadArrayDictionary(UnlockableItemTranslations, "UnlockableItem.txt");
+            LoadArrayDictionary(TerminalTranslations, "Terminal.txt");
+            LoadArrayDictionary(SigurdTranslations, "Sigurd.txt");
         }
 
-        private static void LoadDictionary(Dictionary<string, string> dict, string fileName)
+        public static void ResetTranslation()
         {
-            string filePath = Path.Combine(translationPath, fileName);
-            if (!File.Exists(filePath)) return;
-
             try
             {
-                string text = File.ReadAllText(filePath);
-                text = RemoveComments(text);
+                if (string.IsNullOrEmpty(translationPath)) translationPath = Plugin.TranslationFilePath;
+                if (string.IsNullOrEmpty(defTranslationPath)) defTranslationPath = Plugin.DefTranslationFilePath;
 
-                foreach (var pair in ParseEntries(text))
-                {
-                    if (string.IsNullOrEmpty(pair.Key)) continue;
-
-                    // Dialogue is single string
-                    string value = pair.Value;
-                    if (value.StartsWith("\"") && value.EndsWith("\"") && value.Length >= 2)
-                    {
-                        value = value.Substring(1, value.Length - 2);
-                    }
-                    else if (value.StartsWith("{") && value.EndsWith("}"))
-                    {
-                        // Fallback if they use {"..."} for dialogue? Take first element
-                        string content = value.Substring(1, value.Length - 2);
-                        Match match = Regex.Match(content, "\"(.*?)\"");
-                        if (match.Success) value = match.Groups[1].Value;
-                    }
-
-                    if (!dict.ContainsKey(pair.Key))
-                    {
-                        dict.Add(pair.Key, value);
-                    }
-                }
+                OverwriteTranslationsWithDefaults();
             }
             catch (Exception ex)
             {
-                Debug.LogError($"LCKR이 대사 번역을 불러오는 도중 오류가 발생했습니다: {ex}");
+                Debug.LogError($"LCKR ResetTranslation 중 오류: {ex}");
+            }
+            finally
+            {
+                // 덮어쓴 후 다시 로드
+                Setup();
+            }
+        }
+        
+        private static void OverwriteTranslationsWithDefaults()
+        {
+            MenuManager menuManager = FindObjectOfType<MenuManager>();
+            if (string.IsNullOrEmpty(defTranslationPath) || !Directory.Exists(defTranslationPath))
+            {
+                menuManager.DisplayMenuNotification("번역 기본값 폴더를 찾을 수 없습니다!", "[ 뒤로 ]");
+                Debug.LogError($"LCKR 기본 번역 폴더가 존재하지 않습니다: {defTranslationPath}");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(translationPath))
+            {
+                menuManager.DisplayMenuNotification("번역 폴더를 찾을 수 없습니다!", "[ 뒤로 ]");
+                return;
+            }
+
+            
+            if (!Directory.Exists(translationPath))
+                Directory.CreateDirectory(translationPath);
+
+            List<string> missingFiles = new List<string>();
+
+            foreach (var fileName in TranslationFiles)
+            {
+                string src = Path.Combine(defTranslationPath, fileName);
+                string dst = Path.Combine(translationPath, fileName);
+
+                if (!File.Exists(src))
+                {
+                    missingFiles.Add(fileName);
+                    continue;
+                }
+
+                File.Copy(src, dst, overwrite: true);
+            }
+
+            // 🔹 누락 파일이 있을 때만 한 번에 로깅
+            if (missingFiles.Count > 0)
+            {
+                menuManager.DisplayMenuNotification($"누락된 기본 번역 파일 목록:\n{string.Join(", ", missingFiles)}", "[ 뒤로 ]");
             }
         }
 
@@ -201,7 +340,20 @@ namespace LCKorean.Patches
             }
         }
 
-        public static string GetArrayTranslation(string type, int index, string key, bool partialMatch = false)
+        public static string ReplaceArrayText(string fullText, string type, string key, int index = 0)
+        {
+            return fullText.Replace(key, GetArrayTranslation(type, key, index));
+        }
+        
+        public static string ReplaceArrayTextAll(string fullText, string type, int index = 0)
+        {
+            if (string.IsNullOrEmpty(fullText))
+                return fullText;
+            return GetArrayTranslation(type, fullText, index, partialMatch: true);
+        }
+
+
+        public static string GetArrayTranslation(string type, string key, int index = 0, bool partialMatch = false, string orgText = "")
         {
             if (string.IsNullOrEmpty(key)) return key;
 
@@ -210,10 +362,47 @@ namespace LCKorean.Patches
             switch (type)
             {
                 case "Tip":
-                    targetDict = tipTranslations;
+                    targetDict = TipTranslations;
                     break;
                 case "ScanNode": // Just in case, though usually not partial matched
-                    targetDict = scanNodeTranslations;
+                    targetDict = ScanNodeTranslations;
+                    break;
+                case "HUD":
+                    targetDict = OtherHudTranslations;
+                    break;
+                case "Planets":
+                    targetDict = PlanetsTranslations;
+                    break;
+                
+                case "Item":
+                    targetDict = ItemTranslations;
+                    break;
+                case "Dialogue":
+                    targetDict = DialogueTranslations;
+                    break;
+                case "ControlTip":
+                    targetDict = ControlTipTranslations;
+                    break;
+                case "CursorTip":
+                    targetDict = CursorTipTranslations;
+                    break;
+                case "PlayerLevel":
+                    targetDict = PlayerLevelsTranslations;
+                    break;
+                case "Ingame":
+                    targetDict = IngameTranslations;
+                    break;
+                case "DeathReasons":
+                    targetDict = DeathReasonsTranslations;
+                    break;
+                case "UnlockableItem":
+                    targetDict = UnlockableItemTranslations;
+                    break;
+                case "Sigurd":
+                    targetDict = SigurdTranslations;
+                    break;
+                case "Terminal":
+                    targetDict = TerminalTranslations;
                     break;
             }
 
@@ -241,61 +430,16 @@ namespace LCKorean.Patches
                     {
                         if (index >= 0 && index < translatedValues.Length)
                         {
-                            return translatedValues[index];
+                            return Regex.Unescape(translatedValues[index]);
+                            //return translatedValues[index];
                         }
                     }
                 }
             }
-            return key;
-        }
 
-        public static string GetStringTranslation(string type, string key, bool partialMatch = false)
-        {
-            if (string.IsNullOrEmpty(key)) return key;
-
-            Dictionary<string, string> targetDict = null;
-
-            switch (type)
+            if (type == "Terminal" || type == "Sigurd")
             {
-                case "Item":
-                    targetDict = itemTranslations;
-                    break;
-                case "Dialogue":
-                    targetDict = dialogueTranslations;
-                    break;
-                case "ControlTip":
-                    targetDict = controlTipTranslations;
-                    break;
-                case "CursorTip":
-                    targetDict = cursorTipTranslations;
-                    break;
-            }
-
-            if (targetDict != null)
-            {
-                if (partialMatch)
-                {
-                    string modifiedKey = key;
-                    // Sort by length descending to prioritize longer matches
-                     var sortedKeys = targetDict.Keys.OrderByDescending(k => k.Length);
-
-                    foreach (var dictKey in sortedKeys)
-                    {
-                        string value = targetDict[dictKey];
-                        if (modifiedKey.Contains(dictKey))
-                        {
-                            modifiedKey = modifiedKey.Replace(dictKey, value);
-                        }
-                    }
-                    return modifiedKey;
-                }
-                else
-                {
-                    if (targetDict.TryGetValue(key, out string translatedValue))
-                    {
-                        return translatedValue;
-                    }
-                }
+                return orgText;
             }
             return key;
         }

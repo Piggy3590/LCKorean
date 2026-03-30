@@ -1,25 +1,9 @@
-﻿using BepInEx.Logging;
-using DunGen;
-using GameNetcodeStuff;
+﻿using GameNetcodeStuff;
 using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using TMPro;
-using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Audio;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.HID;
-using Steamworks;
 
-namespace LCKorean.Patches
+namespace LCKR.Patches
 {
     [HarmonyPatch(typeof(PlayerControllerB))]
     internal class PlayerControllerBPatch
@@ -33,7 +17,7 @@ namespace LCKorean.Patches
             string originalText = ___cursorTip.text;
             if (originalText != cursorTip)
             {
-                cursorTip = TranslationManager.GetStringTranslation("CursorTip", originalText, true);
+                cursorTip = TranslationManager.GetArrayTranslation("CursorTip", originalText, 0, true);
                  ___cursorTip.text = cursorTip;
             }
 
@@ -59,30 +43,17 @@ namespace LCKorean.Patches
             foreach (DeadBodyInfo info in deadBodyInfo)
             {
                 ScanNodeProperties componentInChildren = info.gameObject.GetComponentInChildren<ScanNodeProperties>();
-                if (!componentInChildren.headerText.Contains("의 시체"))
+                if (!componentInChildren.headerText.Contains(TranslationManager.GetArrayTranslation("DeathReasons", "PlayerBody")))
                 {
                     componentInChildren.headerText = componentInChildren.headerText.Replace("Body of ", "");
-                    componentInChildren.headerText = componentInChildren.headerText + "의 시체";
+                    componentInChildren.headerText += TranslationManager.GetArrayTranslation("DeathReasons", "PlayerBody");
                 }
-                componentInChildren.subText = componentInChildren.subText.Replace("Cause of death: ", "사인:");
-                componentInChildren.subText = componentInChildren.subText.Replace("Unknown", "알 수 없음");
-                componentInChildren.subText = componentInChildren.subText.Replace("Bludgeoning", "구타");
-                componentInChildren.subText = componentInChildren.subText.Replace("Gravity", "중력");
-                componentInChildren.subText = componentInChildren.subText.Replace("Blast", "폭사");
-                componentInChildren.subText = componentInChildren.subText.Replace("Kicking", "걷어차임");
-                componentInChildren.subText = componentInChildren.subText.Replace("Strangulation", "교살");
-                componentInChildren.subText = componentInChildren.subText.Replace("Suffocation", "질식");
-                componentInChildren.subText = componentInChildren.subText.Replace("Mauling", "공격당함");
-                componentInChildren.subText = componentInChildren.subText.Replace("Gunshots", "총격");
-                componentInChildren.subText = componentInChildren.subText.Replace("Crushing", "압사");
-                componentInChildren.subText = componentInChildren.subText.Replace("Drowning", "익사");
-                componentInChildren.subText = componentInChildren.subText.Replace("Abandoned", "실종");
-                componentInChildren.subText = componentInChildren.subText.Replace("Electrocution", "감전사");
-                componentInChildren.subText = componentInChildren.subText.Replace("Burning", "불탐");
-                componentInChildren.subText = componentInChildren.subText.Replace("Stabbing", "찔림");
-                componentInChildren.subText = componentInChildren.subText.Replace("Fan", "환풍기");
-                componentInChildren.subText = componentInChildren.subText.Replace("Inertia", "관성");
-                componentInChildren.subText = componentInChildren.subText.Replace("Snipped", "절단됨");
+                string[] parts = componentInChildren.subText.Split(':');
+                string left  = parts[0].Trim();
+                string right = parts[1].Trim();
+
+                componentInChildren.subText = TranslationManager.ReplaceArrayText(componentInChildren.subText, "DeathReasons", left);
+                componentInChildren.subText = TranslationManager.ReplaceArrayText(componentInChildren.subText, "DeathReasons", right);
             }
         }
     }

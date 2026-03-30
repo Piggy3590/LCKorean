@@ -1,26 +1,11 @@
-﻿using BepInEx.Logging;
-using DunGen;
-using GameNetcodeStuff;
-using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+﻿using HarmonyLib;
 using TMPro;
-using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Audio;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.HID;
 using UnityEngine.UI;
+using static UnityEngine.GraphicsBuffer;
 
-namespace LCKorean.Patches
+namespace LCKR.Patches
 {
     [HarmonyPatch(typeof(MenuManager))]
     internal class MenuManagerPatch
@@ -60,6 +45,22 @@ namespace LCKorean.Patches
             {
                 ___settingsBackButton.text = ___settingsBackButton.text.Replace("DISCARD", "취소");
                 ___settingsBackButton.text = ___settingsBackButton.text.Replace("BACK", "뒤로");
+            }
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch("Start")]
+        private static void Start_Postfix(MenuManager __instance, ref TextMeshProUGUI ___versionNumberText)
+        {
+            if (Plugin.showVersion && GameNetworkManager.Instance != null && ___versionNumberText != null)
+            {
+                ___versionNumberText.text = $"   <size=14>LCKR {Plugin.modVersion + Plugin.modVerType}</size>\n{___versionNumberText.text}";
+            }
+
+            if (!__instance.isInitScene)
+            {
+                Transform panel = GameObject.Instantiate(Plugin.resetPanel, GameObject.Find("MenuContainer").transform).AddComponent<LCKRPanel>().transform;
+                panel.SetSiblingIndex(GameObject.Find("MainButtons").transform.GetSiblingIndex() + 1);
             }
         }
     }

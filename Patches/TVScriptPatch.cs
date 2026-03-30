@@ -1,28 +1,7 @@
-﻿using BepInEx.Logging;
-using DunGen;
-using GameNetcodeStuff;
-using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using TMPro;
-using Unity.Netcode;
-using UnityEngine;
-using UnityEngine.Audio;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.HID;
-using System.Reflection;
-using System.Collections.Specialized;
+﻿using HarmonyLib;
 using UnityEngine.Video;
 
-namespace LCKorean.Patches
+namespace LCKR.Patches
 {
     [HarmonyPatch(typeof(TVScript))]
     internal class TVScriptPatch

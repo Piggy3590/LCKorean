@@ -1,35 +1,40 @@
-﻿using BepInEx.Logging;
-using DunGen;
-using GameNetcodeStuff;
-using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+﻿using HarmonyLib;
 using TMPro;
-using Unity.Netcode;
-using UnityEngine;
-using UnityEngine.Audio;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.HID;
 
-namespace LCKorean.Patches
+namespace LCKR.Patches
 {
     [HarmonyPatch(typeof(RoundManager))]
     internal class RoundManagerPatch
     {
+        private static TextMeshProUGUI _loadingText;
+        
+        [HarmonyPrefix]
+        [HarmonyPatch("Start")]
+        private static void Start_Prefix()
+        {
+            if (_loadingText == null)
+            {
+                _loadingText = HUDManager.Instance.LoadingScreen.transform.Find("LoadText").GetComponent<TextMeshProUGUI>();
+            }
+            _loadingText.text = TranslationManager.ReplaceArrayText(_loadingText.text, "HUD", "LoadText");
+        }
+        
+        [HarmonyPrefix]
+        [HarmonyPatch("GenerateNewLevelClientRpc")]
+        private static void GenerateNewLevelClientRpc_Prefix()
+        {
+            _loadingText.text = TranslationManager.ReplaceArrayText(_loadingText.text, "HUD", "LoadText");
+        }
+        
         [HarmonyPostfix]
         [HarmonyPatch("GenerateNewLevelClientRpc")]
         private static void GenerateNewLevelClientRpc_Postfix()
         {
+            _loadingText.text = TranslationManager.ReplaceArrayText(_loadingText.text, "HUD", "LoadText");
             if (HUDManager.Instance.loadingText.text.Contains("Random seed"))
             {
-                HUDManager.Instance.loadingText.text = HUDManager.Instance.loadingText.text.Replace("Random seed", "무작위 시드");
+                TextMeshProUGUI t = HUDManager.Instance.loadingText;
+                t.text = TranslationManager.ReplaceArrayText(t.text, "HUD", "Random seed");
             }
         }
     }

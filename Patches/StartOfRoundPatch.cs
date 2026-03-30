@@ -1,29 +1,10 @@
-﻿using BepInEx.Logging;
-using DunGen;
-using GameNetcodeStuff;
+﻿using GameNetcodeStuff;
 using HarmonyLib;
-using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using TMPro;
-using UnityEngine;
-using UnityEngine.Audio;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.HID;
-using UnityEngine.InputSystem.XR;
-using UnityEngine.Rendering;
 using UnityEngine.UI;
-using static IngamePlayerSettings;
-using static System.Net.Mime.MediaTypeNames;
 
-namespace LCKorean.Patches
+namespace LCKR.Patches
 {
     [HarmonyPatch(typeof(StartOfRound))]
     internal class StartOfRoundPatch
@@ -34,32 +15,12 @@ namespace LCKorean.Patches
         {
             try
             {
-                TranslateDialogue();
-            }
-            catch (Exception e)
-            {
-                Plugin.mls.LogError("컴퓨터 파일럿 대사를 번역하는 과정에서 오류가 발생했습니다!\n" + e);
-            }
-
-            try
-            {
                 TranslatePlanet();
             }
             catch (Exception e)
             {
-                Plugin.mls.LogError("행성 목록을 번역하는 과정에서 오류가 발생했습니다!\n" + e);
+                Plugin.mls.LogError("행성 리스트를 번역하는 과정에서 오류가 발생했습니다!\n" + e);
             }
-
-            try
-            {
-                //TranslateUnlockableList();
-            }
-            catch (Exception e)
-            {
-                Plugin.mls.LogError("함선 강화 및 장식 목록을 번역하는 과정에서 오류가 발생했습니다!\n" + e);
-            }
-            //ConvertImage();
-
         }
 
         [HarmonyPostfix]
@@ -71,7 +32,8 @@ namespace LCKorean.Patches
                 HUDManager.Instance.loadingText.text = "세계 불러오는 중...";
             }
         }
-
+        
+        /*
         [HarmonyPostfix]
         [HarmonyPatch("SetDiscordStatusDetails")]
         private static void SetDiscordStatusDetails_Postfix()
@@ -80,47 +42,70 @@ namespace LCKorean.Patches
             {
                 return;
             }
+
             if (GameNetworkManager.Instance.disableSteam)
             {
                 return;
             }
-            DiscordController.Instance.status_Details = DiscordController.Instance.status_Details.Replace("Getting fired", "해고당하는 중");
-            DiscordController.Instance.status_Details = DiscordController.Instance.status_Details.Replace("In orbit (Waiting for crew)", "공전 중 (팀원 기다리는 중)");
+
+            DiscordController.Instance.status_Details =
+                DiscordController.Instance.status_Details.Replace("Getting fired", "해고당하는 중");
+            DiscordController.Instance.status_Details =
+                DiscordController.Instance.status_Details.Replace("In orbit (Waiting for crew)", "공전 중 (팀원 기다리는 중)");
             if (StartOfRound.Instance.inShipPhase)
             {
-                DiscordController.Instance.status_Details = StartOfRound.Instance.currentLevel.PlanetName + "을(를) 공전하는 중";
-                DiscordController.Instance.status_Details = StartOfRound.Instance.currentLevel.PlanetName.Replace("Gordion", "고르디온");
-                DiscordController.Instance.status_Details = StartOfRound.Instance.currentLevel.PlanetName.Replace("Experimentation", "익스페리멘테이션");
-                DiscordController.Instance.status_Details = StartOfRound.Instance.currentLevel.PlanetName.Replace("Assuarance", "어슈어런스");
-                DiscordController.Instance.status_Details = StartOfRound.Instance.currentLevel.PlanetName.Replace("Vow", "보우");
-                DiscordController.Instance.status_Details = StartOfRound.Instance.currentLevel.PlanetName.Replace("Offense", "오펜스");
-                DiscordController.Instance.status_Details = StartOfRound.Instance.currentLevel.PlanetName.Replace("March", "머치");
-                DiscordController.Instance.status_Details = StartOfRound.Instance.currentLevel.PlanetName.Replace("Adamance", "애더먼스");
-                DiscordController.Instance.status_Details = StartOfRound.Instance.currentLevel.PlanetName.Replace("Rend", "렌드");
-                DiscordController.Instance.status_Details = StartOfRound.Instance.currentLevel.PlanetName.Replace("Dine", "다인");
-                DiscordController.Instance.status_Details = StartOfRound.Instance.currentLevel.PlanetName.Replace("Titan", "타이탄");
-                DiscordController.Instance.status_Details = StartOfRound.Instance.currentLevel.PlanetName.Replace("Embrion", "엠브리온");
-                DiscordController.Instance.status_Details = StartOfRound.Instance.currentLevel.PlanetName.Replace("Artifice", "아터피스");
+                DiscordController.Instance.status_Details =
+                    StartOfRound.Instance.currentLevel.PlanetName + "을(를) 공전하는 중";
+                DiscordController.Instance.status_Details =
+                    StartOfRound.Instance.currentLevel.PlanetName.Replace("Gordion", "고르디온");
+                DiscordController.Instance.status_Details =
+                    StartOfRound.Instance.currentLevel.PlanetName.Replace("Experimentation", "익스페리멘테이션");
+                DiscordController.Instance.status_Details =
+                    StartOfRound.Instance.currentLevel.PlanetName.Replace("Assuarance", "어슈어런스");
+                DiscordController.Instance.status_Details =
+                    StartOfRound.Instance.currentLevel.PlanetName.Replace("Vow", "보우");
+                DiscordController.Instance.status_Details =
+                    StartOfRound.Instance.currentLevel.PlanetName.Replace("Offense", "오펜스");
+                DiscordController.Instance.status_Details =
+                    StartOfRound.Instance.currentLevel.PlanetName.Replace("March", "머치");
+                DiscordController.Instance.status_Details =
+                    StartOfRound.Instance.currentLevel.PlanetName.Replace("Adamance", "애더먼스");
+                DiscordController.Instance.status_Details =
+                    StartOfRound.Instance.currentLevel.PlanetName.Replace("Rend", "렌드");
+                DiscordController.Instance.status_Details =
+                    StartOfRound.Instance.currentLevel.PlanetName.Replace("Dine", "다인");
+                DiscordController.Instance.status_Details =
+                    StartOfRound.Instance.currentLevel.PlanetName.Replace("Titan", "타이탄");
+                DiscordController.Instance.status_Details =
+                    StartOfRound.Instance.currentLevel.PlanetName.Replace("Embrion", "엠브리온");
+                DiscordController.Instance.status_Details =
+                    StartOfRound.Instance.currentLevel.PlanetName.Replace("Artifice", "아터피스");
             }
 
-            DiscordController.Instance.status_smallText = DiscordController.Instance.status_smallText.Replace("Deceased", "사망함");
-            DiscordController.Instance.status_smallText = DiscordController.Instance.status_smallText.Replace("In orbit", "공전 중");
+            DiscordController.Instance.status_smallText =
+                DiscordController.Instance.status_smallText.Replace("Deceased", "사망함");
+            DiscordController.Instance.status_smallText =
+                DiscordController.Instance.status_smallText.Replace("In orbit", "공전 중");
 
             if (RoundManager.Instance != null && StartOfRound.Instance.inShipPhase)
             {
-                float num = (float)StartOfRound.Instance.GetValueOfAllScrap(true, false) / (float)TimeOfDay.Instance.profitQuota * 100f;
-                DiscordController.Instance.status_State = string.Format("할당량의 {0}% 달성 | {1}일 남음", (int)num, TimeOfDay.Instance.daysUntilDeadline);
+                float num = (float)StartOfRound.Instance.GetValueOfAllScrap(true, false) /
+                    (float)TimeOfDay.Instance.profitQuota * 100f;
+                DiscordController.Instance.status_State = string.Format("할당량의 {0}% 달성 | {1}일 남음", (int)num,
+                    TimeOfDay.Instance.daysUntilDeadline);
             }
         }
+        */
 
         [HarmonyPostfix]
         [HarmonyPatch("FirePlayersAfterDeadlineClientRpc")]
         private static void FirePlayersAfterDeadlineClientRpc_Postfix()
         {
-            HUDManager.Instance.EndOfRunStatsText.text = HUDManager.Instance.EndOfRunStatsText.text.Replace("Days on the job", "근무일수");
-            HUDManager.Instance.EndOfRunStatsText.text = HUDManager.Instance.EndOfRunStatsText.text.Replace("Scrap value collected", "수집한 폐품의 가치");
-            HUDManager.Instance.EndOfRunStatsText.text = HUDManager.Instance.EndOfRunStatsText.text.Replace("Deaths", "사망 횟수");
-            HUDManager.Instance.EndOfRunStatsText.text = HUDManager.Instance.EndOfRunStatsText.text.Replace("Steps taken", "걸음 수");
+            TextMeshProUGUI t = HUDManager.Instance.EndOfRunStatsText;
+            t.text = TranslationManager.ReplaceArrayText(t.text, "HUD", "Days on the job");
+            t.text = TranslationManager.ReplaceArrayText(t.text, "HUD", "Scrap value collected");
+            t.text = TranslationManager.ReplaceArrayText(t.text, "HUD", "Deaths");
+            t.text = TranslationManager.ReplaceArrayText(t.text, "HUD", "Steps taken");
         }
 
         [HarmonyPostfix]
@@ -135,9 +120,52 @@ namespace LCKorean.Patches
                     level.riskLevel = "안전";
                 }
             }
+
+            string text;
+            if (StartOfRound.Instance.currentLevel.currentWeather != LevelWeatherType.None)
+            {
+                string weatherText = TranslationManager.GetArrayTranslation("Planets", "Weather");
+                string weather = TranslationManager.GetArrayTranslation("Planets",
+                    StartOfRound.Instance.currentLevel.currentWeather.ToString());
+                text = $"{weatherText}: {weather}";
+            }
+            else
+            {
+                text = "";
+            }
+
+            string levelDescription = StartOfRound.Instance.currentLevel.LevelDescription;
+            if (StartOfRound.Instance.isChallengeFile)
+            {
+                StartOfRound.Instance.screenLevelDescription.text = string.Concat(new string[]
+                {
+                    TranslationManager.GetArrayTranslation("Planets", "Orbiting") + ": ",
+                    GameNetworkManager.Instance.GetNameForWeekNumber(-1),
+                    "\n",
+                    TranslationManager.GetArrayTranslation("Planets", levelDescription, 0, true),
+                    "\n",
+                    text
+                });
+            }
+            else
+            {
+                StartOfRound.Instance.screenLevelDescription.text = string.Concat(new string[]
+                {
+                    "공전 중: ",
+                    TranslationManager.GetArrayTranslation("Planets", StartOfRound.Instance.currentLevel.PlanetName, 0, true),
+                    "\n",
+                    TranslationManager.GetArrayTranslation("Planets", levelDescription, 0, true),
+                    "\n",
+                    text
+                });
+            }
+            //___screenLevelDescription.text = TranslationManager.GetArrayTranslation("Planets", ___screenLevelDescription.text, 0, true);
+
+            /*
             ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("Weather", "날씨");
 
-            ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("Where the Company resides", "회사가 소재하는 지역입니다");
+            ___screenLevelDescription.text =
+                ___screenLevelDescription.text.Replace("Where the Company resides", "회사가 소재하는 지역입니다");
 
             ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("Rainy", "우천");
             ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("Stormy", "뇌우");
@@ -147,168 +175,52 @@ namespace LCKorean.Patches
 
             ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("Orbiting", "공전 중");
             ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("71 Gordion", "71 고르디온");
+            
 
-            ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("41 Experimentation", "41 익스페리멘테이션");
-            ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("220 Assurance", "220 어슈어런스");
-            ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("56 Vow", "56 보우")
-                ;
-            ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("21 Offense", "21 오펜스");
-            ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("61 March", "61 머치");
-            ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("20 Adamance", "20 애더먼스");
+            ___screenLevelDescription.text =
+                ___screenLevelDescription.text.Replace("41 Experimentation", "41 익스페리멘테이션");
+                */
+        }
 
-            ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("85 Rend", "85 렌드");
-            ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("7 Dine", "7 다인");
-            ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("8 Titan", "8 타이탄");
-            ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("68 Artifice", "68 아터피스");
+        bool TryGetValueAfterColon(string text, string removalKey, out string value)
+        {
+            value = null;
 
-            ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("5 Embrion", "5 엠브리언");
-            ___screenLevelDescription.text = ___screenLevelDescription.text.Replace("44 Liquidation", "44 리퀴데이션");
+            if (string.IsNullOrEmpty(text))
+                return false;
+
+            int colonIndex = text.IndexOf(':');
+            if (colonIndex < 0)
+                return false;
+
+            string key = text.Substring(0, colonIndex).Trim();
+            if (key != removalKey)
+                return false;
+
+            value = text.Substring(colonIndex + 1).Trim();
+            return true;
         }
 
         [HarmonyPostfix]
         [HarmonyPatch("WritePlayerNotes")]
-        public static void WritePlayerNotes_Postfix(ref EndOfGameStats ___gameStats, ref PlayerControllerB[] ___allPlayerScripts, ref int ___connectedPlayersAmount,
+        public static void WritePlayerNotes_Postfix(ref EndOfGameStats ___gameStats,
+            ref PlayerControllerB[] ___allPlayerScripts, ref int ___connectedPlayersAmount,
             ref bool ___localPlayerWasMostProfitableThisRound)
         {
-            for (int i = 0 ; i < ___allPlayerScripts.Length ; i++)
+            for (int i = 0; i < ___allPlayerScripts.Length; i++)
             {
                 for (int j = 0; j < ___gameStats.allPlayerStats[i].playerNotes.Count; j++)
                 {
-                    ___gameStats.allPlayerStats[i].playerNotes[j] = ___gameStats.allPlayerStats[i].playerNotes[j].Replace("The laziest employee.", "가장 게으른 직원.");
-                    ___gameStats.allPlayerStats[i].playerNotes[j] = ___gameStats.allPlayerStats[i].playerNotes[j].Replace("The most paranoid employee.", "가장 피해망상이 심한 직원.");
-                    ___gameStats.allPlayerStats[i].playerNotes[j] = ___gameStats.allPlayerStats[i].playerNotes[j].Replace("Sustained the most injuries.", "가장 많은 부상을 입음.");
-                    ___gameStats.allPlayerStats[i].playerNotes[j] = ___gameStats.allPlayerStats[i].playerNotes[j].Replace("Most profitable", "가장 수익성이 높음");
+                    string t = ___gameStats.allPlayerStats[i].playerNotes[j];
+                    t = TranslationManager.GetArrayTranslation("HUD", t);
+                    ___gameStats.allPlayerStats[i].playerNotes[j] = t;
                 }
             }
         }
-        /*
-        static void ConvertImage()
-        {
-            foreach (Texture2D texture in TextureReplacer.Textures)
-            {
-                if (texture.name == "StopSignTex")
-                {
-                    CopyTexture2D(texture, Plugin.stopSignTex);
-                }
-                else if (texture.name == "YieldSignTex")
-                {
-                    CopyTexture2D(texture, Plugin.yieldSignTex);
-                }
-                else if (texture.name == "StickyNoteTex")
-                {
-                    CopyTexture2D(texture, Plugin.StickyNoteTex);
-                }
-
-                else if (texture.name == "artificeHint")
-                {
-                    CopyTexture2D(texture, Plugin.artificeHint);
-                }
-                else if (texture.name == "endgameAllPlayersDead")
-                {
-                    CopyTexture2D(texture, Plugin.endgameAllPlayersDead);
-                }
-                else if (texture.name == "endgameStatsBoxes")
-                {
-                    CopyTexture2D(texture, Plugin.endgameStatsBoxes);
-                }
-                else if (texture.name == "endgameStatsDeceased")
-                {
-                    CopyTexture2D(texture, Plugin.endgameStatsDeceased);
-                }
-                else if (texture.name == "endgameStatsMissing")
-                {
-                    CopyTexture2D(texture, Plugin.endgameStatsMissing);
-                }
-                else if (texture.name == "FlashbangBottleTexture")
-                {
-                    CopyTexture2D(texture, Plugin.flashbangBottleTexture);
-                }
-
-                else if (texture.name == "manual1")
-                {
-                    CopyTexture2D(texture, Plugin.manual1);
-                }
-                else if (texture.name == "manual2v2")
-                {
-                    CopyTexture2D(texture, Plugin.manual2v2);
-                }
-                else if (texture.name == "manual3v2")
-                {
-                    CopyTexture2D(texture, Plugin.manual3v2);
-                }
-                else if (texture.name == "manual4v2")
-                {
-                    CopyTexture2D(texture, Plugin.manual4v2);
-                }
-
-                else if (texture.name == "PlayerLevelStickers")
-                {
-                    CopyTexture2D(texture, Plugin.playerLevelStickers);
-                }
-                else if (texture.name == "PlayerLevelStickers 1")
-                {
-                    CopyTexture2D(texture, Plugin.playerLevelStickers1);
-                }
-
-                else if (texture.name == "posters")
-                {
-                    CopyTexture2D(texture, Plugin.posters);
-                }
-                else if (texture.name == "TipsPoster2")
-                {
-                    CopyTexture2D(texture, Plugin.TipsPoster2);
-                }
-                else if (texture.name == "powerBoxTextures")
-                {
-                    CopyTexture2D(texture, Plugin.powerBoxTextures);
-                }
-
-                else if (texture.name == "RedUIPanelGlitchBWarningRadiation")
-                {
-                    CopyTexture2D(texture, Plugin.RedUIPanelGlitchBWarningRadiation);
-                }
-                else if (texture.name == "RedUIPanelGlitchBWarningRadiationB")
-                {
-                    CopyTexture2D(texture, Plugin.RedUIPanelGlitchBWarningRadiationB);
-                }
-                else if (texture.name == "RedUIPanelGlitchBWarningRadiationC")
-                {
-                    CopyTexture2D(texture, Plugin.RedUIPanelGlitchBWarningRadiationC);
-                }
-                else if (texture.name == "RedUIPanelGlitchBWarningRadiationD")
-                {
-                    CopyTexture2D(texture, Plugin.RedUIPanelGlitchBWarningRadiationD);
-                }
-            }
-        }
-
-        static void CopyTexture2D(Texture2D originalTexture, Texture2D source)
-        {
-            RenderTexture renderTexture = new RenderTexture(originalTexture.width, originalTexture.height, 0);
-            Graphics.Blit(Plugin.RedUIPanelGlitchBWarningRadiationD, renderTexture);
-            Texture2D combinedTexture = new Texture2D(renderTexture.width, renderTexture.height);
-            RenderTexture.active = renderTexture;
-            originalTexture.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
-            originalTexture.Apply();
-        }
-
-        public static Texture2D duplicateTexture(Texture2D source)
-        {
-            RenderTexture temporary = RenderTexture.GetTemporary(source.width, source.height, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default, 1);
-            RenderTexture active = RenderTexture.active;
-            Graphics.Blit(source, temporary);
-            RenderTexture.active = temporary;
-            Texture2D texture2D = new Texture2D(source.width, source.height, TextureFormat.ARGB32, true);
-            texture2D.ReadPixels(new Rect(0f, 0f, (float)temporary.width, (float)temporary.height), 0, 0);
-            texture2D.Apply();
-            RenderTexture.active = active;
-            RenderTexture.ReleaseTemporary(temporary);
-            return texture2D;
-        }
-        */
 
         static void TranslatePlanet()
         {
+            /*
             Plugin.mls.LogInfo("Translating Planets");
             foreach (SelectableLevel level in StartOfRound.Instance.levels)
             {
@@ -457,675 +369,8 @@ namespace LCKorean.Patches
                     level.LevelDescription = level.LevelDescription.Replace("CONDITIONS: Warm lush terrain, supports pleny of flora, acidic pools present.",
                         "조건: 따뜻하고 무성한 지형으로 이루어졌으며, 많은 식물을 지원하고 산성 웅덩이가 존재합니다.");
                 }
-
-                if (Plugin.translatePlanet)
-                {
-                    if (level.PlanetName == "71 Gordion")
-                    {
-                        level.PlanetName = "71 고르디온";
-                    }else if (level.PlanetName == "41 Experimentation")
-                    {
-                        level.PlanetName = "41 익스페리멘테이션";
-                    }
-                    else if (level.PlanetName == "220 Assurance")
-                    {
-                        level.PlanetName = "220 어슈어런스";
-                    }
-                    else if (level.PlanetName == "56 Vow")
-                    {
-                        level.PlanetName = "56 보우";
-                    }
-                    else if (level.PlanetName == "61 March")
-                    {
-                        level.PlanetName = "61 머치";
-                    }
-                    else if (level.PlanetName == "21 Offense")
-                    {
-                        level.PlanetName = "21 오펜스";
-                    }
-                    else if (level.PlanetName == "85 Rend")
-                    {
-                        level.PlanetName = "85 렌드";
-                    }
-                    else if (level.PlanetName == "7 Dine")
-                    {
-                        level.PlanetName = "7 다인";
-                    }
-                    else if (level.PlanetName == "8 Titan")
-                    {
-                        level.PlanetName = "8 타이탄";
-                    }
-                    
-                    else if (level.PlanetName == "20 Adamance")
-                    {
-                        level.PlanetName = "20 애더먼스";
-                    }
-                    else if (level.PlanetName == "68 Artifice")
-                    {
-                        level.PlanetName = "68 아터피스";
-                    }
-                    else if (level.PlanetName == "5 Embrion")
-                    {
-                        level.PlanetName = "5 엠브리언";
-                    }
-                    else if (level.PlanetName == "44 Liquidation")
-                    {
-                        level.PlanetName = "44 리퀴데이션";
-                    }
-                }
             }
-        }
-        static void TranslateDialogue()
-        {
-            Plugin.mls.LogInfo("Translating Dialogues");
-            foreach (DialogueSegment dialogue in StartOfRound.Instance.openingDoorDialogue)
-            {
-                switch (dialogue.speakerText)
-                {
-                    case "PILOT COMPUTER":
-                        dialogue.speakerText = "파일럿 컴퓨터";
-                        break;
-                }
-                switch (dialogue.bodyText)
-                {
-                    case "Warning! No response from crew, which has not returned. Emergency code activated.":
-                        dialogue.bodyText = "경고! 모든 팀원이 응답하지 않으며 함선에 돌아오지 않았습니다. 긴급 코드가 활성화되었습니다.";
-                        break;
-                    case "The autopilot will now attempt to fly to the closest safe spaceport. Your items have been lost.":
-                        dialogue.bodyText = "가까운 기지로 이동합니다. 모든 폐품을 분실했습니다.";
-                        break;
-                    case "Alert! The autopilot is leaving due to dangerous conditions.":
-                        dialogue.bodyText = "경고! 위험한 상황으로 인해 함선이 이륙하고 있습니다.";
-                        break;
-                    case "The Company must minimize risk of damage to proprietary hardware. Goodbye!":
-                        dialogue.bodyText = "우리 회사는 독점 하드웨어에 대한 손상 위험을 최소화해야 합니다. 안녕히 계세요!\r\n";
-                        break;
-                }
-            }
-        }
-        
-        static void TranslateUnlockableList()
-        {
-            Plugin.mls.LogInfo("Translating Unlockable List");
-            foreach (UnlockableItem unlockableItem in StartOfRound.Instance.unlockablesList.unlockables)
-            {
-                switch (unlockableItem.unlockableName)
-                {
-                    case "Orange suit":
-                        unlockableItem.unlockableName = "주황색 슈트";
-                        break;
-                    case "Green suit":
-                        unlockableItem.unlockableName = "초록색 슈트";
-                        break;
-                    case "Hazard suit":
-                        unlockableItem.unlockableName = "방호복 슈트";
-                        break;
-                    case "Pajama suit":
-                        unlockableItem.unlockableName = "파자마 슈트";
-                        break;
-                    case "Cozy lights":
-                        unlockableItem.unlockableName = "아늑한 조명";
-                        break;
-                    case "Teleporter":
-                        unlockableItem.unlockableName = "순간이동기";
-                        break;
-                    case "Television":
-                        unlockableItem.unlockableName = "텔레비전";
-                        break;
-                    case "Cupboard":
-                        unlockableItem.unlockableName = "수납장";
-                        break;
-                    case "File Cabinet":
-                        unlockableItem.unlockableName = "파일 캐비닛";
-                        break;
-                    case "Toilet":
-                        unlockableItem.unlockableName = "변기";
-                        break;
-                    case "Shower":
-                        unlockableItem.unlockableName = "샤워 부스";
-                        break;
-                    case "Light switch":
-                        unlockableItem.unlockableName = "전등 스위치";
-                        break;
-                    case "Record player":
-                        unlockableItem.unlockableName = "레코드 플레이어";
-                        break;
-                    case "Table":
-                        unlockableItem.unlockableName = "테이블";
-                        break;
-                    case "Romantic table":
-                        unlockableItem.unlockableName = "로맨틱한 테이블";
-                        break;
-                    case "Bunkbeds":
-                        unlockableItem.unlockableName = "벙커침대";
-                        break;
-                    case "Terminal":
-                        unlockableItem.unlockableName = "터미널";
-                        break;
-                    case "Signal translator":
-                        unlockableItem.unlockableName = "신호 해석기";
-                        break;
-                    case "Loud horn":
-                        unlockableItem.unlockableName = "시끄러운 경적";
-                        break;
-                    case "Inverse Teleporter":
-                        unlockableItem.unlockableName = "역방향 순간이동기";
-                        break;
-                    case "JackOLantern":
-                        unlockableItem.unlockableName = "잭오랜턴";
-                        break;
-                    case "Welcome mat":
-                        unlockableItem.unlockableName = "웰컴 매트";
-                        break;
-                    case "Goldfish":
-                        unlockableItem.unlockableName = "금붕어";
-                        break;
-                    case "Plushie pajama man":
-                        unlockableItem.unlockableName = "인형 파자마 맨";
-                        break;
-                    case "Purple Suit":
-                        unlockableItem.unlockableName = "보라색 슈트";
-                        break;
-                    case "Bee Suit":
-                        unlockableItem.unlockableName = "꿀벌 슈트";
-                        break;
-                    case "Bunny Suit":
-                        unlockableItem.unlockableName = "토끼 슈트";
-                        break;
-                    case "Disco Ball":
-                        unlockableItem.unlockableName = "디스코 볼";
-                        break;
-                }
-            }
-        }
-
-        static void TranslateModdedItem()
-        {
-            Plugin.mls.LogInfo("Translating Items");
-            foreach (Item item in StartOfRound.Instance.allItemsList.itemsList)
-            {
-                switch (item.itemName)
-                {
-                    case "Alcohol Flask":
-                        item.itemName = "알코올 플라스크";
-                        break;
-                    case "Anvil":
-                        item.itemName = "모루";
-                        break;
-                    case "Baseball bat":
-                        item.itemName = "야구 방망이";
-                        break;
-                    case "Beer can":
-                        item.itemName = "맥주 캔";
-                        break;
-                    case "Brick":
-                        item.itemName = "벽돌";
-                        break;
-                    case "Broken engine":
-                        item.itemName = "망가진 엔진";
-                        break;
-                    case "Bucket":
-                        item.itemName = "양동이";
-                        break;
-                    case "Can paint":
-                        item.itemName = "페인트 캔";
-                        break;
-                    case "Canteen":
-                        item.itemName = "수통";
-                        break;
-                    case "Car battery":
-                        item.itemName = "자동차 배터리";
-                        break;
-                    case "Clamp":
-                        item.itemName = "조임틀";
-                        break;
-                    case "Fancy Painting":
-                        item.itemName = "멋진 그림";
-                        break;
-                    case "Fan":
-                        item.itemName = "선풍기";
-                        break;
-                    case "Fireaxe":
-                        item.itemName = "소방 도끼";
-                        break;
-                    case "Fire extinguisher":
-                        item.itemName = "소화기";
-                        break;
-                    case "Fire hydrant":
-                        item.itemName = "소화전";
-                        break;
-                    case "Food can":
-                        item.itemName = "통조림";
-                        break;
-                    case "Gameboy":
-                        item.itemName = "게임보이";
-                        break;
-                    case "Garbage":
-                        item.itemName = "쓰레기";
-                        break;
-                    case "Hammer":
-                        item.itemName = "망치";
-                        break;
-                    case "Jerrycan":
-                        item.itemName = "기름통";
-                        break;
-                    case "Keyboard":
-                        item.itemName = "키보드";
-                        break;
-                    case "Lantern":
-                        item.itemName = "랜턴";
-                        break;
-                    case "Library lamp":
-                        item.itemName = "도서관 램프";
-                        break;
-                    case "Plant":
-                        item.itemName = "식물";
-                        break;
-                    case "Pliers":
-                        item.itemName = "플라이어";
-                        break;
-                    case "Plunger":
-                        item.itemName = "뚫어뻥";
-                        break;
-                    case "Retro Toy":
-                        item.itemName = "레트로 장난감";
-                        break;
-                    case "Screwdriver":
-                        item.itemName = "스크류 드라이버";
-                        break;
-                    case "Sink":
-                        item.itemName = "싱크대";
-                        break;
-                    case "Socket Wrench":
-                        item.itemName = "소켓 렌치";
-                        break;
-                    case "Squeaky toy":
-                        item.itemName = "고무 오리";
-                        break;
-                    case "Suitcase":
-                        item.itemName = "여행 가방";
-                        break;
-                    case "Toaster":
-                        item.itemName = "토스터기";
-                        break;
-                    case "Toolbox":
-                        item.itemName = "공구 상자";
-                        break;
-                    case "Top hat":
-                        item.itemName = "실크햇";
-                        break;
-                    case "Traffic cone":
-                        item.itemName = "라바콘";
-                        break;
-                    case "Vent":
-                        item.itemName = "환풍구";
-                        break;
-                    case "Watering Can":
-                        item.itemName = "물뿌리개";
-                        break;
-                    case "Wheel":
-                        item.itemName = "바퀴";
-                        break;
-                    case "Wine bottle":
-                        item.itemName = "와인 병";
-                        break;
-                    case "Wrench":
-                        item.itemName = "렌치";
-                        break;
-
-
-                    case "Syringe":
-                        item.itemName = "주사기";
-                        break;
-                    case "Syringe Gun":
-                        item.itemName = "주사기총";
-                        break;
-                    case "Corner Pipe":
-                        item.itemName = "코너 파이프";
-                        break;
-                    case "Small Pipe":
-                        item.itemName = "작은 파이프";
-                        break;
-                    case "Flow Pipe":
-                        item.itemName = "파이프";
-                        break;
-                    case "Brain Jar":
-                        item.itemName = "뇌가 담긴 병";
-                        break;
-                    case "Toy Nutcracker":
-                        item.itemName = "호두까기 인형 장난감";
-                        break;
-                    case "Test Tube":
-                        item.itemName = "시험관";
-                        break;
-                    case "Test Tube Rack":
-                        item.itemName = "시험관 랙";
-                        break;
-                    case "Nutcracker Eye":
-                        item.itemName = "호두까기 인형 눈";
-                        break;
-                    case "Blue Test Tube":
-                        item.itemName = "파란색 시험관";
-                        break;
-                    case "Yellow Test Tube":
-                        item.itemName = "노란색 시험관";
-                        break;
-                    case "Red Test Tube":
-                        item.itemName = "빨간색 시험관";
-                        break;
-                    case "Green Test Tube":
-                        item.itemName = "초록색 시험관";
-                        break;
-                    case "Crowbar":
-                        item.itemName = "쇠지렛대";
-                        break;
-                    case "Plzen":
-                        item.itemName = "플젠";
-                        break;
-                    case "Cup":
-                        item.itemName = "컵";
-                        break;
-                    case "Microwave":
-                        item.itemName = "전자레인지";
-                        break;
-                    case "bubblegun":
-                        item.itemName = "비눗방울 총";
-                        break;
-                    case "Broken P88":
-                        item.itemName = "망가진 P88";
-                        break;
-                    case "employee":
-                        item.itemName = "직원";
-                        break;
-                    case "Mine":
-                        item.itemName = "지뢰";
-                        break;
-                    case "Toothles":
-                        item.itemName = "투슬리스";
-                        break;
-                    case "Crossbow":
-                        item.itemName = "석궁";
-                        break;
-                    case "physgun":
-                        item.itemName = "피직스건";
-                        break;
-                    case "Ammo crate":
-                        item.itemName = "탄약 상자";
-                        break;
-                    case "Drink":
-                        item.itemName = "음료수";
-                        break;
-                    case "Radio":
-                        item.itemName = "라디오";
-                        break;
-                    case "Mouse":
-                        item.itemName = "마우스";
-                        break;
-                    case "Monitor":
-                        item.itemName = "모니터";
-                        break;
-                    case "Battery":
-                        item.itemName = "건전지";
-                        break;
-                    case "Cannon":
-                        item.itemName = "대포";
-                        break;
-                    case "Health Drink":
-                        item.itemName = "건강 음료";
-                        break;
-                    case "Chemical":
-                        item.itemName = "화학 약품";
-                        break;
-                    case "Disinfecting Alcohol":
-                        item.itemName = "소독용 알코올";
-                        break;
-                    case "Ampoule":
-                        item.itemName = "앰풀";
-                        break;
-                    case "Blood Pack":
-                        item.itemName = "혈액 팩";
-                        break;
-                    case "Flip Lighter":
-                        item.itemName = "라이터";
-                        break;
-                    case "Rubber Ball":
-                        item.itemName = "고무 공";
-                        break;
-                    case "Video Tape":
-                        item.itemName = "비디오 테이프";
-                        break;
-                    case "First Aid Kit":
-                        item.itemName = "구급 상자";
-                        break;
-                    case "Gold Medallion":
-                        item.itemName = "금메달";
-                        break;
-                    case "Steel Pipe":
-                        item.itemName = "금속 파이프";
-                        break;
-                    case "Axe":
-                        item.itemName = "도끼";
-                        break;
-                    case "Emergency Hammer":
-                        item.itemName = "비상용 망치";
-                        break;
-                    case "Katana":
-                        item.itemName = "카타나";
-                        break;
-                    case "Silver Medallion":
-                        item.itemName = "은메달";
-                        break;
-                    case "Pocket Radio":
-                        item.itemName = "휴대용 라디오";
-                        break;
-                    case "Teddy Plush":
-                        item.itemName = "곰 인형";
-                        break;
-                    case "Experiment Log Hyper Acid":
-                        item.itemName = "Hyper Acid 실험 기록";
-                        break;
-                    case "Experiment Log Comedy Mask":
-                        item.itemName = "희극 가면 실험 기록";
-                        break;
-                    case "Experiment Log Cursed Coin":
-                        item.itemName = "저주받은 동전 실험 기록";
-                        break;
-                    case "Experiment Log BIO HXNV7":
-                        item.itemName = "바이오 HXNV7 실험 기록";
-                        break;
-                    case "Blue Folder":
-                        item.itemName = "파란색 폴더";
-                        break;
-                    case "Red Folder":
-                        item.itemName = "빨간색 폴더";
-                        break;
-                    case "Fire Extinguisher":
-                        item.itemName = "소화기";
-                        break;
-                    case "Coil":
-                        item.itemName = "코일";
-                        break;
-                    case "Typewriter":
-                        item.itemName = "타자기";
-                        break;
-                    case "Documents":
-                        item.itemName = "서류 더미";
-                        break;
-                    case "Stapler":
-                        item.itemName = "스테이플러";
-                        break;
-                    case "Old Computer":
-                        item.itemName = "구식 컴퓨터";
-                        break;
-                    case "Bronze Trophy":
-                        item.itemName = "브론즈 트로피";
-                        break;
-                    case "Banana":
-                        item.itemName = "바나나";
-                        break;
-                    case "Stun Baton":
-                        item.itemName = "스턴봉";
-                        break;
-                    case "BIO-HXNV7":
-                        item.itemName = "바이오-HXNV7";
-                        break;
-                    case "Recovered Secret Log":
-                        item.itemName = "복구된 비밀 일지";
-                        break;
-                    case "Experiment Log Golden Dagger":
-                        item.itemName = "황금 단검 실험 기록";
-                        break;
-                    case "Clam":
-                        item.itemName = "대합";
-                        break;
-                    case "Turtle Shell":
-                        item.itemName = "거북이 등딱지";
-                        break;
-                    case "Fish Bones":
-                        item.itemName = "생선 뼈";
-                        break;
-                    case "Horned Shell":
-                        item.itemName = "뿔 달린 껍질";
-                        break;
-                    case "Porcelain Teacup":
-                        item.itemName = "도자기 찻잔";
-                        break;
-                    case "Marble":
-                        item.itemName = "대리석";
-                        break;
-                    case "Porcelain Bottle":
-                        item.itemName = "도자기 병";
-                        break;
-                    case "Porcelain Perfume Bottle":
-                        item.itemName = "도자기 향수 병";
-                        break;
-                    case "Glowing Orb":
-                        item.itemName = "발광구";
-                        break;
-                    case "Golden Skull":
-                        item.itemName = "황금 해골";
-                        break;
-                    case "Map of Cosmocos":
-                        item.itemName = "코스모코스 지도";
-                        break;
-                    case "Wet Note 1":
-                        item.itemName = "젖은 노트 1";
-                        break;
-                    case "Wet Note 2":
-                        item.itemName = "젖은 노트 2";
-                        break;
-                    case "Wet Note 3":
-                        item.itemName = "젖은 노트 3";
-                        break;
-                    case "Wet Note 4":
-                        item.itemName = "젖은 노트 4";
-                        break;
-                    case "Cosmic Shard":
-                        item.itemName = "우주빛 파편";
-                        break;
-                    case "Cosmic Growth":
-                        item.itemName = "우주 생장물";
-                        break;
-                    case "Chunk of Celestial Brain":
-                        item.itemName = "천상의 두뇌 덩어리";
-                        break;
-                    case "Bucket of Shards":
-                        item.itemName = "파편이 든 양동이";
-                        break;
-                    case "Cosmic Flashlight":
-                        item.itemName = "우주빛 손전등";
-                        break;
-                    case "Forgotten Log 1":
-                        item.itemName = "잊혀진 일지 1";
-                        break;
-                    case "Forgotten Log 2":
-                        item.itemName = "잊혀진 일지 2";
-                        break;
-                    case "Forgotten Log 3":
-                        item.itemName = "잊혀진 일지 3";
-                        break;
-                    case "Glasses":
-                        item.itemName = "안경";
-                        break;
-                    case "Grown Petri Dish":
-                        item.itemName = "생장한 배양 접시";
-                        break;
-                    case "Petri Dish":
-                        item.itemName = "배양 접시";
-                        break;
-                    case "Cosmochad":
-                        item.itemName = "코스모채드";
-                        break;
-                    case "Dying Cosmic Flashlight":
-                        item.itemName = "죽어가는 우주빛 손전등";
-                        break;
-                    case "Dying Cosmic Growth":
-                        item.itemName = "죽어가는 우주 생장물";
-                        break;
-                    case "Blood Petri Dish":
-                        item.itemName = "혈액 배양 접시";
-                        break;
-                    case "Evil Cosmochad":
-                        item.itemName = "악마 코스모채드";
-                        break;
-                    case "Evil Cosmo":
-                        item.itemName = "악마 코스모";
-                        break;
-                    case "Lil Cosmo":
-                        item.itemName = "릴 코스모";
-                        break;
-                    case "Dying Grown Petri Dish":
-                        item.itemName = "죽어가는 생장물 배양 접시";
-                        break;
-                    case "Watching Petri Dish":
-                        item.itemName = "감시하는 배양 접시";
-                        break;
-                    case "Microscope":
-                        item.itemName = "현미경";
-                        break;
-                    case "Round Vile":
-                        item.itemName = "원통형 바일";
-                        break;
-                    case "Square Vile":
-                        item.itemName = "사각형 바일";
-                        break;
-                    case "Oval Vile":
-                        item.itemName = "타원형 바일";
-                        break;
-                    case "Harrington Log 1":
-                        item.itemName = "해링턴 일지 1";
-                        break;
-                    case "Harrington Log 2":
-                        item.itemName = "해링턴 일지 2";
-                        break;
-                    case "Harrington Log 3":
-                        item.itemName = "해링턴 일지 3";
-                        break;
-                    case "Harrington Log 4":
-                        item.itemName = "해링턴 일지 4";
-                        break;
-                    case "Jar of Growth":
-                        item.itemName = "생장물이 든 병";
-                        break;
-                    case "Tape Player Log 1":
-                        item.itemName = "테이프 플레이어 일지 1";
-                        break;
-                    case "Tape Player Log 2":
-                        item.itemName = "테이프 플레이어 일지 1";
-                        break;
-                    case "Tape Player Log 3":
-                        item.itemName = "테이프 플레이어 일지 1";
-                        break;
-                    case "Tape Player Log 4":
-                        item.itemName = "테이프 플레이어 일지 1";
-                        break;
-
-
-                    case "Shopping Cart":
-                        item.itemName = "쇼핑 카트";
-                        break;
-                }
-            }
+                */
         }
     }
 }

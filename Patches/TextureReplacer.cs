@@ -6,7 +6,7 @@ using UnityEngine;
 using System.Reflection;
 using UnityEngine.SceneManagement;
 
-namespace LCKorean.Patches
+namespace LCKR.Patches
 {
     public class TextureReplacer : MonoBehaviour
     {

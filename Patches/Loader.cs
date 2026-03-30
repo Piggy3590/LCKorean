@@ -1,14 +1,8 @@
-﻿using System;
-using System.IO;
-using System.Text;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using UnityEngine;
-using TMPro;
+﻿using TMPro;
 using HarmonyLib;
 using LCKorean;
 
-namespace LCKorean.Patches
+namespace LCKR.Patches
 {
     [HarmonyPatch]
     class FontLoader

@@ -1,0 +1,9 @@
+CH_DeadlineMonitor = {"가능한  한", "많은  수익을", "얻으세요"},
+CH_QuotaMonitor = {"환영합니다!", "이곳은:"},
+DEADLINE = "마감일",
+Now = "지금",
+Days = "일",
+QuotaMonitor = "수익\n할당량",
+AM = "오전",
+PM = "오후",
+MONITORING = "모니터링 중"

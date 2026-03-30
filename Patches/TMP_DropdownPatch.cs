@@ -1,22 +1,5 @@
-﻿using BepInEx.Logging;
-using DunGen;
-using GameNetcodeStuff;
-using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+﻿using HarmonyLib;
 using TMPro;
-using Unity.Netcode;
-using UnityEngine;
-using UnityEngine.Audio;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.HID;
 
 namespace LCKorean.Patches
 {

@@ -1,13 +1,8 @@
-﻿using BepInEx.Logging;
-using DunGen;
-using GameNetcodeStuff;
-using HarmonyLib;
-using System.Collections;
+﻿using HarmonyLib;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-namespace LCKorean.Patches
+namespace LCKR.Patches
 {
     [HarmonyPatch(typeof(PreInitSceneScript))]
     internal class PreInitSceneScriptPatch

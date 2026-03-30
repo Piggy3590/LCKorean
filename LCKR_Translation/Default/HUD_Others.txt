@@ -1,0 +1,43 @@
+NewCreature = "새로운 생명체 데이터가 단말기에 전송되었습니다!", //생명체를 처음 스캔하면 표시되는 텍스트
+FoundJournal = "일지를 발견했습니다:", //시거드의 일지(데이터 칩)을 획득하면 표시되는 텍스트
+WaitingForCrew = "팀원 기다리는 중...", //라운드가 시작되는 동안 화면에 표시되는 텍스트
+Random seed = "무작위 시드", //위와 동일
+Overtime bonus = "초과 근무 보너스", //할당량 초과 시 부여되는 보너스 크레딧
+LoadText = "대기권에 진입하는 중...",
+
+" Day Left" = "일 남았습니다", //라운드 종료 시 출력되는 마감일까지 남은 일수
+" Days Left" = "일 남았습니다", //위와 동일
+
+TOTAL = "합계", //여러 폐품을 스캔할 때 출력되는 폐품의 가치 총량
+
+collected = "수집함", //함선에 폐품을 가지고 들어오면 우측 아래 표시되는 박스. 폐품의 이름.
+Value = "가격", //함선에 폐품을 가지고 들어오면 우측 아래 표시되는 박스. 폐품의 가격.
+" casualties" = "명의 사상자 발생", //라운드 종료 시 사망한 플레이어 수를 표시하는 텍스트
+" bodies recovered" = "구의 시체 회수됨", //라운드 종료 시 회수한 시체의 수를 표시하는 텍스트
+
+Spectating = "관전 중", //관전 중인 플레이어의 이름 앞에 표시되는 텍스트. 예) 관전 중: Player #1
+SteamLeakDetected = {"가시성이 낮습니다!", "해당 구역에서", "증기 누출이 감지되었습니다"}, //증기 누출 감지 시 텍스트
+OxygenLow = "산소가 부족합니다!", //수중에서 산소가 부족할 시 표시되는 텍스트
+TIP!: Hold [R-Trigger] to vote for the autopilot ship to leave early." = "팁!: [R-Trigger]을 길게 눌러 함선 조기 출발에 투표할 수 있습니다.",
+TIP!: Hold [RMB] to vote for the autopilot ship to leave early. = "팁!: [RMB]을 길게 눌러 함선 조기 출발에 투표할 수 있습니다.",
+Tell autopilot ship to leave early = "함선에게 일찍 떠나라고 지시하기\n",
+Voted for ship to leave early = "함선 조기 출발에 투표했습니다",
+Hold = "길게 누르기",
+Votes = "투표 수",
+
+The laziest employee. = "가장 게으른 직원.",
+The most paranoid employee. = "가장 피해망상이 심한 직원.",
+Sustained the most injuries. = "가장 많은 부상을 입음.",
+Most profitable = "가장 수익성이 높음",
+
+OFF = "세일",
+AVAILABLE NOW = "지금 구매하세요",
+CURES CANCER = "암도 치료합니다",
+NO WAY = "엄청난 기능",
+LIMITED TIME ONLY = "한정판입니다",
+GET YOURS TODAY = "지금 바로 주문하세요",
+
+Days on the job = "근무일수",
+Scrap value collected = "수집한 폐품의 가치",
+Deaths = "사망 횟수",
+Steps taken = "걸음 수",

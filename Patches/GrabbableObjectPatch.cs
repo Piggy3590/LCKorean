@@ -1,28 +1,11 @@
-﻿using BepInEx.Logging;
-using DunGen;
-using GameNetcodeStuff;
-using HarmonyLib;
-using Steamworks.Ugc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using TMPro;
-using UnityEngine;
-using UnityEngine.Audio;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.HID;
+﻿using HarmonyLib;
 
-namespace LCKorean.Patches
+namespace LCKR.Patches
 {
     [HarmonyPatch(typeof(GrabbableObject))]
     internal class GrabbableObjectPatch
     {
+            /*
         [HarmonyPostfix]
         [HarmonyPatch("Start")]
         private static void Start_Postfix(GrabbableObject __instance, ref Item ___itemProperties)
@@ -39,5 +22,6 @@ namespace LCKorean.Patches
                 ___itemProperties.toolTips[0] = "자세히 보기: [Z]";
             }
         }
+            */
     }
 }

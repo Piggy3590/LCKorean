@@ -1,32 +1,12 @@
-﻿using BepInEx.Logging;
-using DunGen;
-using GameNetcodeStuff;
-using HarmonyLib;
-using Newtonsoft.Json.Linq;
+﻿using HarmonyLib;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using TMPro;
-using UnityEngine;
-using UnityEngine.Audio;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.HID;
-using UnityEngine.InputSystem.XR;
-using UnityEngine.Rendering;
-using UnityEngine.UI;
-using static System.Net.Mime.MediaTypeNames;
 
-namespace LCKorean.Patches
+namespace LCKR.Patches
 {
     [HarmonyPatch(typeof(GameNetworkManager))]
     internal class GameNetworkManagerPatch
     {
+        /*
         [HarmonyPrefix]
         [HarmonyPatch("SaveItemsInShip")]
         private static void SaveItemsInShip_Prefix()
@@ -999,5 +979,6 @@ namespace LCKorean.Patches
                 }
             }
         }
+        */
     }
 }

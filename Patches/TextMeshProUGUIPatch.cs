@@ -1,25 +1,9 @@
-﻿using BepInEx.Logging;
-using DunGen;
-using GameNetcodeStuff;
-using HarmonyLib;
+﻿using HarmonyLib;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using TMPro;
-using Unity.Netcode;
-using UnityEngine;
-using UnityEngine.Audio;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.HID;
 using UnityEngine.SceneManagement;
 
-namespace LCKorean.Patches
+namespace LCKR.Patches
 {
     [HarmonyPatch(typeof(TextMeshProUGUI))]
     internal class TextMeshProUGUIPatch
@@ -501,7 +485,7 @@ namespace LCKorean.Patches
                     __instance.text = "<size=50>긴급 기상 경보";
                     break;
                 case "METEOR SHOWERS DETECTED. UP TO 20-30 PER HOUR. TAKE SHELTER IMMEDIATELY.":
-                    __instance.text = "유성우가 감지되었습니다. 시간당 최대 20-30개까지 수 있습니다. 즉시 대피하십시오.";
+                    __instance.text = "유성우가 감지되었습니다. 시간당 최대 20-30개까지 낙하할 수 있습니다. 즉시 대피하십시오.";
                     break;
                 case "YOUR AUTOPILOT SATELLITE\nISSUED A\nWEATHER WARNING":
                     __instance.text = "<size=35>자동항법위성이\n기상 경보를\n발령했습니다";
