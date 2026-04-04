@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using System.Collections;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using TMPro;
@@ -101,20 +102,37 @@ namespace LCKR.Patches
                                            $"{TranslationManager.GetArrayTranslation( "HUD", "SteamLeakDetected", 1)}" +
                                            $"\n" +
                                            $"{TranslationManager.GetArrayTranslation( "HUD", "SteamLeakDetected", 2)}";
-            }else if (statusEffect == "Oxygen critically low!")
+            }else if (statusEffect.Contains("Oxygen"))
             {
-                ___statusEffectText.text = TranslationManager.ReplaceArrayText(___statusEffectText.text, "HUD", "OxygenLow");
-            }else if (statusEffect == "HEALTH RISK!")
+                ___statusEffectText.text = TranslationManager.GetArrayTranslation("HUD", "OxygenLow");
+            }else if (statusEffect.Contains("HEALTH RISK!"))
             {
                 ___statusEffectText.text = TranslationManager.GetArrayTranslation("HUD", "HealthRisk") + "\n"
                     + TranslationManager.GetArrayTranslation("HUD", "HealthRisk", 1) + "\n"
                 + TranslationManager.GetArrayTranslation("HUD", "HealthRisk", 2);
             }else if (statusEffect.Contains("HIGH FEVER DETECTED!") && statusEffect.Contains("REACHING"))
             {
+                string input = ___statusEffectText.text;
+                string resultText = input;
+                if (Plugin.toCelsius)
+                {
+                    resultText = Regex.Replace(input, @"-?\d+(\.\d+)?", match =>
+                    {
+                        float f = float.Parse(match.Value);
+                        float c = (f - 32f) * 5f / 9f;
+
+                        int rounded = Mathf.RoundToInt(c);
+                        return rounded.ToString();
+                    }).Replace("°F", "°C");
+                    ___statusEffectText.text = resultText;
+                }
+                
                 ___statusEffectText.text = 
                     ___statusEffectText.text.Replace("HIGH FEVER DETECTED!", TranslationManager.GetArrayTranslation("HUD", "HighFever"));
                 ___statusEffectText.text = 
                     ___statusEffectText.text.Replace("REACHING", TranslationManager.GetArrayTranslation("HUD", "HighFever", 1));
+                
+                ___statusEffectText.text = resultText;
             }else if (statusEffect.Contains("HIGH FEVER DETECTED!!!"))
             {
                 ___statusEffectText.text =

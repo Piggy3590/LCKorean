@@ -16,8 +16,8 @@ namespace LCKR
     {
         private const string modGUID = "Piggy.LCKR";
         private const string modName = "LCKR";
-        public const string modVersion = "2.1.0";
-        public static string modVerType = "a";
+        public const string modVersion = "2.1.1";
+        public static string modVerType = "b";
 
         private readonly Harmony harmony = new Harmony(modGUID);
 
@@ -43,6 +43,7 @@ namespace LCKR
 
         public static bool patchFont;
         public static bool toKG;
+        public static bool toCelsius;
         public static bool showVersion;
         public static bool versionChanged;
         
@@ -85,7 +86,8 @@ namespace LCKR
 
             showVersion = (bool)base.Config.Bind<bool>("일반", "버전 표시", true, "기본값은 true입니다.\ntrue로 설정하면 메인 화면에 모드의 버전을 표시합니다..").Value;
             
-            toKG = (bool)base.Config.Bind<bool>("번역", "KG 변환", true, "기본값은 true입니다.\ntrue로 설정하면 무게 수치를 kg으로 변환합니다.").Value;
+            toKG = (bool)base.Config.Bind<bool>("번역", "KG으로 표기", true, "기본값은 true입니다.\ntrue로 설정하면 무게 수치를 kg으로 변환/표기합니다.").Value;
+            toCelsius = (bool)base.Config.Bind<bool>("번역", "섭씨로 표기", true, "기본값은 true입니다.\ntrue로 설정하면 온도를 섭씨로 변환/표기합니다.").Value;
             
             string filePath = Path.Combine(Paths.ConfigPath, "lckrVersion.txt");
 
