@@ -16,7 +16,7 @@ namespace LCKR
     {
         private const string modGUID = "Piggy.LCKR";
         private const string modName = "LCKR";
-        public const string modVersion = "2.0.5";
+        public const string modVersion = "2.1.0";
         public static string modVerType = "a";
 
         private readonly Harmony harmony = new Harmony(modGUID);
@@ -38,14 +38,13 @@ namespace LCKR
         public static VideoClip snareKorean;
 
         public static bool fullyKoreanMoons;
-        public static string confirmString;
-        public static string denyString;
 
         public static GameObject resetPanel;
 
         public static bool patchFont;
         public static bool toKG;
         public static bool showVersion;
+        public static bool versionChanged;
         
         //Translation
         public static string deathText;
@@ -77,6 +76,7 @@ namespace LCKR
             TranslationFilePath = Config.ConfigFilePath.Replace("Piggy.LCKR.cfg", "") + "\\LCKR_Translation";
             DefTranslationFilePath =  Config.ConfigFilePath.Replace("Piggy.LCKR.cfg", "") + "LCKR_Translation\\Default";
 
+            mls = BepInEx.Logging.Logger.CreateLogSource(modGUID);
             LoadAssets();
             TextureReplacer.Setup();
             TranslationManager.Setup();
@@ -84,14 +84,28 @@ namespace LCKR
             patchFont = (bool)base.Config.Bind<bool>("폰트", "폰트 변경", true, "기본값은 true입니다.\nFontPatcher 등 외부 폰트 모드를 사용하려면 이 값을 false로 설정하세요. false로 설정하면 본 모드에서 폰트를 변경하지 않습니다.").Value;
 
             showVersion = (bool)base.Config.Bind<bool>("일반", "버전 표시", true, "기본값은 true입니다.\ntrue로 설정하면 메인 화면에 모드의 버전을 표시합니다..").Value;
-
-            fullyKoreanMoons = (bool)base.Config.Bind<bool>("접근성", "단말기 카탈로그 한글 입력", false, "기본값은 false입니다.\n위성 카탈로그 \"MOONS\"나 상점 카탈로그 \"STORE\"같은 키워드를 \"위성\", \"상점\"으로 변경합니다.\n(help => 도움말, moons => 위성, store => 상점, bestiary => 도감, other => 기타, eject => 사출, sigurd는 그대로입니다.)").Value;
-            confirmString = (string)base.Config.Bind<string>("접근성", "확정 키워드", "confirm", "기본값은 confirm입니다.\n컨펌 노드 (Confirm)를 설정합니다. *초성, 띄어쓰기와 한 글자는 인식하지 못합니다!*").Value;
-            denyString = (string)base.Config.Bind<string>("접근성", "취소 키워드", "deny", "기본값은 deny입니다.\n디나이 노드 (Deny)를 설정합니다. *초성, 띄어쓰기와 한 글자는 인식하지 못합니다!*").Value;
-
+            
             toKG = (bool)base.Config.Bind<bool>("번역", "KG 변환", true, "기본값은 true입니다.\ntrue로 설정하면 무게 수치를 kg으로 변환합니다.").Value;
             
-            mls = BepInEx.Logging.Logger.CreateLogSource(modGUID);
+            string filePath = Path.Combine(Paths.ConfigPath, "lckrVersion.txt");
+
+            if (File.Exists(filePath))
+            {
+                string oldVersion = File.ReadAllText(filePath);
+
+                if (oldVersion != modVersion)
+                {
+                    Logger.LogInfo($"버전 변경됨: {oldVersion} -> {modVersion}");
+                    versionChanged = true;
+                }
+            }
+            else
+            {
+                versionChanged = true;
+            }
+
+            File.WriteAllText(filePath, modVersion);
+            
             mls.LogInfo("LCKR is loaded");
             mls.LogInfo("base.Config.ConfigFilePath: " + base.Config.ConfigFilePath);
 
