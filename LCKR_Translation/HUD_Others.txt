@@ -1,26 +1,53 @@
-NewCreature = "새로운 생명체 데이터가 단말기에 전송되었습니다!", //생명체를 처음 스캔하면 표시되는 텍스트
-FoundJournal = "일지를 발견했습니다:", //시거드의 일지(데이터 칩)을 획득하면 표시되는 텍스트
-WaitingForCrew = "팀원 기다리는 중...", //라운드가 시작되는 동안 화면에 표시되는 텍스트
-Random seed = "무작위 시드", //위와 동일
-Overtime bonus = "초과 근무 보너스", //할당량 초과 시 부여되는 보너스 크레딧
+NewCreature = "새로운 생명체 데이터가 단말기에 전송되었습니다!",
+FoundJournal = "일지를 발견했습니다:",
+WaitingForCrew = "팀원 기다리는 중...",
+Random seed = "무작위 시드",
+Overtime bonus = "초과 근무 보너스",
 LoadText = "대기권에 진입하는 중...",
 
-" Day Left" = "일 남았습니다", //라운드 종료 시 출력되는 마감일까지 남은 일수
-" Days Left" = "일 남았습니다", //위와 동일
+Press \"/\" to talk. = "\"/\"를 눌러 대화합니다.",
+HANDS FULL = "양 손 사용 중",
+Typing... = "입력 중...",
+(Some were too far to receive your message.) = "(일부는 너무 멀어 메세지를 받지 못했습니다.)",
+Confirm: [V]   |   Rotate: [R]   |   Store: [X] = "확정: [V]   |   회전: [R]   |   보관: [X]",
 
-TOTAL = "합계", //여러 폐품을 스캔할 때 출력되는 폐품의 가치 총량
+HAZARD LEVEL: = "위험 수준:",
 
-collected = "수집함", //함선에 폐품을 가지고 들어오면 우측 아래 표시되는 박스. 폐품의 이름.
-Value = "가격", //함선에 폐품을 가지고 들어오면 우측 아래 표시되는 박스. 폐품의 가격.
-" casualties" = "명의 사상자 발생", //라운드 종료 시 사망한 플레이어 수를 표시하는 텍스트
-" bodies recovered" = "구의 시체 회수됨", //라운드 종료 시 회수한 시체의 수를 표시하는 텍스트
+SYSTEMS ONLINE = "시스템 온라인",
+[LIFE SUPPORT: OFFLINE] = "[생명 지원: 오프라인]",
+(Dead) = "(사망)",
+Notes: = "메모:",
+PERFORMANCE REPORT = "성과 보고서",
 
-Spectating = "관전 중", //관전 중인 플레이어의 이름 앞에 표시되는 텍스트. 예) 관전 중: Player #1
-SteamLeakDetected = {"가시성이 낮습니다!", "해당 구역에서", "증기 누출이 감지되었습니다"}, //증기 누출 감지 시 텍스트
-OxygenLow = "산소가 부족합니다!", //수중에서 산소가 부족할 시 표시되는 텍스트
-TIP!: Hold [R-Trigger] to vote for the autopilot ship to leave early." = "팁!: [R-Trigger]을 길게 눌러 함선 조기 출발에 투표할 수 있습니다.",
-TIP!: Hold [RMB] to vote for the autopilot ship to leave early. = "팁!: [RMB]을 길게 눌러 함선 조기 출발에 투표할 수 있습니다.",
-Tell autopilot ship to leave early = "함선에게 일찍 떠나라고 지시하기\n",
+CRITICAL INJURY = "치명적인 부상",
+
+Paycheck! = "급여를 받았습니다!",
+TOTAL: = "합계:",
+YOU ARE FIRED. = "해고당했습니다.",
+Stats = "통계",
+You will keep your employee rank. Your ship and credits will be reset. = "직원 계급은 유지되지만, 당신의 함선과 크레딧은 초기화됩니다.",
+You did not meet the profit quota before the deadline. = "마감일 전까지 수익 할당량을 충족하지 못했습니다.",
+TO MEET PROFIT QUOTA = "수익 할당량 충족까지",
+QUOTA REACHED! = "<size=65>할당량을 달성했습니다!</size>",
+NEW PROFIT QUOTA: = "새로운 수익 할당량:",
+
+" Day Left" = "일 남았습니다",
+" Days Left" = "일 남았습니다",
+
+TOTAL = "합계",
+
+collected = "수집함",
+Value = "가격",
+" casualties" = "명의 사상자 발생",
+" bodies recovered" = "구의 시체 회수됨",
+"Fines" = "벌금",
+"DUE:" = "청구액:",
+
+Spectating = "관전 중",
+
+TipController = "팁!: [R-Trigger]을 길게 눌러 함선 조기 출발에 투표할 수 있습니다.",
+TipMouse = "팁!: [RMB]을 길게 눌러 함선 조기 출발에 투표할 수 있습니다.",
+"Tell autopilot ship to leave early" = "함선에게 조기 출발 지시하기",
 Voted for ship to leave early = "함선 조기 출발에 투표했습니다",
 Hold = "길게 누르기",
 Votes = "투표 수",
@@ -41,3 +68,9 @@ Days on the job = "근무일수",
 Scrap value collected = "수집한 폐품의 가치",
 Deaths = "사망 횟수",
 Steps taken = "걸음 수",
+
+OxygenLow = "산소가 부족합니다!",
+SteamLeakDetected = {"가시성이 낮습니다!", "해당 구역에서", "증기 누출이 감지되었습니다"},
+HealthRisk = {"체력 위험!", "입자로 인해 공기 필터가", "과부하 상태입니다"},
+HighFever = {"고열이 감지되었습니다!", "현재 온도"},
+HighFever2 = {"고열이 감지되었습니다!!!", "이물질이 감지되었습니다!!!", "비정상적인 뇌파가 감지되었습니다!!!"}

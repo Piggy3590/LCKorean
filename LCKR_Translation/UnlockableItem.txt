@@ -25,4 +25,4 @@ Plushie pajama man = "인형 파자마 맨",
 Purple Suit = "보라색 슈트",
 Bee Suit = "꿀벌 슈트",
 Bunny Suit = "토끼 슈트",
-Disco Ball = "디스코 볼",
+Disco Ball = "디스코 볼"

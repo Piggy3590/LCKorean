@@ -1,5 +1,5 @@
-Intern = {"인턴"},
-Part-timer = {"아르바이트"},
-Employee = {"정직원"},
-Leader = {"팀장"},
-Boss = {"사장"}
+Intern = "인턴",
+Part-timer = "아르바이트",
+Employee = "정직원",
+Leader = "팀장",
+Boss = "사장"

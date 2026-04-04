@@ -1,3 +1,6 @@
+clipboard = "클립보드",
+Sticky note = "스티커 메모지",
+
 Boombox = "붐박스",
 Flashlight = "손전등",
 Jetpack = "제트팩",
@@ -58,7 +61,6 @@ Toothpaste = "치약",
 Toy cube = "장난감 큐브",
 Hive = "벌집",
 
-Radar-booster = "",
 Yield sign = "양보 표지판",
 
 Shotgun = "산탄총",

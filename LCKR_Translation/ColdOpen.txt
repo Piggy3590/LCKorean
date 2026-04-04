@@ -1,0 +1,17 @@
+"Detecting difficulties..." = "문제 감지 중...",
+"Running reboot diagnostic..." = "재부팅 진단 실행 중...",
+"UNABLE TO START" = "시작할 수 없습니다.",
+"PLEASE FIX ISSUES" = "문제를 해결해주세요",
+"I BELIEVE IN YOU" = "당신을 믿습니다",
+
+"I promise that" = "약속할게",
+"I'm going" = "난 갈 꺼야",
+"I'm not staying there" = "난 거기 안 있을 거야",
+
+"ERROR" = "오류",
+
+"A pardon, a defense" = "용서, 변명",
+"A tunnel" ="터널",
+"A hole in the fence" = "울타리의 구멍",
+"for all the weary workers" = "지친 노동자들을 위한",
+"Does it exist" = "그런 것이 있을까"

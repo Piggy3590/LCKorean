@@ -25,6 +25,10 @@ Vain Shroud = {"은폐 수풀", ""},
 Kidnapper Fox = {"납치범 여우", ""},
 Maneater = {"맨이터", ""},
 Giant Sapsucker = {"거대 딱따구리", ""},
+Feiopar = {"페이오파르", ""},
+Cadaver = {"시체 성장체", ""},
+Cadaver Bloom = {"시체 개화체", ""},
+
 
 valueCheck = {"", "가격: "},
 Magic 7 ball = {"마법의 7번 공", ""},

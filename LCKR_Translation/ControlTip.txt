@@ -13,7 +13,6 @@ Reload = "재장전",
 
 Take TZP = "TZP 흡입하기",
 Pop up ladder = "사다리 꺼내기",
-Use grenade = "수류탄 사용하기",
 Swing shovel = "삽 휘두르기",
 Swing sign = "표지판 휘두르기",
 Turn on booster = "부스터 켜기",
